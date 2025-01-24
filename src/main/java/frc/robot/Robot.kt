@@ -1,13 +1,23 @@
 package frc.robot
 
+import MiscCalculations
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.TimedRobot
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
+import frc.robot.RobotContainer.ControlledAngularRate
+import frc.robot.RobotContainer.ControlledSpeed
+import frc.robot.RobotContainer.MaxAngularRateConst
+import frc.robot.RobotContainer.MaxSpeedConst
+import frc.robot.RobotContainer.leftJoystick
+import frc.robot.RobotContainer.vision
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -39,6 +49,7 @@ object Robot : TimedRobot() {
         HAL.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Kotlin, 0, WPILibVersion.Version)
         // Access the RobotContainer object so that it is initialized. This will perform all our
         // button bindings, and put our autonomous chooser on the dashboard.
+
         RobotContainer
     }
 
@@ -63,7 +74,7 @@ object Robot : TimedRobot() {
     }
 
     override fun disabledPeriodic() {
-
+        vision.updateOdometryFromDisabled()
     }
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
@@ -84,7 +95,7 @@ object Robot : TimedRobot() {
 
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
-
+        vision.updateOdometry(1, false)
     }
 
     override fun testInit() {

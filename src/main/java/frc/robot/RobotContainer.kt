@@ -1,46 +1,64 @@
 package frc.robot
 
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import edu.wpi.first.wpilibj2.command.button.Trigger
-import frc.robot.commands.ExampleCommand
-import frc.robot.subsystems.ExampleSubsystem
+import MiscCalculations
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType
+import com.ctre.phoenix6.swerve.SwerveRequest
+import edu.wpi.first.units.Units.*
+import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.FunctionalCommand
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick
+import frc.robot.commands.TeleopDriveCommand
+import frc.robot.constants.TunerConstants
+import frc.robot.subsystems.CommandSwerveDrivetrain
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the [Robot]
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- *
- * In Kotlin, it is recommended that all your Subsystems are Kotlin objects. As such, there
- * can only ever be a single instance. This eliminates the need to create reference variables
- * to the various subsystems in this container to pass into to commands. The commands can just
- * directly reference the (single instance of the) object.
- */
-object RobotContainer
-{
-    init
-    {
+object RobotContainer {
+    public val MaxSpeedConst = TunerConstants.kSpeedAt12Volts.`in`(MetersPerSecond) // kSpeedAt12Volts desired top
+    // speed
+    public var ControlledSpeed = MaxSpeedConst
+    public val MaxAngularRateConst =
+        RotationsPerSecond.of(0.75).`in`(RadiansPerSecond) // 3/4 of a rotation per second max angular velocity
+
+    public var ControlledAngularRate = MaxAngularRateConst
+
+    /* Setting up bindings for necessary control of the swerve drive platform */
+    public val drive: SwerveRequest.FieldCentric = SwerveRequest.FieldCentric()
+        .withDeadband(MaxSpeedConst * 0.1).withRotationalDeadband(MaxAngularRateConst * 0.1) // Add a 10% deadband
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage) // Use open-loop control for drive motors
+
+    public val robotRelative: SwerveRequest.RobotCentric = SwerveRequest.RobotCentric()
+        .withDeadband(MaxSpeedConst * 0.1).withRotationalDeadband(MaxAngularRateConst * 0.1) // Add a 10% deadband
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage) // Use open-loop control for drive motors
+
+
+    private val brake = SwerveRequest.SwerveDriveBrake()
+    private val point = SwerveRequest.PointWheelsAt()
+
+    private val logger: Telemetry = Telemetry(MaxSpeedConst)
+
+//    private val xbox = CommandXboxController(0)
+
+    val leftJoystick: CommandJoystick = CommandJoystick(0)
+    val rightJoystick: CommandJoystick = CommandJoystick(1)
+
+    val vision = VisionSystem()
+
+
+    val drivetrain: CommandSwerveDrivetrain = TunerConstants.createDrivetrain()
+
+    val teleopDriveCommand = TeleopDriveCommand()
+
+    init {
         configureBindings()
-        // Reference the Autos object so that it is initialized, placing the chooser on the dashboard
     }
 
-    // Replace with CommandPS4Controller or CommandJoystick if needed
-    private val driverController = CommandXboxController(0)
+    private fun configureBindings() {
 
-    /**
-     * Use this method to define your `trigger->command` mappings. Triggers can be created via the
-     * [Trigger] constructor that takes a [BooleanSupplier][java.util.function.BooleanSupplier]
-     * with an arbitrary predicate, or via the named factories in [GenericHID][edu.wpi.first.wpilibj2.command.button.CommandGenericHID]
-     * subclasses such for [Xbox][CommandXboxController]/[PS4][edu.wpi.first.wpilibj2.command.button.CommandPS4Controller]
-     * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
-     */
-    private fun configureBindings()
-    {
-        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        Trigger { ExampleSubsystem.exampleCondition() }.onTrue(ExampleCommand())
+        drivetrain.setDefaultCommand(teleopDriveCommand)
 
-        // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-        // cancelling on release.
-        driverController.b().whileTrue(ExampleSubsystem.exampleMethodCommand())
+        drivetrain.registerTelemetry(logger::telemeterize)
     }
+
+    val autonomousCommand: Command
+        get() = Commands.print("No autonomous command configured")
 }
