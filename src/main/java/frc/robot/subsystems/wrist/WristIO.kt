@@ -1,4 +1,4 @@
-package frc.robot.subsystems.elevator
+package frc.robot.subsystems.wrist
 
 interface WristIO {
     fun getWristEncoder():Double
