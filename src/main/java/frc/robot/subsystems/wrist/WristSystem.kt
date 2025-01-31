@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 
 // By making a subsystem a Kotlin object, we ensure there is only ever one instance of it.
 // It also reduces the need to have reference variables for the subsystems to be passed around.
-object WristSystem : SubsystemBase() {
+class WristSystem(private val io: WristIO) : SubsystemBase() {
     /**
      * Example command factory method.
      *

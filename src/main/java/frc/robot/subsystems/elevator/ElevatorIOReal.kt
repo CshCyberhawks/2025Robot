@@ -24,12 +24,20 @@ class ElevatorIOReal : ElevatorIO {
         talonFX.getConfigurator().apply(talonFXConfigurations)
     }
 
-    override fun getElevatorEncoder(): Double {
+    fun getElevatorEncoder(): Double {
         TODO("Not yet implemented")
         return 0.0;
     }
 
-    override fun setMotorPosition(rotations: Double) {
+    fun setElevatorMotor(rotations: Double) {
+        TODO("Not yet implemented")
+    }
+
+    fun setMotorPosition(rotations: Double) {
         talonFX.setControl(MotionMagicVoltage(rotations))
+    }
+
+    override fun setPosition(positionMeters: Double) {
+        TODO("Not yet implemented")
     }
 }

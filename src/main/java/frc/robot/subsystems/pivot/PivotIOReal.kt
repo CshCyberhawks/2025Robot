@@ -24,12 +24,16 @@ class PivotIOReal : PivotIO {
         talonFX.getConfigurator().apply(talonFXConfigurations)
     }
 
-    override fun getPivotEncoder(): Double {
+    fun getPivotEncoder(): Double {
         TODO("Not yet implemented")
         return 0.0;
     }
 
-    override fun setPivotMotor(x: Double) {
-        talonFX.setControl(MotionMagicVoltage(rotations))
+    fun setPivotMotor(x: Double) {
+        talonFX.setControl(MotionMagicVoltage(x))
+    }
+
+    override fun setAngle(angleDegrees: Double) {
+        TODO("Not yet implemented")
     }
 }

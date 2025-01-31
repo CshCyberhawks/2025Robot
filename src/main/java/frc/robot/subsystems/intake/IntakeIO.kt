@@ -4,8 +4,9 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.hardware.TalonFX
 
 interface IntakeIO {
-    var talonFX: TalonFX
-    var talonFXConfigs: TalonFXConfiguration
-    fun getIntakeEncoder(): Double
-    fun setIntakeMotor(x: Double)
+//    fun getIntakeEncoder(): Double
+
+    //    fun setIntakeMotor(x: Double)
+    fun setCoralIntakeState(state: CoralIntakeState)
+    fun setAlgaeIntakeState(state: AlgaeIntakeState)
 }

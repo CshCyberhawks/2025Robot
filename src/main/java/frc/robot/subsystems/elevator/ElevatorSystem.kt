@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command
 
 // By making a subsystem a Kotlin object, we ensure there is only ever one instance of it.
 // It also reduces the need to have reference variables for the subsystems to be passed around.
-object ElevatorSystem : SubsystemBase() {
+class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     /**
      * Example command factory method.
      *

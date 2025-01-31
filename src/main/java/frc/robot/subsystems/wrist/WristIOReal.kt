@@ -5,7 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.controls.MotionMagicVoltage
 import frc.robot.constants.WristConstants
 
-class WristIOReal : WristIO {
+class WristIOReal() : WristIO {
 
     var talonFX = TalonFX(WristConstants.id, WristConstants.canbus)
     var talonFXConfigurations = TalonFXConfiguration()
@@ -24,12 +24,16 @@ class WristIOReal : WristIO {
         talonFX.getConfigurator().apply(talonFXConfigurations)
     }
 
-    override fun getWristEncoder(): Double {
+    fun getWristEncoder(): Double {
         TODO("Not yet implemented")
         return 0.0;
     }
 
-    override fun setWristMotor(x: Double) {
-        talonFX.setControl(MotionMagicVoltage(rotations))
+    fun setWristMotor(x: Double) {
+        talonFX.setControl(MotionMagicVoltage(x))
+    }
+
+    override fun setAngle(angleDegrees: Double) {
+        TODO("Not yet implemented")
     }
 }

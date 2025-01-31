@@ -24,12 +24,20 @@ class IntakeIOReal : IntakeIO {
         talonFX.getConfigurator().apply(talonFXConfigurations)
     }
 
-    override fun getIntakeEncoder(): Double {
+    fun getIntakeEncoder(): Double {
         TODO("Not yet implemented")
         return 0.0;
     }
 
-    override fun setIntakeMotor(x: Double) {
-        talonFX.setControl(MotionMagicVoltage(rotations))
+    fun setIntakeMotor(x: Double) {
+        talonFX.setControl(MotionMagicVoltage(x))
+    }
+
+    override fun setCoralIntakeState(state: CoralIntakeState) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setAlgaeIntakeState(state: AlgaeIntakeState) {
+        TODO("Not yet implemented")
     }
 }
