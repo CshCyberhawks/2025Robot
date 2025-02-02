@@ -5,6 +5,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -108,13 +109,20 @@ object Robot : TimedRobot() {
 
     }
 
+//    var lastLoopTime = 0.0
+
     /** This method is called once when the robot is first started up.  */
     override fun simulationInit() {
-
+//        lastLoopTime = MiscCalculations.getCurrentTime()
     }
 
     /** This method is called periodically whilst in simulation.  */
     override fun simulationPeriodic() {
-
+//        val currentTime = MiscCalculations.getCurrentTime()
+//        val dtSeconds = (currentTime - lastLoopTime) / 1000
+//
+//        RobotContainer.drivetrain.updateSimState(dtSeconds, RobotController.getBatteryVoltage())
+//
+//        lastLoopTime = currentTime
     }
 }

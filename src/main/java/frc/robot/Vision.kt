@@ -18,8 +18,11 @@ import kotlin.math.max
 class VisionSystem {
     val max_distance_m = 6.0
 
-    val limelightNames: Array<String> =
+    val limelightNames: Array<String> = if (!RobotState.simulated) {
         arrayOf("limelight-front")
+    } else {
+        emptyArray()
+    }
 
     fun updateOdometryFromDisabled() {
 
@@ -81,7 +84,7 @@ class VisionSystem {
 
         var namesToSearch: Array<String>;
 
-            namesToSearch = limelightNames
+        namesToSearch = limelightNames
 
         for (llName in namesToSearch) {
             if (DriverStation.getAlliance().isEmpty) {
@@ -90,7 +93,7 @@ class VisionSystem {
             }
 
             var llMeasure: LimelightHelpers.PoseEstimate =
-                    LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
+                LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
 
             if (llMeasure.tagCount >= tagCount && llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {
                 val poseDifference =
