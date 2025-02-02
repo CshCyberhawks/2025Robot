@@ -1,9 +1,12 @@
-package frc.robot.subsystems.intake
+package frc.robot.subsystems.intake.implementation
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.controls.MotionMagicVoltage
 import frc.robot.constants.IntakeConstants
+import frc.robot.subsystems.intake.AlgaeIntakeState
+import frc.robot.subsystems.intake.CoralIntakeState
+import frc.robot.subsystems.intake.IntakeIO
 
 class IntakeIOReal : IntakeIO {
 

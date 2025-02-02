@@ -1,9 +1,10 @@
-package frc.robot.subsystems.elevator
+package frc.robot.subsystems.elevator.implementation
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.controls.MotionMagicVoltage
 import frc.robot.constants.ElevatorConstants
+import frc.robot.subsystems.elevator.ElevatorIO
 
 class ElevatorIOReal : ElevatorIO {
 
