@@ -3,8 +3,13 @@ package frc.robot.subsystems.swerve
 import com.ctre.phoenix6.swerve.SwerveDrivetrain
 import com.ctre.phoenix6.swerve.SwerveModule
 import com.ctre.phoenix6.swerve.SwerveRequest
+import edu.wpi.first.math.Matrix
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.numbers.N1
+import edu.wpi.first.math.numbers.N3
 import edu.wpi.first.units.Units.*
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotContainer
 import frc.robot.constants.TunerConstants
 import frc.robot.util.Telemetry
@@ -21,12 +26,22 @@ class SwerveIOReal() : SwerveIO {
         drivetrain.registerTelemetry(logger::telemeterize)
     }
 
-    override fun setDefaultCommand(command: Command) {
-        drivetrain.defaultCommand = command
-    }
+//    override fun setDefaultCommand(command: Command) {
+//        drivetrain.defaultCommand = command
+//    }
 
     override fun seedFieldCentric() {
         drivetrain.seedFieldCentric()
+    }
+
+    override fun getSwervePose(): Pose2d = drivetrain.state.Pose
+
+    override fun addVisionMeasurement(visionRobotPoseMeters: Pose2d, timestampSeconds: Double) {
+        drivetrain.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds)
+    }
+
+    override fun setVisionMeasurementStdDevs(visionMeasurementStdDevs: Matrix<N3, N1>) {
+        drivetrain.setVisionMeasurementStdDevs(visionMeasurementStdDevs)
     }
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -44,7 +59,7 @@ class SwerveIOReal() : SwerveIO {
     private val brake = SwerveRequest.SwerveDriveBrake()
     private val point = SwerveRequest.PointWheelsAt()
 
-    override fun applyDriveRequest(x: Double, y: Double, twist: Double) {
+    override fun applyDriveRequest(x: Double, y: Double, twistRadians: Double) {
         drivetrain.applyRequest {
             fieldCentric.withVelocityX(
                 x
@@ -57,12 +72,12 @@ class SwerveIOReal() : SwerveIO {
                 // left with negative X
                 // (left)
                 .withRotationalRate(
-                    twist
+                    twistRadians
                 )
         }
     }
 
-    override fun applyRobotRelativeDriveRequest(x: Double, y: Double, twist: Double) {
+    override fun applyRobotRelativeDriveRequest(x: Double, y: Double, twistRadians: Double) {
         drivetrain.applyRequest {
             robotRelative.withVelocityX(
                 x
@@ -75,7 +90,7 @@ class SwerveIOReal() : SwerveIO {
                 // left with negative X
                 // (left)
                 .withRotationalRate(
-                    twist
+                    twistRadians
                 )
         }
     }

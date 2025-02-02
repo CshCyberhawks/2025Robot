@@ -5,6 +5,8 @@ import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
@@ -13,10 +15,6 @@ import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
-import frc.robot.RobotContainer.ControlledAngularRate
-import frc.robot.RobotContainer.ControlledSpeed
-import frc.robot.RobotContainer.MaxAngularRateConst
-import frc.robot.RobotContainer.MaxSpeedConst
 import frc.robot.RobotContainer.leftJoystick
 import frc.robot.RobotContainer.vision
 
@@ -37,6 +35,7 @@ object Robot : TimedRobot() {
      *the  AutoChooser on the dashboard.
      */
     private var autonomousCommand: Command = Commands.runOnce({})
+    val robotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose", Pose2d.struct).publish();
 
 
     /**
@@ -67,6 +66,8 @@ object Robot : TimedRobot() {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
+
+        robotPosePublisher.set(RobotContainer.drivetrain.getSwervePose())
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */

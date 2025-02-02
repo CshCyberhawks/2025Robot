@@ -11,7 +11,7 @@ import frc.robot.subsystems.swerve.SwerveConstants
 
 class SimTeleopDriveCommand : Command() {
     init {
-//        addRequirements(RobotContainer.drivetrain)
+        addRequirements(RobotContainer.drivetrain)
     }
 
     override fun initialize() {
@@ -22,7 +22,7 @@ class SimTeleopDriveCommand : Command() {
     }
 
     override fun execute() {
-        val deadzonedLeftY = MiscCalculations.calculateDeadzone(RobotContainer.xbox.leftX, .5)
+        val deadzonedLeftY = MiscCalculations.calculateDeadzone(RobotContainer.xbox.rightX, .5)
 
         SwerveConstants.ControlledSpeed = MathUtil.clamp(
             SwerveConstants.ControlledSpeed + (-deadzonedLeftY * SwerveConstants.MaxSpeedConst * .02), 0.0,
@@ -42,26 +42,26 @@ class SimTeleopDriveCommand : Command() {
         if (fieldOriented) {
             RobotContainer.drivetrain.applyDriveRequest(
                 -MiscCalculations.calculateDeadzone(
-                    RobotContainer.xbox.rightY,
-                    .1
-                ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
-                    RobotContainer.xbox.rightX,
+                    RobotContainer.xbox.leftY,
                     .1
                 ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
                     RobotContainer.xbox.leftX,
+                    .1
+                ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
+                    RobotContainer.xbox.rightX,
                     .1
                 ) * SwerveConstants.ControlledAngularRate
             )
         } else {
             RobotContainer.drivetrain.applyRobotRelativeDriveRequest(
                 -MiscCalculations.calculateDeadzone(
-                    RobotContainer.xbox.rightY,
-                    .1
-                ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
-                    RobotContainer.xbox.rightX,
+                    RobotContainer.xbox.leftY,
                     .1
                 ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
                     RobotContainer.xbox.leftX,
+                    .1
+                ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
+                    RobotContainer.xbox.rightX,
                     .1
                 ) * SwerveConstants.ControlledAngularRate
             )
