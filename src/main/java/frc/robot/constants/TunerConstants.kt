@@ -17,9 +17,9 @@ import edu.wpi.first.units.measure.Distance
 import edu.wpi.first.units.measure.LinearVelocity
 import edu.wpi.first.units.measure.MomentOfInertia
 import edu.wpi.first.units.measure.Voltage
-import frc.robot.subsystems.CommandSwerveDrivetrain
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain
 
-// import frc.robot.subsystems.CommandSwerveDrivetrain
+// import frc.robot.subsystems.swerve.CommandSwerveDrivetrain
 
 
 object TunerConstants {
