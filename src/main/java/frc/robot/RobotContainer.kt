@@ -15,7 +15,6 @@ import frc.robot.constants.TunerConstants
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain
 import frc.robot.subsystems.swerve.SwerveIOReal
 import frc.robot.subsystems.swerve.SwerveIOSim
-import frc.robot.subsystems.swerve.SwerveSystem
 import frc.robot.util.Telemetry
 
 object RobotContainer {
@@ -27,7 +26,7 @@ object RobotContainer {
     val vision = VisionSystem()
 
 
-    val drivetrain = SwerveSystem(if (RobotState.simulated) SwerveIOSim() else SwerveIOReal())
+    val drivetrain = if (RobotState.simulated) SwerveIOSim() else SwerveIOReal()
 
     val teleopDriveCommand = if (RobotState.simulated) {
         SimTeleopDriveCommand()

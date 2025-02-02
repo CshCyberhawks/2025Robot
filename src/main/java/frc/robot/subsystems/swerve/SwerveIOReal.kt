@@ -16,7 +16,7 @@ import frc.robot.util.Telemetry
 import java.util.function.Consumer
 import java.util.function.Supplier
 
-class SwerveIOReal() : SwerveIO {
+class SwerveIOReal() : SwerveIO() {
     private val drivetrain = TunerConstants.createDrivetrain()
 
     private val logger: Telemetry = Telemetry(SwerveConstants.MaxSpeedConst)
