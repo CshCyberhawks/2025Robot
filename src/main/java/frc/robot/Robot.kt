@@ -6,6 +6,7 @@ import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Pose3d
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.TimedRobot
@@ -36,6 +37,10 @@ object Robot : TimedRobot() {
      */
     private var autonomousCommand: Command = Commands.runOnce({})
     val robotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose", Pose2d.struct).publish();
+    val elevatorPosePublisher =
+        NetworkTableInstance.getDefault().getStructTopic("Elevator Pose", Pose3d.struct).publish();
+    val pivotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Pivot Pose", Pose3d.struct).publish();
+    val wristPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Wrist Pose", Pose3d.struct).publish();
 
 
     /**
@@ -68,6 +73,11 @@ object Robot : TimedRobot() {
         CommandScheduler.getInstance().run()
 
         robotPosePublisher.set(RobotContainer.drivetrain.getSwervePose())
+        elevatorPosePublisher.set(Pose3d())
+        pivotPosePublisher.set(Pose3d())
+        wristPosePublisher.set(Pose3d())
+
+        SmartDashboard.putNumberArray("Test", arrayOf(0.0, 0.0, 0.0))
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */
