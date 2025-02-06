@@ -57,6 +57,8 @@ object RobotContainer {
         drivetrain.setDefaultCommand(teleopDriveCommand)
 
         drivetrain.registerTelemetry(logger::telemeterize)
+
+//        teleopDriveCommand.schedule()
     }
 
     val autonomousCommand: Command

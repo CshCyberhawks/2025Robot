@@ -40,6 +40,11 @@ class TeleopDriveCommand : Command() {
 
         SmartDashboard.putNumber("ControlledSpeed", ControlledSpeed)
         SmartDashboard.putNumber("ControlledAngularRate", ControlledAngularRate)
+        SmartDashboard.putNumber("Right Joy Y", rightJoystick.y)
+        SmartDashboard.putNumber("Drive X", -MiscCalculations.calculateDeadzone(
+            rightJoystick.y,
+            .1
+        ) * ControlledSpeed)
 
 
         val fieldOriented = !rightJoystick.button(2).asBoolean
@@ -68,7 +73,7 @@ class TeleopDriveCommand : Command() {
                             .1
                         ) * ControlledAngularRate
                     )
-            }
+            }.execute()
         } else {
             drivetrain.applyRequest {
                 robotRelative.withVelocityX(
@@ -93,7 +98,7 @@ class TeleopDriveCommand : Command() {
                             .1
                         ) * ControlledAngularRate
                     )
-            }
+            }.execute()
         }
 
 
