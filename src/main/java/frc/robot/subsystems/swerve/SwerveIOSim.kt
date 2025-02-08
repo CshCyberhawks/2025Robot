@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.subsystems.swerve.SwerveIOBase
 
-class SwerveIOSim() : SwerveIO() {
+class SwerveIOSim() : SwerveIOBase() {
     private var robotPose = Pose2d()
     private var currentSpeed = ChassisSpeeds()
 

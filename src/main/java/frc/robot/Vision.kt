@@ -18,14 +18,12 @@ import kotlin.math.max
 class VisionSystem {
     val max_distance_m = 6.0
 
-    val limelightNames: Array<String> = if (!RobotState.simulated) {
-        arrayOf("limelight-front")
-    } else {
-        emptyArray()
+    val limelightNames: Array<String> = when (RobotConfiguration.robotState) {
+        RobotState.Real -> arrayOf("limelight-front")
+        else -> emptyArray()
     }
 
     fun updateOdometryFromDisabled() {
-
         var namesToSearch: Array<String>;
 
 

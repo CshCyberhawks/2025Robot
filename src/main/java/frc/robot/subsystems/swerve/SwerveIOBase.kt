@@ -12,7 +12,7 @@ import edu.wpi.first.math.numbers.N3
 import edu.wpi.first.math.Matrix
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 
-open class SwerveIO() : SubsystemBase() {
+open class SwerveIOBase() : SubsystemBase() {
     open fun seedFieldCentric() {}
 
     open fun getSwervePose(): Pose2d = Pose2d()
