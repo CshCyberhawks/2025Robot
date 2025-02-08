@@ -1,8 +1,5 @@
 package frc.robot
 
-import frc.robot.util.IO.InputSystem
-import frc.robot.util.IO.ManualOperatorInput
-
 enum class RobotType {
     Real,
     Simulated,

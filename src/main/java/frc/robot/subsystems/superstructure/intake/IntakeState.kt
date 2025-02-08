@@ -1,4 +1,4 @@
-package frc.robot.subsystems.superstructure
+package frc.robot.subsystems.superstructure.intake
 
 // Setting the motor positive will both intake coral from substation and score onto reef
 enum class CoralIntakeState(val speed: Double) {

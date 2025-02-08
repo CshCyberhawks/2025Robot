@@ -1,4 +1,4 @@
-package frc.robot.subsystems.pivot
+package frc.robot.subsystems.superstructure.pivot
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.hardware.TalonFX

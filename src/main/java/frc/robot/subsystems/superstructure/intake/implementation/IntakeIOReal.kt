@@ -1,4 +1,4 @@
-package frc.robot.subsystems.superstructure
+package frc.robot.subsystems.superstructure.intake.implementation
 
 import au.grapplerobotics.LaserCan
 import au.grapplerobotics.interfaces.LaserCanInterface
@@ -9,10 +9,14 @@ import com.ctre.phoenix6.signals.InvertedValue
 import com.revrobotics.spark.SparkBase
 import com.revrobotics.spark.SparkLowLevel
 import com.revrobotics.spark.SparkMax
-import com.revrobotics.spark.config.SparkBaseConfig
 import com.revrobotics.spark.config.SparkMaxConfig
 import edu.wpi.first.math.util.Units
-import frc.robot.subsystems.intake.*
+import frc.robot.subsystems.superstructure.intake.AlgaeIntakeState
+import frc.robot.subsystems.superstructure.intake.AlgaeState
+import frc.robot.subsystems.superstructure.intake.CoralIntakeState
+import frc.robot.subsystems.superstructure.intake.CoralState
+import frc.robot.subsystems.superstructure.intake.IntakeConstants
+import frc.robot.subsystems.superstructure.intake.IntakeIO
 
 class IntakeIOReal : IntakeIO {
     private val coralIntakeMotor = TalonFX(IntakeConstants.coralMotorId)

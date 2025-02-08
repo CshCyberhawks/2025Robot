@@ -1,4 +1,4 @@
-package frc.robot.subsystems.pivot
+package frc.robot.subsystems.superstructure.pivot
 
 object PivotConstants {
     val kG = 0.0

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.wrist
+package frc.robot.subsystems.superstructure.wrist
 
 object WristConstants {
     val kG = 0.0

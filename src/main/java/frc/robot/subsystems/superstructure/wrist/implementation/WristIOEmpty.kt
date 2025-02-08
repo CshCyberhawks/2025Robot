@@ -1,6 +1,6 @@
-package frc.robot.subsystems.wrist.implementation
+package frc.robot.subsystems.superstructure.wrist.implementation
 
-import frc.robot.subsystems.wrist.WristIO
+import frc.robot.subsystems.superstructure.wrist.WristIO
 
 class WristIOEmpty() : WristIO {
     override fun setAngle(angleDegrees: Double) {}

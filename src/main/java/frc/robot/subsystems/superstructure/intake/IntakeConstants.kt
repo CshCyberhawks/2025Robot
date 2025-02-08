@@ -1,4 +1,4 @@
-package frc.robot.subsystems.superstructure
+package frc.robot.subsystems.superstructure.intake
 
 object IntakeConstants {
     const val coralMotorId = 40

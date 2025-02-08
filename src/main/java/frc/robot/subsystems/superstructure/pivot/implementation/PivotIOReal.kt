@@ -1,10 +1,10 @@
-package frc.robot.subsystems.pivot.implementation
+package frc.robot.subsystems.superstructure.pivot.implementation
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.controls.MotionMagicVoltage
-import frc.robot.subsystems.pivot.PivotConstants
-import frc.robot.subsystems.pivot.PivotIO
+import frc.robot.subsystems.superstructure.pivot.PivotConstants
+import frc.robot.subsystems.superstructure.pivot.PivotIO
 
 class PivotIOReal : PivotIO {
 
