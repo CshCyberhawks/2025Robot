@@ -76,7 +76,7 @@ class SwerveIOReal() : SwerveIOBase() {
                 .withRotationalRate(
                     twistRadians
                 )
-        }
+        }.execute()
     }
 
     override fun applyRobotRelativeDriveRequest(x: Double, y: Double, twistRadians: Double) {
@@ -94,6 +94,6 @@ class SwerveIOReal() : SwerveIOBase() {
                 .withRotationalRate(
                     twistRadians
                 )
-        }
+        }.execute()
     }
 }
