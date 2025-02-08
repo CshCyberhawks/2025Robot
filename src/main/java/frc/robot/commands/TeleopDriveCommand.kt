@@ -5,97 +5,68 @@ import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.RobotContainer
-import frc.robot.RobotContainer.ControlledAngularRate
-import frc.robot.RobotContainer.ControlledSpeed
-import frc.robot.RobotContainer.MaxAngularRateConst
-import frc.robot.RobotContainer.MaxSpeedConst
-import frc.robot.RobotContainer.drive
-import frc.robot.RobotContainer.drivetrain
-import frc.robot.RobotContainer.leftJoystick
-import frc.robot.RobotContainer.rightJoystick
-import frc.robot.RobotContainer.robotRelative
+import frc.robot.subsystems.ExampleSubsystem.runOnce
+import frc.robot.subsystems.swerve.SwerveConstants
+
 
 class TeleopDriveCommand : Command() {
     init {
-        addRequirements(drivetrain)
+        addRequirements(RobotContainer.drivetrain)
     }
 
     override fun initialize() {
-        rightJoystick.button(2).onTrue(drivetrain.runOnce { drivetrain.seedFieldCentric() })
+        RobotContainer.rightJoystick.button(2)
+            .onTrue(runOnce { RobotContainer.drivetrain.seedFieldCentric() })
 
         super.initialize()
     }
 
     override fun execute() {
-        var deadzonedLeftY = MiscCalculations.calculateDeadzone(leftJoystick.y, .5)
+        val deadzonedLeftY = MiscCalculations.calculateDeadzone(RobotContainer.leftJoystick.y, .5)
 
-        ControlledSpeed = MathUtil.clamp(
-            ControlledSpeed + (-deadzonedLeftY * MaxSpeedConst * .02), 0.0,
-            MaxSpeedConst
+        SwerveConstants.ControlledSpeed = MathUtil.clamp(
+            SwerveConstants.ControlledSpeed + (-deadzonedLeftY * SwerveConstants.MaxSpeedConst * .02), 0.0,
+            SwerveConstants.MaxSpeedConst
         );
-        ControlledAngularRate = MathUtil.clamp(
-            ControlledAngularRate + (-deadzonedLeftY * MaxAngularRateConst * .02),
-            0.0, MaxAngularRateConst
+        SwerveConstants.ControlledAngularRate = MathUtil.clamp(
+            SwerveConstants.ControlledAngularRate + (-deadzonedLeftY * SwerveConstants.MaxAngularRateConst * .02),
+            0.0, SwerveConstants.MaxAngularRateConst
         );
 
-        SmartDashboard.putNumber("ControlledSpeed", ControlledSpeed)
-        SmartDashboard.putNumber("ControlledAngularRate", ControlledAngularRate)
+        SmartDashboard.putNumber("ControlledSpeed", SwerveConstants.ControlledSpeed)
+        SmartDashboard.putNumber("ControlledAngularRate", SwerveConstants.ControlledAngularRate)
 
 
-        val fieldOriented = !rightJoystick.button(2).asBoolean
+        val fieldOriented = !RobotContainer.rightJoystick.button(2).asBoolean
 
         if (fieldOriented) {
-            drivetrain.applyRequest {
-                drive.withVelocityX(
-                    -MiscCalculations.calculateDeadzone(
-                        rightJoystick.y,
-                        .1
-                    ) * ControlledSpeed
-                ) //
-                    // Drive forward with
-                    // negative Y (forward)
-                    .withVelocityY(
-                        -MiscCalculations.calculateDeadzone(
-                            rightJoystick.x,
-                            .1
-                        ) * ControlledSpeed
-                    ) // Drive
-                    // left with negative X
-                    // (left)
-                    .withRotationalRate(
-                        -MiscCalculations.calculateDeadzone(
-                            leftJoystick.x,
-                            .1
-                        ) * ControlledAngularRate
-                    )
-            }
+            RobotContainer.drivetrain.applyDriveRequest(
+                -MiscCalculations.calculateDeadzone(
+                    RobotContainer.rightJoystick.y,
+                    .1
+                ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
+                    RobotContainer.rightJoystick.x,
+                    .1
+                ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
+                    RobotContainer.leftJoystick.x,
+                    .1
+                ) * SwerveConstants.ControlledAngularRate
+            )
         } else {
-            drivetrain.applyRequest {
-                robotRelative.withVelocityX(
-                    -MiscCalculations.calculateDeadzone(
-                        rightJoystick.y,
-                        .1
-                    ) * ControlledSpeed
-                ) //
-                    // Drive forward with
-                    // negative Y (forward)
-                    .withVelocityY(
-                        -MiscCalculations.calculateDeadzone(
-                            rightJoystick.x,
-                            .1
-                        ) * ControlledSpeed
-                    ) // Drive
-                    // left with negative X
-                    // (left)
-                    .withRotationalRate(
-                        -MiscCalculations.calculateDeadzone(
-                            leftJoystick.x,
-                            .1
-                        ) * ControlledAngularRate
-                    )
-            }
-        }
+            RobotContainer.drivetrain.applyRobotRelativeDriveRequest(
+                -MiscCalculations.calculateDeadzone(
+                    RobotContainer.rightJoystick.y,
+                    .1
+                ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
+                    RobotContainer.rightJoystick.x,
+                    .1
+                ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
+                    RobotContainer.leftJoystick.x,
+                    .1
+                ) * SwerveConstants.ControlledAngularRate
+            )
 
+        }
 
         super.execute()
     }

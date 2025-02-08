@@ -5,6 +5,10 @@ import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.math.MathUtil
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Pose3d
+import edu.wpi.first.networktables.NetworkTableInstance
+import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
@@ -12,10 +16,6 @@ import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
-import frc.robot.RobotContainer.ControlledAngularRate
-import frc.robot.RobotContainer.ControlledSpeed
-import frc.robot.RobotContainer.MaxAngularRateConst
-import frc.robot.RobotContainer.MaxSpeedConst
 import frc.robot.RobotContainer.leftJoystick
 import frc.robot.RobotContainer.vision
 
@@ -36,6 +36,11 @@ object Robot : TimedRobot() {
      *the  AutoChooser on the dashboard.
      */
     private var autonomousCommand: Command = Commands.runOnce({})
+    val robotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose", Pose2d.struct).publish();
+    val elevatorPosePublisher =
+        NetworkTableInstance.getDefault().getStructTopic("Elevator Pose", Pose3d.struct).publish();
+    val pivotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Pivot Pose", Pose3d.struct).publish();
+    val wristPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Wrist Pose", Pose3d.struct).publish();
 
 
     /**
@@ -66,6 +71,13 @@ object Robot : TimedRobot() {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
+
+        robotPosePublisher.set(RobotContainer.drivetrain.getSwervePose())
+        elevatorPosePublisher.set(Pose3d())
+        pivotPosePublisher.set(Pose3d())
+        wristPosePublisher.set(Pose3d())
+
+        SmartDashboard.putNumberArray("Test", arrayOf(0.0, 0.0, 0.0))
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */
@@ -108,13 +120,20 @@ object Robot : TimedRobot() {
 
     }
 
+//    var lastLoopTime = 0.0
+
     /** This method is called once when the robot is first started up.  */
     override fun simulationInit() {
-
+//        lastLoopTime = MiscCalculations.getCurrentTime()
     }
 
     /** This method is called periodically whilst in simulation.  */
     override fun simulationPeriodic() {
-
+//        val currentTime = MiscCalculations.getCurrentTime()
+//        val dtSeconds = (currentTime - lastLoopTime) / 1000
+//
+//        RobotContainer.drivetrain.updateSimState(dtSeconds, RobotController.getBatteryVoltage())
+//
+//        lastLoopTime = currentTime
     }
 }

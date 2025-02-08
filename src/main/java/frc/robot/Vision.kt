@@ -18,11 +18,12 @@ import kotlin.math.max
 class VisionSystem {
     val max_distance_m = 6.0
 
-    val limelightNames: Array<String> =
-        arrayOf("limelight-front")
+    val limelightNames: Array<String> = when (RobotConfiguration.robotState) {
+        RobotState.Real -> arrayOf("limelight-front")
+        else -> emptyArray()
+    }
 
     fun updateOdometryFromDisabled() {
-
         var namesToSearch: Array<String>;
 
 
@@ -41,7 +42,7 @@ class VisionSystem {
 
             if (llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {
                 val poseDifference =
-                    llMeasure.pose.translation.getDistance(RobotContainer.drivetrain.state.Pose.translation)
+                    llMeasure.pose.translation.getDistance(RobotContainer.drivetrain.getSwervePose().translation)
 
                 val distanceToTag = llMeasure.avgTagDist
 
@@ -81,7 +82,7 @@ class VisionSystem {
 
         var namesToSearch: Array<String>;
 
-            namesToSearch = limelightNames
+        namesToSearch = limelightNames
 
         for (llName in namesToSearch) {
             if (DriverStation.getAlliance().isEmpty) {
@@ -90,11 +91,11 @@ class VisionSystem {
             }
 
             var llMeasure: LimelightHelpers.PoseEstimate =
-                    LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
+                LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
 
             if (llMeasure.tagCount >= tagCount && llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {
                 val poseDifference =
-                    llMeasure.pose.translation.getDistance(RobotContainer.drivetrain.state.Pose.translation)
+                    llMeasure.pose.translation.getDistance(RobotContainer.drivetrain.getSwervePose().translation)
                 if (!poseDifferenceCheck || poseDifference < max_distance_m) {
                     val distanceToTag = llMeasure.avgTagDist
 
