@@ -1,50 +1,51 @@
 package frc.robot.subsystems.intake
 
+import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.RobotState
 
 // By making a subsystem a Kotlin object, we ensure there is only ever one instance of it.
 // It also reduces the need to have reference variables for the subsystems to be passed around.
 class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
-    /**
-     * Example command factory method.
-     *
-     * @return a command
-     */
-//    fun exampleMethodCommand(): Command = runOnce {
-//        // Subsystem.runOnce() implicitly add `this` as a required subsystem.
-//        // TODO: one-time action goes here
-//    }
+    private fun setCoralIntakeState(state: CoralIntakeState) = run { io.setCoralIntakeState(state) }
+    private fun setAlgaeIntakeState(state: AlgaeIntakeState) = run { io.setAlgaeIntakeState(state) }
 
-    /**
-     * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-     *
-     * @return value of some boolean subsystem state, such as a digital sensor.
-     */
-//    fun exampleCondition(): Boolean {
-//        // Query some boolean state, such as a digital sensor.
-//        return false
-//    }
+    private fun awaitCoralState(state: CoralState) = Commands.waitUntil { io.getCoralState() == state }
+    private fun awaitAlgaeState(state: AlgaeState) = Commands.waitUntil { io.getAlgaeState() == state }
+
+    fun coralIntake() = Commands.sequence(
+        setCoralIntakeState(CoralIntakeState.Intaking),
+        awaitCoralState(CoralState.Stored),
+        setCoralIntakeState(CoralIntakeState.Idle)
+    )
+
+    fun coralScore() = Commands.sequence(
+        setCoralIntakeState(CoralIntakeState.Scoring),
+        awaitCoralState(CoralState.Empty),
+        Commands.waitSeconds(IntakeConstants.coralScoreTimeoutSeconds),
+        setCoralIntakeState(CoralIntakeState.Idle)
+    )
+
+    fun algaeIntake() = Commands.sequence(
+        setAlgaeIntakeState(AlgaeIntakeState.Intaking),
+        awaitAlgaeState(AlgaeState.Stored),
+        setAlgaeIntakeState(AlgaeIntakeState.Holding)
+    )
+
+    fun algaeScore() = Commands.sequence(
+        setAlgaeIntakeState(AlgaeIntakeState.Scoring),
+        awaitAlgaeState(AlgaeState.Empty),
+        Commands.waitSeconds(IntakeConstants.algaeScoreTimeoutSeconds),
+        setAlgaeIntakeState(AlgaeIntakeState.Idle)
+    )
+
 
     override fun periodic() {
-        // This method will be called once per scheduler run
+        RobotState.coralState = io.getCoralState()
+        RobotState.algaeState = io.getAlgaeState()
     }
 
     override fun simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
-    }
-
-//    fun exampleAction()
-//    {
-//        // This action is called by the ExampleCommand
-//        println("ExampleSubsystem.exampleAction has been called")
-//    }
-
-    fun getPos(): Double {
-        TODO("Not yet implemented")
-        return 0.0;
-    }
-
-    fun setPos(x: Double) {
-        TODO("Not yet implemented")
     }
 }

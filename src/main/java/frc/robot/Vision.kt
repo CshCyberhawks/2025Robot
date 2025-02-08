@@ -18,8 +18,8 @@ import kotlin.math.max
 class VisionSystem {
     val max_distance_m = 6.0
 
-    val limelightNames: Array<String> = when (RobotConfiguration.robotState) {
-        RobotState.Real -> arrayOf("limelight-front")
+    val limelightNames: Array<String> = when (RobotConfiguration.robotType) {
+        RobotType.Real -> arrayOf("limelight-front")
         else -> emptyArray()
     }
 
