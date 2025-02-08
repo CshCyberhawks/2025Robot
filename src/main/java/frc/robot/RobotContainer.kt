@@ -8,57 +8,45 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.FunctionalCommand
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController
+import frc.robot.commands.SimTeleopDriveCommand
 import frc.robot.commands.TeleopDriveCommand
-import frc.robot.constants.TunerConstants
-import frc.robot.subsystems.CommandSwerveDrivetrain
+import frc.robot.subsystems.swerve.TunerConstants
+import frc.robot.subsystems.swerve.CommandSwerveDrivetrain
+import frc.robot.subsystems.swerve.SwerveIOBase
+import frc.robot.subsystems.swerve.SwerveIOReal
+import frc.robot.subsystems.swerve.SwerveIOSim
+import frc.robot.util.Telemetry
 
 object RobotContainer {
-    public val MaxSpeedConst = TunerConstants.kSpeedAt12Volts.`in`(MetersPerSecond) // kSpeedAt12Volts desired top
-    // speed
-    public var ControlledSpeed = MaxSpeedConst
-    public val MaxAngularRateConst =
-        RotationsPerSecond.of(0.75).`in`(RadiansPerSecond) // 3/4 of a rotation per second max angular velocity
-
-    public var ControlledAngularRate = MaxAngularRateConst
-
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    public val drive: SwerveRequest.FieldCentric = SwerveRequest.FieldCentric()
-        .withDeadband(MaxSpeedConst * 0.1).withRotationalDeadband(MaxAngularRateConst * 0.1) // Add a 10% deadband
-        .withDriveRequestType(DriveRequestType.OpenLoopVoltage) // Use open-loop control for drive motors
-
-    public val robotRelative: SwerveRequest.RobotCentric = SwerveRequest.RobotCentric()
-        .withDeadband(MaxSpeedConst * 0.1).withRotationalDeadband(MaxAngularRateConst * 0.1) // Add a 10% deadband
-        .withDriveRequestType(DriveRequestType.OpenLoopVoltage) // Use open-loop control for drive motors
-
-
-    private val brake = SwerveRequest.SwerveDriveBrake()
-    private val point = SwerveRequest.PointWheelsAt()
-
-    private val logger: Telemetry = Telemetry(MaxSpeedConst)
-
-//    private val xbox = CommandXboxController(0)
-
     val leftJoystick: CommandJoystick = CommandJoystick(0)
     val rightJoystick: CommandJoystick = CommandJoystick(1)
 
+    val xbox = CommandXboxController(2)
+
     val vision = VisionSystem()
 
+    val drivetrain = when (RobotConfiguration.robotState) {
+        RobotState.Real -> SwerveIOReal()
+        RobotState.Simulated -> SwerveIOSim()
+        RobotState.Empty -> SwerveIOBase()
+    }
 
-    val drivetrain: CommandSwerveDrivetrain = TunerConstants.createDrivetrain()
-
-    val teleopDriveCommand = TeleopDriveCommand()
+    val teleopDriveCommand = when (RobotConfiguration.robotState) {
+        RobotState.Real -> TeleopDriveCommand()
+        RobotState.Simulated -> SimTeleopDriveCommand()
+        RobotState.Empty -> Commands.run({})
+    }
 
     init {
         configureBindings()
     }
 
     private fun configureBindings() {
-
         drivetrain.setDefaultCommand(teleopDriveCommand)
 
-        drivetrain.registerTelemetry(logger::telemeterize)
 
-//        teleopDriveCommand.schedule()
+        drivetrain.registerTelemetry(logger::telemeterize)
     }
 
     val autonomousCommand: Command
