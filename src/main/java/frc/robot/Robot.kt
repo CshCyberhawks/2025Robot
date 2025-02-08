@@ -86,7 +86,7 @@ object Robot : TimedRobot() {
     }
 
     override fun disabledPeriodic() {
-        vision.updateOdometryFromDisabled()
+//        vision.updateOdometryFromDisabled()
     }
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
@@ -107,7 +107,7 @@ object Robot : TimedRobot() {
 
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
-        vision.updateOdometry(1, false)
+//        vision.updateOdometry(1, false)
     }
 
     override fun testInit() {

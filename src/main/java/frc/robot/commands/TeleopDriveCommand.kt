@@ -40,6 +40,7 @@ class TeleopDriveCommand : Command() {
         val fieldOriented = !RobotContainer.rightJoystick.button(2).asBoolean
 
         if (fieldOriented) {
+
             RobotContainer.drivetrain.applyDriveRequest(
                 -MiscCalculations.calculateDeadzone(
                     RobotContainer.rightJoystick.y,
@@ -65,7 +66,6 @@ class TeleopDriveCommand : Command() {
                     .1
                 ) * SwerveConstants.ControlledAngularRate
             )
-
         }
 
         super.execute()
