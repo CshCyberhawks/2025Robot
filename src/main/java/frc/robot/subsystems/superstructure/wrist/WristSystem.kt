@@ -1,6 +1,7 @@
-package frc.robot.subsystems.wrist
+package frc.robot.subsystems.superstructure.wrist
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase
+import frc.robot.subsystems.superstructure.wrist.WristIO
 
 class WristSystem(private val io: WristIO) : SubsystemBase() {
     /**

@@ -1,9 +1,9 @@
-package frc.robot.subsystems.intake
+package frc.robot.subsystems.superstructure.intake
 
-import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotState
+import frc.robot.subsystems.superstructure.intake.*
 
 // By making a subsystem a Kotlin object, we ensure there is only ever one instance of it.
 // It also reduces the need to have reference variables for the subsystems to be passed around.
@@ -17,6 +17,7 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     fun coralIntake() = Commands.sequence(
         setCoralIntakeState(CoralIntakeState.Intaking),
         awaitCoralState(CoralState.Stored),
+        Commands.waitSeconds(IntakeConstants.coralIntakeTimeoutSeconds),
         setCoralIntakeState(CoralIntakeState.Idle)
     )
 
@@ -46,6 +47,5 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
         RobotState.algaeState = io.getAlgaeState()
     }
 
-    override fun simulationPeriodic() {
-    }
+    override fun simulationPeriodic() {}
 }

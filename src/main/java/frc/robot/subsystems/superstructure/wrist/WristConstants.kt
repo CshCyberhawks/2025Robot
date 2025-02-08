@@ -1,6 +1,6 @@
-package frc.robot.subsystems.pivot
+package frc.robot.subsystems.superstructure.wrist
 
-object PivotConstants {
+object WristConstants {
     val kG = 0.0
     val kS = 0.0
     val kV = 0.0

@@ -1,6 +1,6 @@
-package frc.robot.subsystems.wrist
+package frc.robot.subsystems.superstructure.elevator
 
-object WristConstants {
+object ElevatorConstants {
     val kG = 0.0
     val kS = 0.0
     val kV = 0.0

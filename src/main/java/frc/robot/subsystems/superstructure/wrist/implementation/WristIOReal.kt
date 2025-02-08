@@ -1,10 +1,10 @@
-package frc.robot.subsystems.wrist.implementation
+package frc.robot.subsystems.superstructure.wrist.implementation
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.controls.MotionMagicVoltage
-import frc.robot.subsystems.wrist.WristConstants
-import frc.robot.subsystems.wrist.WristIO
+import frc.robot.subsystems.superstructure.wrist.WristConstants
+import frc.robot.subsystems.superstructure.wrist.WristIO
 
 class WristIOReal() : WristIO {
 
