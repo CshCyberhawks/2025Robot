@@ -1,11 +1,11 @@
 package frc.robot
 
-enum class RobotState {
+enum class RobotType {
     Real,
     Simulated,
     Empty
 }
 
 object RobotConfiguration {
-    val robotState = RobotState.Empty
+    val robotType = RobotType.Empty
 }

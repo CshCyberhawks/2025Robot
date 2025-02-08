@@ -26,16 +26,16 @@ object RobotContainer {
 
     val vision = VisionSystem()
 
-    val drivetrain = when (RobotConfiguration.robotState) {
-        RobotState.Real -> SwerveIOReal()
-        RobotState.Simulated -> SwerveIOSim()
-        RobotState.Empty -> SwerveIOBase()
+    val drivetrain = when (RobotConfiguration.robotType) {
+        RobotType.Real -> SwerveIOReal()
+        RobotType.Simulated -> SwerveIOSim()
+        RobotType.Empty -> SwerveIOBase()
     }
 
-    val teleopDriveCommand = when (RobotConfiguration.robotState) {
-        RobotState.Real -> TeleopDriveCommand()
-        RobotState.Simulated -> SimTeleopDriveCommand()
-        RobotState.Empty -> Commands.run({})
+    val teleopDriveCommand = when (RobotConfiguration.robotType) {
+        RobotType.Real -> TeleopDriveCommand()
+        RobotType.Simulated -> SimTeleopDriveCommand()
+        RobotType.Empty -> Commands.run({})
     }
 
     init {

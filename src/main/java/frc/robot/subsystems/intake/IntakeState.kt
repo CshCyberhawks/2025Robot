@@ -9,7 +9,8 @@ enum class CoralIntakeState(val speed: Double) {
 enum class AlgaeIntakeState {
     Intaking,
     Idle,
-    Scoring
+    Scoring,
+    Holding
 }
 
 enum class CoralState {
