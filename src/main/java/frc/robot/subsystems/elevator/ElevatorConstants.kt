@@ -1,6 +1,6 @@
-package frc.robot.constants
+package frc.robot.subsystems.elevator
 
-object IntakeConstants {
+object ElevatorConstants {
     val kG = 0.0
     val kS = 0.0
     val kV = 0.0

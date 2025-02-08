@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve
 
 import edu.wpi.first.units.Units.*
-import frc.robot.constants.TunerConstants
+import frc.robot.subsystems.swerve.TunerConstants
 
 object SwerveConstants {
     val MaxSpeedConst = TunerConstants.kSpeedAt12Volts.`in`(MetersPerSecond) // kSpeedAt12Volts desired top

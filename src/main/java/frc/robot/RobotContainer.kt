@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.commands.SimTeleopDriveCommand
 import frc.robot.commands.TeleopDriveCommand
-import frc.robot.constants.TunerConstants
+import frc.robot.subsystems.swerve.TunerConstants
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain
 import frc.robot.subsystems.swerve.SwerveIOBase
 import frc.robot.subsystems.swerve.SwerveIOReal

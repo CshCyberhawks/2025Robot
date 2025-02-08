@@ -3,7 +3,7 @@ package frc.robot.subsystems.pivot.implementation
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.controls.MotionMagicVoltage
-import frc.robot.constants.PivotConstants
+import frc.robot.subsystems.pivot.PivotConstants
 import frc.robot.subsystems.pivot.PivotIO
 
 class PivotIOReal : PivotIO {

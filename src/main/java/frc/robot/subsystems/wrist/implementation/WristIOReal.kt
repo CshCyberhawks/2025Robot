@@ -3,7 +3,7 @@ package frc.robot.subsystems.wrist.implementation
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.controls.MotionMagicVoltage
-import frc.robot.constants.WristConstants
+import frc.robot.subsystems.wrist.WristConstants
 import frc.robot.subsystems.wrist.WristIO
 
 class WristIOReal() : WristIO {
