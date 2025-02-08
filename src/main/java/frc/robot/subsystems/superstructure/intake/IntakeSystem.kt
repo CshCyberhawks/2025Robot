@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake
+package frc.robot.subsystems.superstructure
 
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
@@ -17,6 +17,7 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     fun coralIntake() = Commands.sequence(
         setCoralIntakeState(CoralIntakeState.Intaking),
         awaitCoralState(CoralState.Stored),
+        Commands.waitSeconds(IntakeConstants.coralIntakeTimeoutSeconds),
         setCoralIntakeState(CoralIntakeState.Idle)
     )
 
@@ -46,6 +47,5 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
         RobotState.algaeState = io.getAlgaeState()
     }
 
-    override fun simulationPeriodic() {
-    }
+    override fun simulationPeriodic() {}
 }

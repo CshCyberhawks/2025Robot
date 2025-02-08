@@ -11,11 +11,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.commands.SimTeleopDriveCommand
 import frc.robot.commands.TeleopDriveCommand
+import frc.robot.subsystems.superstructure.IntakeIOEmpty
+import frc.robot.subsystems.superstructure.IntakeIOReal
+import frc.robot.subsystems.superstructure.IntakeSystem
 import frc.robot.subsystems.swerve.TunerConstants
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain
 import frc.robot.subsystems.swerve.SwerveIOBase
 import frc.robot.subsystems.swerve.SwerveIOReal
 import frc.robot.subsystems.swerve.SwerveIOSim
+import frc.robot.util.IO.ManualOperatorInput
 import frc.robot.util.Telemetry
 
 object RobotContainer {
@@ -38,6 +42,13 @@ object RobotContainer {
         RobotType.Empty -> Commands.run({})
     }
 
+    val intakeSystem = IntakeSystem(
+        when (RobotConfiguration.robotType) {
+            RobotType.Real -> IntakeIOReal()
+            else -> IntakeIOEmpty()
+        }
+    )
+
     init {
         configureBindings()
     }
@@ -47,6 +58,11 @@ object RobotContainer {
 
 // We might need this?
 //        drivetrain.registerTelemetry(logger::telemeterize)
+
+
+        when (RobotConfiguration.operatorType) {
+            OperatorType.Manual -> ManualOperatorInput.configureBindings()
+        }
     }
 
     val autonomousCommand: Command

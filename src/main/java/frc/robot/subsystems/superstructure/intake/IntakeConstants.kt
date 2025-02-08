@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake
+package frc.robot.subsystems.superstructure
 
 object IntakeConstants {
     const val coralMotorId = 40
@@ -6,6 +6,7 @@ object IntakeConstants {
     const val coralLaserCANId = 42
     const val algaeLaserCANId = 43
 
+    const val coralIntakeTimeoutSeconds = 0.1
     const val coralScoreTimeoutSeconds = 0.5
     const val algaeScoreTimeoutSeconds = 0.5
 }

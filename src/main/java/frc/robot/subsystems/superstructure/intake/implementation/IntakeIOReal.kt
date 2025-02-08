@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.implementation
+package frc.robot.subsystems.superstructure
 
 import au.grapplerobotics.LaserCan
 import au.grapplerobotics.interfaces.LaserCanInterface
@@ -6,25 +6,42 @@ import au.grapplerobotics.interfaces.LaserCanInterface.Measurement
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
+import com.revrobotics.spark.SparkBase
+import com.revrobotics.spark.SparkLowLevel
+import com.revrobotics.spark.SparkMax
+import com.revrobotics.spark.config.SparkBaseConfig
+import com.revrobotics.spark.config.SparkMaxConfig
 import edu.wpi.first.math.util.Units
 import frc.robot.subsystems.intake.*
 
 class IntakeIOReal : IntakeIO {
     private val coralIntakeMotor = TalonFX(IntakeConstants.coralMotorId)
+    private val algaeMotor = SparkMax(IntakeConstants.algaeMotorId, SparkLowLevel.MotorType.kBrushless)
 
     private val coralLaserCAN = LaserCan(IntakeConstants.coralLaserCANId)
+    private val algaeLaserCAN = LaserCan(IntakeConstants.algaeLaserCANId)
 
 
     init {
         val coralIntakeMotorConfiguration = TalonFXConfiguration()
-        // Make it so that setting the motor positive will both intake coral from substation and score onto reef
         coralIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive
-
         coralIntakeMotor.configurator.apply(coralIntakeMotorConfiguration)
+
+        val algaeMotorConfiguration = SparkMaxConfig()
+        algaeMotorConfiguration.inverted(false)
+        algaeMotor.configure(
+            algaeMotorConfiguration,
+            SparkBase.ResetMode.kResetSafeParameters,
+            SparkBase.PersistMode.kPersistParameters
+        )
 
         coralLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
         //coralLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
         coralLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
+
+        algaeLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
+        //algaeLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
+        algaeLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
     }
 
     override fun setCoralIntakeState(state: CoralIntakeState) {
@@ -32,24 +49,32 @@ class IntakeIOReal : IntakeIO {
     }
 
     override fun setAlgaeIntakeState(state: AlgaeIntakeState) {
-        TODO("Not yet implemented")
+        algaeMotor.set(state.speed)
     }
 
     override fun getCoralState(): CoralState {
         val measurement: Measurement = coralLaserCAN.measurement
         @Suppress("SENSELESS_COMPARISON")
         return if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < Units.inchesToMeters(
-                3.5
+                3.5 // Plates are 4.75in apart
             )
         ) {
             CoralState.Stored
         } else {
             CoralState.Empty
         }
-
     }
 
     override fun getAlgaeState(): AlgaeState {
-        TODO("Not yet implemented")
+        val measurement: Measurement = coralLaserCAN.measurement
+        @Suppress("SENSELESS_COMPARISON")
+        return if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < Units.inchesToMeters(
+                12.5 // Other side is ~17.5in from sensor
+            )
+        ) {
+            AlgaeState.Stored
+        } else {
+            AlgaeState.Empty
+        }
     }
 }

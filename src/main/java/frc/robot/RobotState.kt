@@ -1,7 +1,7 @@
 package frc.robot
 
-import frc.robot.subsystems.intake.AlgaeState
-import frc.robot.subsystems.intake.CoralState
+import frc.robot.subsystems.superstructure.AlgaeState
+import frc.robot.subsystems.superstructure.CoralState
 
 object RobotState {
     // Sure we need these

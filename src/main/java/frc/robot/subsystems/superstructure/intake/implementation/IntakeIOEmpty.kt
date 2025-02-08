@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.implementation
+package frc.robot.subsystems.superstructure
 
 import frc.robot.subsystems.intake.*
 

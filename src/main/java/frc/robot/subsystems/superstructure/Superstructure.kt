@@ -1,10 +1,10 @@
-package frc.robot.subsystems
+package frc.robot.subsystems.superstructure
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.subsystems.elevator.ElevatorSystem
 import frc.robot.subsystems.elevator.implementation.ElevatorIOEmpty
-import frc.robot.subsystems.intake.IntakeSystem
-import frc.robot.subsystems.intake.implementation.IntakeIOEmpty
+import frc.robot.subsystems.superstructure.IntakeSystem
+import frc.robot.subsystems.superstructure.IntakeIOEmpty
 import frc.robot.subsystems.pivot.PivotSystem
 import frc.robot.subsystems.pivot.implementation.PivotIOEmpty
 import frc.robot.subsystems.wrist.WristSystem
