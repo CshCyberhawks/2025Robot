@@ -9,6 +9,12 @@ import frc.robot.subsystems.superstructure.intake.IntakeIO
 class IntakeIOEmpty() : IntakeIO {
     override fun setAlgaeIntakeState(state: AlgaeIntakeState) {}
     override fun setCoralIntakeState(state: CoralIntakeState) {}
-    override fun getCoralState() = CoralState.Empty
     override fun getAlgaeState() = AlgaeState.Empty
+    override fun getCoralIntakeCurrent(): Double {
+        TODO("Not yet implemented")
+    }
+
+    override fun getCoralState(): CoralState {
+        TODO("Not yet implemented")
+    }
 }
