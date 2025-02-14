@@ -7,6 +7,8 @@ interface IntakeIO {
     fun setCoralIntakeState(state: CoralIntakeState)
     fun setAlgaeIntakeState(state: AlgaeIntakeState)
 
-    fun getCoralState(): CoralState
+
+    fun getCoralIntakeCurrent(): Double
     fun getAlgaeState(): AlgaeState
+    fun getCoralState(): CoralState
 }

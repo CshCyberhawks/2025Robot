@@ -10,16 +10,16 @@ import frc.robot.subsystems.superstructure.intake.*
 class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     private fun setCoralIntakeState(state: CoralIntakeState) = run { io.setCoralIntakeState(state) }
     private fun setAlgaeIntakeState(state: AlgaeIntakeState) = run { io.setAlgaeIntakeState(state) }
-
-    private fun awaitCoralState(state: CoralState) = Commands.waitUntil { io.getCoralState() == state }
     private fun awaitAlgaeState(state: AlgaeState) = Commands.waitUntil { io.getAlgaeState() == state }
+    private fun awaitCoralState(state: CoralState)=Commands.waitUntil{io.getCoralState()==state}
 
-    fun coralIntake() = Commands.sequence(
-        setCoralIntakeState(CoralIntakeState.Intaking),
-        awaitCoralState(CoralState.Stored),
-        Commands.waitSeconds(IntakeConstants.coralIntakeTimeoutSeconds),
-        setCoralIntakeState(CoralIntakeState.Idle)
-    )
+
+//    fun coralIntake() = Commands.sequence(
+//        setCoralIntakeState(CoralIntakeState.Intaking),
+//        awaitCoralState(CoralState.Stored),
+//        Commands.waitSeconds(IntakeConstants.coralIntakeTimeoutSeconds),
+//        setCoralIntakeState(CoralIntakeState.Idle)
+//    )
 
     fun coralScore() = Commands.sequence(
         setCoralIntakeState(CoralIntakeState.Scoring),
@@ -41,6 +41,11 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
         setAlgaeIntakeState(AlgaeIntakeState.Idle)
     )
 
+    fun coralIntake() = Commands.sequence(
+        setCoralIntakeState(CoralIntakeState.Intaking),
+        awaitCoralState(CoralState.Stored),
+        setCoralIntakeState(CoralIntakeState.Idle)
+    )
 
     override fun periodic() {
         RobotState.coralState = io.getCoralState()

@@ -15,12 +15,12 @@ enum class AlgaeIntakeState(val speed: Double) {
     Holding(-0.05)
 }
 
-enum class CoralState {
+enum class AlgaeState {
     Empty,
     Stored
 }
 
-enum class AlgaeState {
+enum class CoralState{
     Empty,
     Stored
 }
