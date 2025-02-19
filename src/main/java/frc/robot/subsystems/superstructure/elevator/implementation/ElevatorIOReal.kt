@@ -42,6 +42,10 @@ class ElevatorIOReal : ElevatorIO {
         TODO("Not yet implemented")
     }
 
+    override fun atDesiredPosition(): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun setPosition(positionInches: Double) {
         TODO("Not yet implemented")
     }

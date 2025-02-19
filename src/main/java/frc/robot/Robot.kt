@@ -40,11 +40,7 @@ object Robot : TimedRobot() {
      *the  AutoChooser on the dashboard.
      */
 //    private var autonomousCommand: Command = Commands.runOnce({})
-    private var autonomousCommand: Command = Commands.sequence(
-        RobotContainer.superstructure.pivotSystem.feederAngle(),
-        Commands.waitSeconds(1.0),
-        RobotContainer.superstructure.pivotSystem.stowAngle(),
-    )
+    private var autonomousCommand: Command = RobotContainer.drivetrain.getAutoPath("Testing")
 
 //    val elevatorPosePublisher =
 //        NetworkTableInstance.getDefault().getStructTopic("Elevator Pose", Pose3d.struct).publish();

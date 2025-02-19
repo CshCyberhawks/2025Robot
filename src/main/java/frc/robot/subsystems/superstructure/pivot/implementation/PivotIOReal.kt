@@ -38,6 +38,10 @@ class PivotIOReal : PivotIO {
         TODO("Not yet implemented")
     }
 
+    override fun atDesiredAngle(): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun setAngle(angleDegrees: Double) {
         TODO("Not yet implemented")
     }

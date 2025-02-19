@@ -9,6 +9,8 @@ import frc.robot.subsystems.superstructure.elevator.ElevatorIO
 class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun getPosition(): Double = io.getPosition()
 
+    fun atDesiredPosition() = io.atDesiredPosition()
+
     private fun setPosition(positionInches: Double): Command = runOnce {
         io.setPosition(positionInches)
     }
@@ -20,4 +22,6 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun feederPosition() = setPosition(6.5)
 
     fun stowPosition() = setPosition(0.0)
+
+    fun l4Position() = setPosition(30.0)
 }

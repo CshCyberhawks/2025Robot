@@ -8,8 +8,8 @@ import frc.robot.subsystems.superstructure.intake.*
 // By making a subsystem a Kotlin object, we ensure there is only ever one instance of it.
 // It also reduces the need to have reference variables for the subsystems to be passed around.
 class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
-    private fun setCoralIntakeState(state: CoralIntakeState) = run { io.setCoralIntakeState(state) }
-    private fun setAlgaeIntakeState(state: AlgaeIntakeState) = run { io.setAlgaeIntakeState(state) }
+    private fun setCoralIntakeState(state: CoralIntakeState) = runOnce { io.setCoralIntakeState(state) }
+    private fun setAlgaeIntakeState(state: AlgaeIntakeState) = runOnce { io.setAlgaeIntakeState(state) }
 
     private fun awaitCoralState(state: CoralState) = Commands.waitUntil { io.getCoralState() == state }
     private fun awaitAlgaeState(state: AlgaeState) = Commands.waitUntil { io.getAlgaeState() == state }

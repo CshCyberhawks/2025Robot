@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase
 class PivotSystem(private val io: PivotIO) : SubsystemBase() {
     fun getAngle(): Double = io.getAngle()
 
+    fun atDesiredAngle() = io.atDesiredAngle()
+
     private fun setAngle(angleDegrees: Double): Command = runOnce {
         io.setAngle(angleDegrees)
     }
@@ -15,6 +17,8 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
     fun stowAngle() = setAngle(270.0)
 
     fun feederAngle() = setAngle(320.0)
+
+    fun l4Angle() = setAngle(135.0)
 
     override fun periodic() {
         io.periodic()

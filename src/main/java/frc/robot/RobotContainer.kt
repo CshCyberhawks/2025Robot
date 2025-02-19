@@ -15,6 +15,7 @@ import frc.robot.subsystems.swerve.SwerveIOReal
 import frc.robot.subsystems.swerve.SwerveIOSim
 import frc.robot.util.IO.ManualOperatorInput
 import frc.robot.util.VisionSystem
+import com.pathplanner.lib.auto.NamedCommands
 
 object RobotContainer {
     val leftJoystick: CommandJoystick = CommandJoystick(0)
@@ -40,6 +41,10 @@ object RobotContainer {
 
     init {
         configureBindings()
+
+        NamedCommands.registerCommand("PrepL4", superstructure.prepL4())
+        NamedCommands.registerCommand("ScoreL4", superstructure.scoreL4())
+        NamedCommands.registerCommand("IntakeFeeder", superstructure.intakeFeeder())
     }
 
     private fun configureBindings() {

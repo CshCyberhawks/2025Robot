@@ -7,11 +7,13 @@ import frc.robot.util.Timer
 
 class PivotIOSim : PivotIO {
     val trapProfile = TrapezoidProfile(PivotConstants.trapConstraints)
-    var currentState = TrapezoidProfile.State(0.0, 0.0)
-    var desiredState = TrapezoidProfile.State(0.0, 0.0)
+    var currentState = TrapezoidProfile.State(270.0, 0.0)
+    var desiredState = TrapezoidProfile.State(270.0, 0.0)
     var lastTime = Timer.getFPGATimestamp()
 
     override fun getAngle(): Double = currentState.position
+
+    override fun atDesiredAngle() = currentState.position == desiredState.position
 
     override fun setAngle(angleDegrees: Double) {
         desiredState = TrapezoidProfile.State(angleDegrees, 0.0)

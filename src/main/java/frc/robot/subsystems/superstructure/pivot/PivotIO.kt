@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX
 
 interface PivotIO {
     fun getAngle(): Double
+    fun atDesiredAngle(): Boolean
     fun setAngle(angleDegrees: Double)
     fun periodic()
 }

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.superstructure
 
+import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotConfiguration
 import frc.robot.RobotType
@@ -36,5 +37,40 @@ class Superstructure() : SubsystemBase() {
             RobotType.Simulated -> IntakeIOEmpty()
             RobotType.Empty -> IntakeIOEmpty()
         }
+    )
+
+    private fun awaitAtDesiredPosition() =
+        Commands.waitUntil { elevatorSystem.atDesiredPosition() && pivotSystem.atDesiredAngle() }
+
+    fun stow() = Commands.parallel(
+        elevatorSystem.stowPosition(),
+        pivotSystem.stowAngle()
+    )
+
+    fun intakeFeeder() = Commands.sequence(
+        Commands.parallel(
+            elevatorSystem.feederPosition(),
+            pivotSystem.feederAngle(),
+            intakeSystem.coralIntake()
+        ),
+        Commands.parallel(
+            elevatorSystem.stowPosition(),
+            pivotSystem.stowAngle()
+        )
+    )
+
+    fun prepL4() = Commands.parallel(
+        elevatorSystem.l4Position(),
+        pivotSystem.l4Angle()
+    )
+
+    fun scoreL4() = Commands.sequence(
+        prepL4(),
+        awaitAtDesiredPosition(),
+        intakeSystem.coralScore(),
+        Commands.parallel(
+            elevatorSystem.stowPosition(),
+            pivotSystem.stowAngle()
+        )
     )
 }
