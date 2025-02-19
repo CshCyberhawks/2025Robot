@@ -8,21 +8,21 @@ import frc.robot.subsystems.superstructure.elevator.ElevatorIO
 
 class ElevatorIOReal : ElevatorIO {
 
-    var talonFX = TalonFX(ElevatorConstants.id, ElevatorConstants.canbus)
+    //    var talonFX = TalonFX(ElevatorConstants.id, ElevatorConstants.canbus)
     var talonFXConfigurations = TalonFXConfiguration()
 
     init {
-        talonFXConfigurations.Slot0.kG = ElevatorConstants.kG
-        talonFXConfigurations.Slot0.kS = ElevatorConstants.kS
-        talonFXConfigurations.Slot0.kV = ElevatorConstants.kV
-        talonFXConfigurations.Slot0.kA = ElevatorConstants.kA
-        talonFXConfigurations.Slot0.kP = ElevatorConstants.kP
-        talonFXConfigurations.Slot0.kI = ElevatorConstants.kI
-        talonFXConfigurations.Slot0.kD = ElevatorConstants.kD
-        talonFXConfigurations.MotionMagic.MotionMagicCruiseVelocity = ElevatorConstants.targetVelocity
-        talonFXConfigurations.MotionMagic.MotionMagicAcceleration = ElevatorConstants.targetAcceleration
-        talonFXConfigurations.MotionMagic.MotionMagicJerk = ElevatorConstants.targetJerk
-        talonFX.getConfigurator().apply(talonFXConfigurations)
+//        talonFXConfigurations.Slot0.kG = ElevatorConstants.kG
+//        talonFXConfigurations.Slot0.kS = ElevatorConstants.kS
+//        talonFXConfigurations.Slot0.kV = ElevatorConstants.kV
+//        talonFXConfigurations.Slot0.kA = ElevatorConstants.kA
+//        talonFXConfigurations.Slot0.kP = ElevatorConstants.kP
+//        talonFXConfigurations.Slot0.kI = ElevatorConstants.kI
+//        talonFXConfigurations.Slot0.kD = ElevatorConstants.kD
+//        talonFXConfigurations.MotionMagic.MotionMagicCruiseVelocity = ElevatorConstants.targetVelocity
+//        talonFXConfigurations.MotionMagic.MotionMagicAcceleration = ElevatorConstants.targetAcceleration
+//        talonFXConfigurations.MotionMagic.MotionMagicJerk = ElevatorConstants.targetJerk
+//        talonFX.getConfigurator().apply(talonFXConfigurations)
     }
 
     fun getElevatorEncoder(): Double {
@@ -35,10 +35,18 @@ class ElevatorIOReal : ElevatorIO {
     }
 
     fun setMotorPosition(rotations: Double) {
-        talonFX.setControl(MotionMagicVoltage(rotations))
+//        talonFX.setControl(MotionMagicVoltage(rotations))
     }
 
-    override fun setPosition(positionMeters: Double) {
+    override fun getPosition(): Double {
+        TODO("Not yet implemented")
+    }
+
+    override fun setPosition(positionInches: Double) {
+        TODO("Not yet implemented")
+    }
+
+    override fun periodic() {
         TODO("Not yet implemented")
     }
 }

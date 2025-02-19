@@ -8,21 +8,21 @@ import frc.robot.subsystems.superstructure.pivot.PivotIO
 
 class PivotIOReal : PivotIO {
 
-    var talonFX = TalonFX(PivotConstants.id, PivotConstants.canbus)
+    //    var talonFX = TalonFX(PivotConstants.id, PivotConstants.canbus)
     var talonFXConfigurations = TalonFXConfiguration()
 
     init {
-        talonFXConfigurations.Slot0.kG = PivotConstants.kG
-        talonFXConfigurations.Slot0.kS = PivotConstants.kS
-        talonFXConfigurations.Slot0.kV = PivotConstants.kV
-        talonFXConfigurations.Slot0.kA = PivotConstants.kA
-        talonFXConfigurations.Slot0.kP = PivotConstants.kP
-        talonFXConfigurations.Slot0.kI = PivotConstants.kI
-        talonFXConfigurations.Slot0.kD = PivotConstants.kD
-        talonFXConfigurations.MotionMagic.MotionMagicCruiseVelocity = PivotConstants.targetVelocity
-        talonFXConfigurations.MotionMagic.MotionMagicAcceleration = PivotConstants.targetAcceleration
-        talonFXConfigurations.MotionMagic.MotionMagicJerk = PivotConstants.targetJerk
-        talonFX.getConfigurator().apply(talonFXConfigurations)
+//        talonFXConfigurations.Slot0.kG = PivotConstants.kG
+//        talonFXConfigurations.Slot0.kS = PivotConstants.kS
+//        talonFXConfigurations.Slot0.kV = PivotConstants.kV
+//        talonFXConfigurations.Slot0.kA = PivotConstants.kA
+//        talonFXConfigurations.Slot0.kP = PivotConstants.kP
+//        talonFXConfigurations.Slot0.kI = PivotConstants.kI
+//        talonFXConfigurations.Slot0.kD = PivotConstants.kD
+//        talonFXConfigurations.MotionMagic.MotionMagicCruiseVelocity = PivotConstants.targetVelocity
+//        talonFXConfigurations.MotionMagic.MotionMagicAcceleration = PivotConstants.targetAcceleration
+//        talonFXConfigurations.MotionMagic.MotionMagicJerk = PivotConstants.targetJerk
+//        talonFX.getConfigurator().apply(talonFXConfigurations)
     }
 
     fun getPivotEncoder(): Double {
@@ -31,10 +31,16 @@ class PivotIOReal : PivotIO {
     }
 
     fun setPivotMotor(x: Double) {
-        talonFX.setControl(MotionMagicVoltage(x))
+//        talonFX.setControl(MotionMagicVoltage(x))
+    }
+
+    override fun getAngle(): Double {
+        TODO("Not yet implemented")
     }
 
     override fun setAngle(angleDegrees: Double) {
         TODO("Not yet implemented")
     }
+
+    override fun periodic() {}
 }

@@ -4,9 +4,9 @@ import frc.robot.RobotContainer
 
 object ManualOperatorInput {
     fun configureBindings() {
-        RobotContainer.xbox.x().onTrue(RobotContainer.intakeSystem.coralIntake())
-        RobotContainer.xbox.b().onTrue(RobotContainer.intakeSystem.coralScore())
-        RobotContainer.xbox.a().onTrue(RobotContainer.intakeSystem.algaeIntake())
-        RobotContainer.xbox.y().onTrue(RobotContainer.intakeSystem.algaeScore())
+        RobotContainer.xbox.x().onTrue(RobotContainer.superstructure.intakeSystem.coralIntake())
+        RobotContainer.xbox.b().onTrue(RobotContainer.superstructure.intakeSystem.coralScore())
+        RobotContainer.xbox.a().onTrue(RobotContainer.superstructure.intakeSystem.algaeIntake())
+        RobotContainer.xbox.y().onTrue(RobotContainer.superstructure.intakeSystem.algaeScore())
     }
 }

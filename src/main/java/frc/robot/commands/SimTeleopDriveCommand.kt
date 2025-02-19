@@ -11,12 +11,12 @@ import frc.robot.subsystems.swerve.SwerveConstants
 
 class SimTeleopDriveCommand : Command() {
     init {
-        addRequirements(RobotContainer.drivetrain)
+//        addRequirements(RobotContainer.drivetrain)
     }
 
     override fun initialize() {
-        RobotContainer.xbox.start()
-            .onTrue(runOnce { RobotContainer.drivetrain.seedFieldCentric() })
+//        RobotContainer.xbox.start()
+//            .onTrue(runOnce { RobotContainer.drivetrain.seedFieldCentric() })
 
         super.initialize()
     }

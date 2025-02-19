@@ -1,16 +1,7 @@
 package frc.robot.subsystems.superstructure.pivot
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile
+
 object PivotConstants {
-    val kG = 0.0
-    val kS = 0.0
-    val kV = 0.0
-    val kA = 0.0
-    val kP = 0.0
-    val kI = 0.0
-    val kD = 0.0
-    val targetVelocity = 0.0
-    val targetAcceleration = 0.0
-    val targetJerk = 0.0
-    val id = 0
-    val canbus = ""
+    val trapConstraints = TrapezoidProfile.Constraints(180.0, 200.0) // Guessed values for now
 }

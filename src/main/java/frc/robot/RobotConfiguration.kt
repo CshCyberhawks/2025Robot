@@ -7,7 +7,8 @@ enum class RobotType {
 }
 
 enum class OperatorType {
-    Manual
+    Manual,
+    Testing
 }
 
 object RobotConfiguration {

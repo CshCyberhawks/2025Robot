@@ -7,15 +7,17 @@ import frc.robot.subsystems.superstructure.elevator.ElevatorIO
 // By making a subsystem a Kotlin object, we ensure there is only ever one instance of it.
 // It also reduces the need to have reference variables for the subsystems to be passed around.
 class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
-    fun setPosition(positionMeters: Double): Command = runOnce {
-        io.setPosition(positionMeters)
+    fun getPosition(): Double = io.getPosition()
+
+    private fun setPosition(positionInches: Double): Command = runOnce {
+        io.setPosition(positionInches)
     }
 
     override fun periodic() {
-        // This method will be called once per scheduler run
+        io.periodic()
     }
 
-    override fun simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
-    }
+    fun feederPosition() = setPosition(6.5)
+
+    fun stowPosition() = setPosition(0.0)
 }

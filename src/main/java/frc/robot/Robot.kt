@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer.leftJoystick
 import frc.robot.RobotContainer.vision
+import frc.robot.util.Visualizer
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -38,13 +39,12 @@ object Robot : TimedRobot() {
      * the [autonomousInit] method will set it to the value selected in
      *the  AutoChooser on the dashboard.
      */
-    private var autonomousCommand: Command = Commands.runOnce({})
-    val robotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose", Pose2d.struct).publish();
-    val componentZeroPosePublisher =
-        NetworkTableInstance.getDefault().getStructArrayTopic("Component Poses", Pose3d.struct).publish()
-
-    val componentPosePublisher =
-        NetworkTableInstance.getDefault().getStructArrayTopic("Component Poses", Pose3d.struct).publish()
+//    private var autonomousCommand: Command = Commands.runOnce({})
+    private var autonomousCommand: Command = Commands.sequence(
+        RobotContainer.superstructure.pivotSystem.feederAngle(),
+        Commands.waitSeconds(1.0),
+        RobotContainer.superstructure.pivotSystem.stowAngle(),
+    )
 
 //    val elevatorPosePublisher =
 //        NetworkTableInstance.getDefault().getStructTopic("Elevator Pose", Pose3d.struct).publish();
@@ -81,23 +81,7 @@ object Robot : TimedRobot() {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
 
-        robotPosePublisher.set(RobotContainer.drivetrain.getSwervePose())
-//        elevatorPosePublisher.set(Pose3d())
-//        pivotPosePublisher.set(Pose3d())
-//        wristPosePublisher.set(Pose3d())
-        componentZeroPosePublisher.set(arrayOf(Pose3d(), Pose3d()))
-        componentPosePublisher.set(
-            arrayOf(
-                Pose3d(
-                    Translation3d(0.0, 0.0, 0.0),
-                    Rotation3d()
-                ),
-                Pose3d(
-                    Translation3d(0.0, 0.0, Units.inchesToMeters(39.750000)),
-                    Rotation3d(0.0, Units.degreesToRadians(270.0), 0.0)
-                )
-            )
-        )
+        Visualizer.periodic()
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */
@@ -113,6 +97,7 @@ object Robot : TimedRobot() {
     override fun autonomousInit() {
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
+        autonomousCommand.schedule()
     }
 
     /** This method is called periodically during autonomous.  */
