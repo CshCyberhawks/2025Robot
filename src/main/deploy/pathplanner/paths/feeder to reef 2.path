@@ -3,48 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.022848360655738,
-        "y": 5.301690573770491
+        "x": 1.5464139344262293,
+        "y": 7.315624999999999
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.204592876876846,
-        "y": 5.7739660512816995
+        "x": 1.8202842923121285,
+        "y": 7.061613174221535
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.2587090163934425,
-        "y": 7.111834016393442
+        "x": 3.65625,
+        "y": 5.097899590163934
       },
       "prevControl": {
-        "x": 2.2292199115774327,
-        "y": 6.608485204537793
+        "x": 3.4030720357206903,
+        "y": 5.34785483613768
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.8656537385045956,
-      "rotationDegrees": -55.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "IntakeFeeder",
-      "waypointRelativePos": 0.4430199430199436,
+      "name": "PrepL4",
+      "waypointRelativePos": 0.36324786324786407,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "IntakeFeeder"
+          "name": "PrepL4"
         }
       }
     }
@@ -59,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -55.0
+    "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -55.0
   },
   "useDefaultConstraints": true
 }

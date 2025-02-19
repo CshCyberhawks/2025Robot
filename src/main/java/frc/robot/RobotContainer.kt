@@ -45,6 +45,7 @@ object RobotContainer {
         NamedCommands.registerCommand("PrepL4", superstructure.prepL4())
         NamedCommands.registerCommand("ScoreL4", superstructure.scoreL4())
         NamedCommands.registerCommand("IntakeFeeder", superstructure.intakeFeeder())
+        NamedCommands.registerCommand("Stow", superstructure.stow())
     }
 
     private fun configureBindings() {

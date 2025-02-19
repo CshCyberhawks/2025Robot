@@ -7,6 +7,6 @@ object IntakeConstants {
     const val algaeLaserCANId = 43
 
     const val coralIntakeTimeoutSeconds = 0.1
-    const val coralScoreTimeoutSeconds = 0.5
+    const val coralScoreTimeoutSeconds = 0.2
     const val algaeScoreTimeoutSeconds = 0.5
 }

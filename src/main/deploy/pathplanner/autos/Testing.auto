@@ -21,6 +21,48 @@
           "data": {
             "pathName": "Reef to feeder"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Feeder to reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef to feeder 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "feeder to reef 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
         }
       ]
     }
