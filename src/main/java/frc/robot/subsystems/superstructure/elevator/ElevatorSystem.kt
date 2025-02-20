@@ -2,6 +2,7 @@ package frc.robot.subsystems.superstructure.elevator
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO
 
 // By making a subsystem a Kotlin object, we ensure there is only ever one instance of it.
@@ -10,6 +11,8 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun getPosition(): Double = io.getPosition()
 
     fun atDesiredPosition() = io.atDesiredPosition()
+
+    fun awaitDesiredPosition() = Commands.waitUntil { atDesiredPosition() }
 
     private fun setPosition(positionInches: Double): Command = runOnce {
         io.setPosition(positionInches)

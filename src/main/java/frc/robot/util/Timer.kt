@@ -44,7 +44,7 @@ class Timer {
          */
         fun delay(seconds: Double) {
             try {
-                Thread.sleep((seconds * 1e3) as Long);
+                Thread.sleep((seconds * 1e3).toLong());
             } catch (ex: InterruptedException) {
                 Thread.currentThread().interrupt();
             }

@@ -40,7 +40,7 @@ object Robot : TimedRobot() {
      *the  AutoChooser on the dashboard.
      */
 //    private var autonomousCommand: Command = Commands.runOnce({})
-    private var autonomousCommand: Command = RobotContainer.drivetrain.getAutoPath("Testing")
+    private var autonomousCommand: Command = RobotContainer.superstructure.scoreL4()
 
 //    val elevatorPosePublisher =
 //        NetworkTableInstance.getDefault().getStructTopic("Elevator Pose", Pose3d.struct).publish();

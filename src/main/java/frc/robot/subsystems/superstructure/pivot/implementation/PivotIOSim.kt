@@ -13,6 +13,8 @@ class PivotIOSim : PivotIO {
 
     override fun getAngle(): Double = currentState.position
 
+    override fun getDesiredAngle(): Double = desiredState.position
+
     override fun atDesiredAngle() = currentState.position == desiredState.position
 
     override fun setAngle(angleDegrees: Double) {

@@ -41,7 +41,7 @@ class Superstructure() : SubsystemBase() {
     )
 
     private fun awaitAtDesiredPosition() =
-        Commands.waitUntil { elevatorSystem.atDesiredPosition() && pivotSystem.atDesiredAngle() }
+        Commands.parallel(elevatorSystem.awaitDesiredPosition(), pivotSystem.awaitDesiredAngle())
 
     fun stow() = Commands.parallel(
         elevatorSystem.stowPosition(),
