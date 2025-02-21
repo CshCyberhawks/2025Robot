@@ -3,7 +3,7 @@ package frc.robot.subsystems.superstructure.pivot.implementation
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import frc.robot.subsystems.superstructure.pivot.PivotConstants
 import frc.robot.subsystems.superstructure.pivot.PivotIO
-import frc.robot.util.Timer
+import cshcyberhawks.lib.math.Timer
 
 class PivotIOSim : PivotIO {
     val trapProfile = TrapezoidProfile(PivotConstants.trapConstraints)

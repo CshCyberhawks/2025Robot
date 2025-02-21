@@ -4,7 +4,7 @@ import MiscCalculations
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import frc.robot.subsystems.superstructure.elevator.ElevatorConstants
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO
-import frc.robot.util.Timer
+import cshcyberhawks.lib.math.Timer
 
 class ElevatorIOSim : ElevatorIO {
     val trapProfile = TrapezoidProfile(ElevatorConstants.trapConstraints)
