@@ -14,7 +14,7 @@ class ElevatorIOSim : ElevatorIO {
 
     override fun getPosition(): Double = currentState.position
 
-    override fun atDesiredPosition() = currentState.position == desiredState.position
+    override fun atDesiredPosition() = MiscCalculations.appxEqual(currentState.position, desiredState.position, 0.05)
 
     override fun setPosition(positionInches: Double) {
         desiredState = TrapezoidProfile.State(positionInches, 0.0)

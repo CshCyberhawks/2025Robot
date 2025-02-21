@@ -15,7 +15,7 @@ class PivotIOSim : PivotIO {
 
     override fun getDesiredAngle(): Double = desiredState.position
 
-    override fun atDesiredAngle() = currentState.position == desiredState.position
+    override fun atDesiredAngle() = MiscCalculations.appxEqual(currentState.position, desiredState.position, 0.1)
 
     override fun setAngle(angleDegrees: Double) {
         desiredState = TrapezoidProfile.State(angleDegrees, 0.0)

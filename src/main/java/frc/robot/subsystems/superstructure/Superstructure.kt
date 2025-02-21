@@ -3,6 +3,7 @@ package frc.robot.subsystems.superstructure
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.ConditionalCommand
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotConfiguration
 import frc.robot.RobotType
@@ -46,8 +47,7 @@ object Superstructure : SubsystemBase() {
         Commands.parallel(elevatorSystem.awaitDesiredPosition(), pivotSystem.awaitDesiredAngle())
 
     // Should be able to handle stowing from any position
-    fun stow() = Commands.parallel(
-//        IfCommand({ elevatorSystem.getPosition() > })
+    fun stow() = Commands.sequence(
         elevatorSystem.stowPosition(),
         pivotSystem.stowAngle()
     )
@@ -69,14 +69,24 @@ object Superstructure : SubsystemBase() {
             pivotSystem.l4Angle(),
             elevatorSystem.safeUpPosition()
         ),
-        pivotSystem.awaitSafeTravel(),
-        elevatorSystem.l4Position()
+        pivotSystem.awaitSafeTravelUp(),
+        elevatorSystem.l4Position(),
+//        elevatorSystem.awaitDesiredPosition(),
+//        pivotSystem.awaitDesiredAngle()
     )
 
-    fun scoreL4() = Commands.sequence(
-        prepL4(),
-        awaitAtDesiredPosition(),
-        intakeSystem.coralScore(),
-        stow()
+
+    fun scoreL4() = SuperstructureAction(
+        prepL4(), Commands.runOnce({}), Commands.sequence(
+            Commands.parallel(
+                pivotSystem.travelAngle(),
+                elevatorSystem.safeDownPosition()
+            ),
+            pivotSystem.awaitSafeTravelDown(),
+            Commands.parallel(
+                pivotSystem.stowAngle(),
+                elevatorSystem.stowPosition()
+            )
+        )
     )
 }

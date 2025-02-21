@@ -24,7 +24,7 @@ import frc.robot.RobotContainer.leftJoystick
 import frc.robot.RobotContainer.vision
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.util.Visualizer
-import frc.robot.util.input.RobotAction
+import frc.robot.util.input.DriverAction
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -51,16 +51,18 @@ object Robot : TimedRobot() {
 //    val wristPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Wrist Pose", Pose3d.struct).publish();
 //
 
-    private val actionChooser = SendableChooser<RobotAction>()
+    private val actionChooser = SendableChooser<DriverAction>()
 
     init {
-        for (action in RobotAction.entries) {
+        for (action in DriverAction.entries) {
             actionChooser.addOption(action.name, action)
         }
 
         SmartDashboard.putData(actionChooser)
 
         SmartDashboard.putBoolean("Action", false)
+        SmartDashboard.putBoolean("Confirm", false)
+        SmartDashboard.putBoolean("Cancel", false)
     }
 
     /**
@@ -128,6 +130,17 @@ object Robot : TimedRobot() {
             println("Scheduled action")
 
             SmartDashboard.putBoolean("Action", false)
+        }
+
+        if (SmartDashboard.getBoolean("Confirm", false)) {
+            RobotState.actionConfirmed = true
+            SmartDashboard.putBoolean("Confirm", false)
+        }
+
+
+        if (SmartDashboard.getBoolean("Cancel", false)) {
+            RobotState.actionCancelled = true
+            SmartDashboard.putBoolean("Cancel", false)
         }
     }
 

@@ -30,5 +30,8 @@ class IfCommand(
         branchSet = true
     }
 
-    override fun isFinished() = branchSet && branch.isFinished
+    override fun isFinished(): Boolean {
+        println("If finished: $branchSet && ${branch.isFinished}")
+        return branchSet && branch.isFinished
+    }
 }

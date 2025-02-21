@@ -8,4 +8,7 @@ object RobotState {
     // I don't think we want to use them in the superstructure, but it might make sense to reference them in swerve or auto
     var coralState = CoralState.Empty
     var algaeState = AlgaeState.Empty
+
+    var actionCancelled = false
+    var actionConfirmed = false
 }
