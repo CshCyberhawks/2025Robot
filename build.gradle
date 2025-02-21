@@ -61,7 +61,7 @@ repositories {
 }
 
 // configurations.configureEach {
-    // exclude group: "edu.wpi.first.wpilibj"
+// exclude group: "edu.wpi.first.wpilibj"
 // }
 
 // tasks.register('checkAkitInstall', JavaExec) {

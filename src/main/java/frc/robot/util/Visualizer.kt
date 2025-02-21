@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation3d
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.networktables.NetworkTableInstance
 import frc.robot.RobotContainer
+import frc.robot.subsystems.superstructure.Superstructure
 
 object Visualizer {
     val robotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose", Pose2d.struct).publish();
@@ -23,7 +24,7 @@ object Visualizer {
                     Translation3d(
                         0.0,
                         0.0,
-                        Units.inchesToMeters(RobotContainer.superstructure.elevatorSystem.getPosition())
+                        Units.inchesToMeters(Superstructure.elevatorSystem.getPosition())
                     ),
                     Rotation3d()
                 ),
@@ -31,9 +32,9 @@ object Visualizer {
                     Translation3d(
                         0.0,
                         0.0,
-                        Units.inchesToMeters(39.750000 + RobotContainer.superstructure.elevatorSystem.getPosition())
+                        Units.inchesToMeters(39.750000 + Superstructure.elevatorSystem.getPosition())
                     ),
-                    Rotation3d(0.0, Units.degreesToRadians(RobotContainer.superstructure.pivotSystem.getAngle()), 0.0)
+                    Rotation3d(0.0, Units.degreesToRadians(Superstructure.pivotSystem.getAngle()), 0.0)
                 )
             )
         )

@@ -28,7 +28,7 @@ class SwerveIOSim() : SwerveIOBase() {
     private var robotPose =
         FieldConstants.Reef.centerFaces[0]!!.plus(
             Transform2d(
-                Translation2d(Units.inchesToMeters(33.5 / 2 + 2.5), 0.0),
+                Translation2d(Units.inchesToMeters(33.5 / 2 + 10.0), 0.0),
                 Rotation2d.fromDegrees(180.0)
             )
         )

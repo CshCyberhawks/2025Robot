@@ -2,6 +2,7 @@ package frc.robot.subsystems.superstructure
 
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.ConditionalCommand
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotConfiguration
 import frc.robot.RobotType
@@ -16,8 +17,9 @@ import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOReal
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOEmpty
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOReal
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOSim
+import frc.robot.util.commandsystem.IfCommand
 
-class Superstructure() : SubsystemBase() {
+object Superstructure : SubsystemBase() {
     val pivotSystem = PivotSystem(
         when (RobotConfiguration.robotType) {
             RobotType.Real -> PivotIOReal()
@@ -43,7 +45,9 @@ class Superstructure() : SubsystemBase() {
     private fun awaitAtDesiredPosition() =
         Commands.parallel(elevatorSystem.awaitDesiredPosition(), pivotSystem.awaitDesiredAngle())
 
+    // Should be able to handle stowing from any position
     fun stow() = Commands.parallel(
+//        IfCommand({ elevatorSystem.getPosition() > })
         elevatorSystem.stowPosition(),
         pivotSystem.stowAngle()
     )
@@ -60,18 +64,19 @@ class Superstructure() : SubsystemBase() {
         )
     )
 
-    fun prepL4() = Commands.parallel(
-        elevatorSystem.l4Position(),
-        pivotSystem.l4Angle()
+    fun prepL4() = Commands.sequence(
+        Commands.parallel(
+            pivotSystem.l4Angle(),
+            elevatorSystem.safeUpPosition()
+        ),
+        pivotSystem.awaitSafeTravel(),
+        elevatorSystem.l4Position()
     )
 
     fun scoreL4() = Commands.sequence(
         prepL4(),
         awaitAtDesiredPosition(),
         intakeSystem.coralScore(),
-        Commands.parallel(
-            elevatorSystem.stowPosition(),
-            pivotSystem.stowAngle()
-        )
+        stow()
     )
 }

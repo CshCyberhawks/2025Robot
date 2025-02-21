@@ -1,12 +1,13 @@
 package frc.robot.util.IO
 
 import frc.robot.RobotContainer
+import frc.robot.subsystems.superstructure.Superstructure
 
 object ManualOperatorInput {
     fun configureBindings() {
-        RobotContainer.xbox.x().onTrue(RobotContainer.superstructure.intakeSystem.coralIntake())
-        RobotContainer.xbox.b().onTrue(RobotContainer.superstructure.intakeSystem.coralScore())
-        RobotContainer.xbox.a().onTrue(RobotContainer.superstructure.intakeSystem.algaeIntake())
-        RobotContainer.xbox.y().onTrue(RobotContainer.superstructure.intakeSystem.algaeScore())
+        RobotContainer.xbox.x().onTrue(Superstructure.intakeSystem.coralIntake())
+        RobotContainer.xbox.b().onTrue(Superstructure.intakeSystem.coralScore())
+        RobotContainer.xbox.a().onTrue(Superstructure.intakeSystem.algaeIntake())
+        RobotContainer.xbox.y().onTrue(Superstructure.intakeSystem.algaeScore())
     }
 }

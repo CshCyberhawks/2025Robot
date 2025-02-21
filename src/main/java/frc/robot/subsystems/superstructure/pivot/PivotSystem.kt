@@ -26,6 +26,8 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
             }
         }
 
+    fun awaitSafeTravel() = Commands.waitUntil { io.getAngle() < 245.0 }
+
     fun stowAngle() = setAngle(290.0)
 
     fun feederAngle() = setAngle(320.0)

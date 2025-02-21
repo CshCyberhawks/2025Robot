@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
@@ -21,7 +22,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer.leftJoystick
 import frc.robot.RobotContainer.vision
+import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.util.Visualizer
+import frc.robot.util.input.RobotAction
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -40,7 +43,7 @@ object Robot : TimedRobot() {
      *the  AutoChooser on the dashboard.
      */
 //    private var autonomousCommand: Command = Commands.runOnce({})
-    private var autonomousCommand: Command = RobotContainer.superstructure.scoreL4()
+    private var autonomousCommand: Command = Superstructure.scoreL4()
 
 //    val elevatorPosePublisher =
 //        NetworkTableInstance.getDefault().getStructTopic("Elevator Pose", Pose3d.struct).publish();
@@ -48,13 +51,23 @@ object Robot : TimedRobot() {
 //    val wristPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Wrist Pose", Pose3d.struct).publish();
 //
 
+    private val actionChooser = SendableChooser<RobotAction>()
+
+    init {
+        for (action in RobotAction.entries) {
+            actionChooser.addOption(action.name, action)
+        }
+
+        SmartDashboard.putData(actionChooser)
+
+        SmartDashboard.putBoolean("Action", false)
+    }
+
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
      */
-    override
-
-    fun robotInit() {
+    override fun robotInit() {
         // Report the use of the Kotlin Language for "FRC Usage Report" statistics
         HAL.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Kotlin, 0, WPILibVersion.Version)
         // Access the RobotContainer object so that it is initialized. This will perform all our
@@ -109,6 +122,13 @@ object Robot : TimedRobot() {
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
 //        vision.updateOdometry(1, false)
+
+        if (SmartDashboard.getBoolean("Action", false)) {
+            actionChooser.selected.cmd.schedule()
+            println("Scheduled action")
+
+            SmartDashboard.putBoolean("Action", false)
+        }
     }
 
     override fun testInit() {
