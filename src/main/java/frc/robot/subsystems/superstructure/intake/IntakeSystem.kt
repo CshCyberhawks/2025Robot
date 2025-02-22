@@ -12,34 +12,40 @@ import frc.robot.subsystems.superstructure.intake.*
 // By making a subsystem a Kotlin object, we ensure there is only ever one instance of it.
 // It also reduces the need to have reference variables for the subsystems to be passed around.
 class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
-    private fun setCoralIntakeState(state: CoralIntakeState) = Request.withAction { io.setCoralIntakeState(state) }
-    private fun setAlgaeIntakeState(state: AlgaeIntakeState) = Request.withAction { io.setAlgaeIntakeState(state) }
+    private fun setIntakeState(state: IntakeState) = Request.withAction { io.setIntakeState(state) }
+    private fun watchForIntake() = Request.withAction { io.watchForIntake() }
 
-    private fun coralState(state: CoralState) = Prerequisite.withCondition { io.getCoralState() == state }
-    private fun algaeState(state: AlgaeState) = Prerequisite.withCondition { io.getAlgaeState() == state }
+    private fun setGamePieceState(state: GamePieceState) = Request.withAction { RobotState.gamePieceState = state }
 
-    fun coralIntake() = setCoralIntakeState(CoralIntakeState.Intaking)
-    fun coralIdle() = setCoralIntakeState(CoralIntakeState.Idle)
-
-    fun coralScore() = SequentialRequest(
-        setCoralIntakeState(CoralIntakeState.Scoring),
-        WaitRequest(IntakeConstants.coralScoreTimeoutSeconds).withPrerequisite(coralState(CoralState.Empty)),
-        setCoralIntakeState(CoralIntakeState.Idle)
+    fun coralIntake() = SequentialRequest(
+        setIntakeState(IntakeState.CoralIntake),
+        WaitRequest(IntakeConstants.coralIntakeTimeoutSeconds),
+        watchForIntake()
     )
 
-    fun algaeIntake() = setAlgaeIntakeState(AlgaeIntakeState.Intaking)
-    fun algaeIdle() = setAlgaeIntakeState(AlgaeIntakeState.Idle)
+    fun coralScore() = SequentialRequest(
+        setIntakeState(IntakeState.CoralScore),
+        WaitRequest(IntakeConstants.coralScoreTimeoutSeconds),
+        setGamePieceState(GamePieceState.Empty),
+        setIntakeState(IntakeState.Idle)
+    )
+
+    fun algaeIntake() = SequentialRequest(
+        setIntakeState(IntakeState.AlgaeIntake),
+        WaitRequest(IntakeConstants.algaeIntakeTimeoutSeconds),
+        watchForIntake()
+    )
 
     fun algaeScore() = SequentialRequest(
-        setAlgaeIntakeState(AlgaeIntakeState.Scoring),
-        WaitRequest(IntakeConstants.algaeScoreTimeoutSeconds).withPrerequisite(algaeState(AlgaeState.Empty)),
-        setAlgaeIntakeState(AlgaeIntakeState.Idle)
+        setIntakeState(IntakeState.AlgaeIntake),
+        WaitRequest(IntakeConstants.algaeScoreTimeoutSeconds),
+        setGamePieceState(GamePieceState.Empty),
+        setIntakeState(IntakeState.Idle)
     )
 
 
     override fun periodic() {
-        RobotState.coralState = io.getCoralState()
-        RobotState.algaeState = io.getAlgaeState()
+        io.periodic()
     }
 
     override fun simulationPeriodic() {}

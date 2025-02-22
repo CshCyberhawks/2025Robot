@@ -14,8 +14,7 @@ import frc.robot.subsystems.superstructure.elevator.ElevatorSystem
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOEmpty
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOReal
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOSim
-import frc.robot.subsystems.superstructure.intake.AlgaeState
-import frc.robot.subsystems.superstructure.intake.CoralState
+import frc.robot.subsystems.superstructure.intake.GamePieceState
 import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOEmpty
 import frc.robot.subsystems.superstructure.pivot.PivotSystem
 import frc.robot.subsystems.superstructure.intake.IntakeSystem
@@ -131,10 +130,9 @@ object Superstructure : SubsystemBase() {
             ),
             EmptyRequest(),
             ParallelRequest(
-                intakeSystem.coralIdle(),
                 stowRequest()
             ),
-            confirmed = { RobotState.coralState == CoralState.Stored }
+            confirmed = { RobotState.gamePieceState == GamePieceState.Coral }
         )
     )
 
@@ -181,11 +179,10 @@ object Superstructure : SubsystemBase() {
             ),
             EmptyRequest(),
             ParallelRequest(
-                intakeSystem.algaeIdle(),
                 pivotSystem.stowAngle(),
                 elevatorSystem.stowPosition()
             ),
-            { RobotState.algaeState == AlgaeState.Stored },
+            { RobotState.gamePieceState == GamePieceState.Algae },
         )
     )
 
@@ -200,11 +197,8 @@ object Superstructure : SubsystemBase() {
                 intakeSystem.algaeIntake()
             ),
             EmptyRequest(),
-            ParallelRequest(
-                safeRetractRequest(),
-                intakeSystem.algaeIdle()
-            ),
-            { RobotState.algaeState == AlgaeState.Stored }
+            safeRetractRequest(),
+            { RobotState.gamePieceState == GamePieceState.Algae }
         )
     )
 

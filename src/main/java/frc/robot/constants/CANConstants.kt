@@ -13,7 +13,9 @@ object CANConstants {
         const val encoderId = 0 // Roborio DIO not CAN
     }
 
-    // Intake
+    object Intake {
+        const val motorId = 40
+    }
 
     // Climb
 
