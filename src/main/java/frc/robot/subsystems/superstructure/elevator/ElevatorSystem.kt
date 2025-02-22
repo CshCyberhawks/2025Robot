@@ -1,21 +1,52 @@
 package frc.robot.subsystems.superstructure.elevator
 
+import cshcyberhawks.lib.requests.AwaitRequest
+import cshcyberhawks.lib.requests.Prerequisite
+import cshcyberhawks.lib.requests.Request
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO
 
 // By making a subsystem a Kotlin object, we ensure there is only ever one instance of it.
 // It also reduces the need to have reference variables for the subsystems to be passed around.
 class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
-    fun setPosition(positionMeters: Double): Command = runOnce {
-        io.setPosition(positionMeters)
+    private val safeUpPosition = 9.0
+    private val safeDownPosition = 4.0
+
+    fun getPosition(): Double = io.getPosition()
+
+    fun aboveSafeUpPosition() = getPosition() > safeUpPosition
+    fun aboveSafeDownPosition() = getPosition() > safeDownPosition
+
+    fun atDesiredPosition() = io.atDesiredPosition()
+
+    fun awaitDesiredPosition() = AwaitRequest { atDesiredPosition() }
+
+    fun belowSafeUpPosition() = Prerequisite.withCondition { !aboveSafeUpPosition() }
+
+    private fun setPosition(positionInches: Double) = Request.withAction {
+        io.setPosition(positionInches)
     }
 
     override fun periodic() {
-        // This method will be called once per scheduler run
+        io.periodic()
+
+        SmartDashboard.putNumber("Elevator Position", getPosition())
     }
 
-    override fun simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
-    }
+    fun feederPosition() = setPosition(6.5)
+
+    fun stowPosition() = setPosition(0.0)
+
+    fun safeUpPosition() = setPosition(safeUpPosition)
+    fun safeDownPosition() = setPosition(safeDownPosition)
+
+    fun l3Position() = setPosition(2.5)
+    fun l4Position() = setPosition(30.0)
+
+    fun algaeRemoveLowPosition() = setPosition(1.0)
+    fun algaeRemoveHighPosition() = setPosition(17.5)
+    fun bargePosition() = setPosition(30.0)
 }
