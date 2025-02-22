@@ -144,6 +144,7 @@ object Robot : TimedRobot() {
 
 
         if (SmartDashboard.getBoolean("Cancel", false)) {
+            println("Cancelled")
             RobotState.actionCancelled = true
             SmartDashboard.putBoolean("Cancel", false)
         }

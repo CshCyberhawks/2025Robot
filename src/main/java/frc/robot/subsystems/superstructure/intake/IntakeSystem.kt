@@ -18,11 +18,8 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     private fun coralState(state: CoralState) = Prerequisite.withCondition { io.getCoralState() == state }
     private fun algaeState(state: AlgaeState) = Prerequisite.withCondition { io.getAlgaeState() == state }
 
-    fun coralIntake() = SequentialRequest(
-        setCoralIntakeState(CoralIntakeState.Intaking),
-        WaitRequest(IntakeConstants.coralIntakeTimeoutSeconds).withPrerequisite(coralState(CoralState.Stored)),
-        setCoralIntakeState(CoralIntakeState.Idle)
-    )
+    fun coralIntake() = setCoralIntakeState(CoralIntakeState.Intaking)
+    fun coralIdle() = setCoralIntakeState(CoralIntakeState.Idle)
 
     fun coralScore() = SequentialRequest(
         setCoralIntakeState(CoralIntakeState.Scoring),
@@ -30,10 +27,8 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
         setCoralIntakeState(CoralIntakeState.Idle)
     )
 
-    fun algaeIntake() = SequentialRequest(
-        setAlgaeIntakeState(AlgaeIntakeState.Intaking),
-        setAlgaeIntakeState(AlgaeIntakeState.Holding).withPrerequisite(algaeState(AlgaeState.Stored))
-    )
+    fun algaeIntake() = setAlgaeIntakeState(AlgaeIntakeState.Intaking)
+    fun algaeIdle() = setAlgaeIntakeState(AlgaeIntakeState.Idle)
 
     fun algaeScore() = SequentialRequest(
         setAlgaeIntakeState(AlgaeIntakeState.Scoring),

@@ -2,6 +2,7 @@ package frc.robot.subsystems.superstructure.elevator
 
 import MiscCalculations
 import cshcyberhawks.lib.requests.AwaitRequest
+import cshcyberhawks.lib.requests.Prerequisite
 import cshcyberhawks.lib.requests.Request
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -24,7 +25,7 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
 
     fun awaitDesiredPosition() = AwaitRequest { atDesiredPosition() }
 
-    fun awaitBelowSafeUpPosition() = Commands.waitUntil { !aboveSafeUpPosition() }
+    fun belowSafeUpPosition() = Prerequisite.withCondition { !aboveSafeUpPosition() }
 
     private fun setPosition(positionInches: Double) = Request.withAction {
         io.setPosition(positionInches)
@@ -43,5 +44,10 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun safeUpPosition() = setPosition(safeUpPosition)
     fun safeDownPosition() = setPosition(safeDownPosition)
 
+    fun l3Position() = setPosition(2.5)
     fun l4Position() = setPosition(30.0)
+
+    fun algaeRemoveLowPosition() = setPosition(1.0)
+    fun algaeRemoveHighPosition() = setPosition(17.5)
+    fun bargePosition() = setPosition(30.0)
 }

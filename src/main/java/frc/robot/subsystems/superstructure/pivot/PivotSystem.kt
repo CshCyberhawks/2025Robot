@@ -37,9 +37,14 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
 
     fun travelAngle() = setAngle(230.0)
 
-    fun feederAngle() = setAngle(320.0)
+    fun feederAngle() = setAngle(310.0)
 
+    fun l2Angle() = setAngle(160.0)
+    fun l3Angle() = setAngle(125.0)
     fun l4Angle() = setAngle(135.0)
+
+    fun algaeRemoveAngle() = setAngle(245.0)
+    fun bargeAngle() = setAngle(130.0)
 
     override fun periodic() {
         io.periodic()

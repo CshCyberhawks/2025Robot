@@ -84,17 +84,15 @@ object SuperstructureAction {
         confirmed: () -> Boolean = { RobotState.actionConfirmed },
         cancelled: () -> Boolean = { RobotState.actionCancelled }
     ): Request = SequentialRequest(
+        Request.withAction {
+            RobotState.actionCancelled = false
+            RobotState.actionConfirmed = false
+        },
         prepAction,
-        AwaitRequest { confirmed() || cancelled() },
-        ParallelRequest(
-            IfRequest(confirmed, confirmAction),
-            Request.withAction {
-                // Relying on that fact the IfRequest determines branching on execute even if blocked by Prereqs here
-                // Makes it decide slightly before robot the action state is reset even if it can't act
-                RobotState.actionCancelled = false
-                RobotState.actionConfirmed = false
-            }
-        ),
+        AwaitRequest {
+            confirmed() || cancelled()
+        },
+        IfRequest(confirmed, confirmAction),
         returnAction
     )
 }
