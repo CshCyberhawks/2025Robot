@@ -5,12 +5,20 @@ class ParallelRequest(vararg requests: Request) : Request() {
     private val inProgressRequests: MutableList<Request> = mutableListOf()
 
     private fun startRequests() {
+        val toRemove: MutableList<Request> = mutableListOf()
+
         for (request in idleRequests) {
             if (request.allowed()) {
                 request.execute()
                 inProgressRequests.add(request)
-                idleRequests.remove(request)
+
+                // Java is stupid and doesn't let you remove from a list while iterating over it
+                toRemove.add(request)
             }
+        }
+
+        for (request in toRemove) {
+            idleRequests.remove(request)
         }
     }
 
