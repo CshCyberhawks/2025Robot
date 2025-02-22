@@ -7,9 +7,14 @@ import cshcyberhawks.lib.math.Timer
 import frc.robot.math.MiscCalculations
 
 class PivotIOSim : PivotIO {
-    val trapProfile = TrapezoidProfile(PivotConstants.trapConstraints)
-    var currentState = TrapezoidProfile.State(270.0, 0.0)
-    var desiredState = TrapezoidProfile.State(270.0, 0.0)
+    val trapProfile = TrapezoidProfile(
+        TrapezoidProfile.Constraints(
+            PivotConstants.velocityDegrees,
+            PivotConstants.accelerationDegrees
+        )
+    )
+    var currentState = TrapezoidProfile.State(290.0, 0.0)
+    var desiredState = TrapezoidProfile.State(290.0, 0.0)
     var lastTime = Timer.getFPGATimestamp()
 
     override fun getAngle(): Double = currentState.position
