@@ -1,6 +1,7 @@
 package frc.robot.subsystems.superstructure.elevator
 
 import MiscCalculations
+import cshcyberhawks.lib.requests.AwaitRequest
 import cshcyberhawks.lib.requests.Request
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -21,7 +22,7 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
 
     fun atDesiredPosition() = io.atDesiredPosition()
 
-    fun awaitDesiredPosition() = Commands.waitUntil { atDesiredPosition() }
+    fun awaitDesiredPosition() = AwaitRequest { atDesiredPosition() }
 
     fun awaitBelowSafeUpPosition() = Commands.waitUntil { !aboveSafeUpPosition() }
 

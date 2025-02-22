@@ -1,8 +1,7 @@
 package frc.robot.subsystems.superstructure
 
-import cshcyberhawks.lib.requests.CompleteRequest
-import cshcyberhawks.lib.requests.EmptyRequest
-import cshcyberhawks.lib.requests.Request
+import cshcyberhawks.lib.requests.*
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.ConditionalCommand
@@ -94,52 +93,62 @@ object Superstructure : SubsystemBase() {
         } else if (activeRequest.get().isFinished()) {
             activeRequest = Optional.empty();
         }
+
+        SmartDashboard.putBoolean("Has new request", hasNewRequest)
+        SmartDashboard.putBoolean("All Requests Complete", allRequestsComplete)
     }
 
     private fun awaitAtDesiredPosition() =
-        Commands.parallel(elevatorSystem.awaitDesiredPosition(), pivotSystem.awaitDesiredAngle())
+        ParallelRequest(elevatorSystem.awaitDesiredPosition(), pivotSystem.awaitDesiredAngle())
 
     // Should be able to handle stowing from any position
-    fun stow() = Commands.sequence(
-        elevatorSystem.stowPosition(),
-        pivotSystem.stowAngle()
-    )
-
-    fun intakeFeeder() = Commands.sequence(
-        Commands.parallel(
-            elevatorSystem.feederPosition(),
-            pivotSystem.feederAngle(),
-            intakeSystem.coralIntake()
-        ),
-        Commands.parallel(
+    fun stow() = request(
+        ParallelRequest(
             elevatorSystem.stowPosition(),
             pivotSystem.stowAngle()
         )
     )
 
-    fun prepL4() = Commands.sequence(
-        Commands.parallel(
-            pivotSystem.l4Angle(),
-            elevatorSystem.safeUpPosition()
-        ),
-        pivotSystem.awaitSafeTravelUp(),
-        elevatorSystem.l4Position(),
-//        elevatorSystem.awaitDesiredPosition(),
-//        pivotSystem.awaitDesiredAngle()
-    )
-
-
-    fun scoreL4() = SuperstructureAction(
-        prepL4(), Commands.runOnce({}), Commands.sequence(
-            Commands.parallel(
-                pivotSystem.travelAngle(),
-                elevatorSystem.safeDownPosition()
+    fun intakeFeeder() = request(
+        SequentialRequest(
+            ParallelRequest(
+                elevatorSystem.feederPosition(),
+                pivotSystem.feederAngle(),
+                intakeSystem.coralIntake()
             ),
-            pivotSystem.awaitSafeTravelDown(),
-            Commands.parallel(
-                pivotSystem.stowAngle(),
-                elevatorSystem.stowPosition()
+            ParallelRequest(
+                elevatorSystem.stowPosition(),
+                pivotSystem.stowAngle()
             )
         )
     )
+
+    fun prepL4() = request(
+        SequentialRequest(
+            ParallelRequest(
+                pivotSystem.l4Angle(),
+                elevatorSystem.safeUpPosition()
+            ),
+            elevatorSystem.l4Position().withPrerequisite(pivotSystem.safeTravelUp()),
+            //        elevatorSystem.awaitDesiredPosition(),
+            //        pivotSystem.awaitDesiredAngle()
+        )
+    )
+
+
+//    fun scoreL4() = SuperstructureAction(
+//        prepL4(), Commands.runOnce({}), Commands.sequence(
+//            Commands.parallel(
+//                pivotSystem.travelAngle(),
+//                elevatorSystem.safeDownPosition()
+//            ),
+//            pivotSystem.awaitSafeTravelDown(),
+//            Commands.parallel(
+//                pivotSystem.stowAngle(),
+//                elevatorSystem.stowPosition()
+//            )
+//        )
+//    )
+
+    fun scoreL4() = request(EmptyRequest())
 }

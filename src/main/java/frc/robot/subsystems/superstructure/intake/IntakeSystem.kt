@@ -1,5 +1,9 @@
 package frc.robot.subsystems.superstructure.intake
 
+import cshcyberhawks.lib.requests.Prerequisite
+import cshcyberhawks.lib.requests.Request
+import cshcyberhawks.lib.requests.SequentialRequest
+import cshcyberhawks.lib.requests.WaitRequest
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotState
@@ -8,36 +12,32 @@ import frc.robot.subsystems.superstructure.intake.*
 // By making a subsystem a Kotlin object, we ensure there is only ever one instance of it.
 // It also reduces the need to have reference variables for the subsystems to be passed around.
 class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
-    private fun setCoralIntakeState(state: CoralIntakeState) = runOnce { io.setCoralIntakeState(state) }
-    private fun setAlgaeIntakeState(state: AlgaeIntakeState) = runOnce { io.setAlgaeIntakeState(state) }
+    private fun setCoralIntakeState(state: CoralIntakeState) = Request.withAction { io.setCoralIntakeState(state) }
+    private fun setAlgaeIntakeState(state: AlgaeIntakeState) = Request.withAction { io.setAlgaeIntakeState(state) }
 
-    private fun awaitCoralState(state: CoralState) = Commands.waitUntil { io.getCoralState() == state }
-    private fun awaitAlgaeState(state: AlgaeState) = Commands.waitUntil { io.getAlgaeState() == state }
+    private fun coralState(state: CoralState) = Prerequisite.withCondition { io.getCoralState() == state }
+    private fun algaeState(state: AlgaeState) = Prerequisite.withCondition { io.getAlgaeState() == state }
 
-    fun coralIntake() = Commands.sequence(
+    fun coralIntake() = SequentialRequest(
         setCoralIntakeState(CoralIntakeState.Intaking),
-        awaitCoralState(CoralState.Stored),
-        Commands.waitSeconds(IntakeConstants.coralIntakeTimeoutSeconds),
+        WaitRequest(IntakeConstants.coralIntakeTimeoutSeconds).withPrerequisite(coralState(CoralState.Stored)),
         setCoralIntakeState(CoralIntakeState.Idle)
     )
 
-    fun coralScore() = Commands.sequence(
+    fun coralScore() = SequentialRequest(
         setCoralIntakeState(CoralIntakeState.Scoring),
-        awaitCoralState(CoralState.Empty),
-        Commands.waitSeconds(IntakeConstants.coralScoreTimeoutSeconds),
+        WaitRequest(IntakeConstants.coralScoreTimeoutSeconds).withPrerequisite(coralState(CoralState.Empty)),
         setCoralIntakeState(CoralIntakeState.Idle)
     )
 
-    fun algaeIntake() = Commands.sequence(
+    fun algaeIntake() = SequentialRequest(
         setAlgaeIntakeState(AlgaeIntakeState.Intaking),
-        awaitAlgaeState(AlgaeState.Stored),
-        setAlgaeIntakeState(AlgaeIntakeState.Holding)
+        setAlgaeIntakeState(AlgaeIntakeState.Holding).withPrerequisite(algaeState(AlgaeState.Stored))
     )
 
-    fun algaeScore() = Commands.sequence(
+    fun algaeScore() = SequentialRequest(
         setAlgaeIntakeState(AlgaeIntakeState.Scoring),
-        awaitAlgaeState(AlgaeState.Empty),
-        Commands.waitSeconds(IntakeConstants.algaeScoreTimeoutSeconds),
+        WaitRequest(IntakeConstants.algaeScoreTimeoutSeconds).withPrerequisite(algaeState(AlgaeState.Empty)),
         setAlgaeIntakeState(AlgaeIntakeState.Idle)
     )
 

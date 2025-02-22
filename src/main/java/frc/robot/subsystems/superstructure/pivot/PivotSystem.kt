@@ -1,5 +1,7 @@
 package frc.robot.subsystems.superstructure.pivot
 
+import cshcyberhawks.lib.requests.AwaitRequest
+import cshcyberhawks.lib.requests.Prerequisite
 import cshcyberhawks.lib.requests.Request
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
@@ -17,7 +19,7 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
         io.setAngle(angleDegrees)
     }
 
-    fun awaitDesiredAngle() = Commands.waitUntil { atDesiredAngle() }
+    fun awaitDesiredAngle() = AwaitRequest { atDesiredAngle() }
 
     fun awaitAnglePast(angle: Double) =
         Commands.waitUntil {
@@ -28,7 +30,7 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
             }
         }
 
-    fun awaitSafeTravelUp() = Commands.waitUntil { getAngle() < 245.0 }
+    fun safeTravelUp() = Prerequisite.withCondition { getAngle() < 245.0 }
     fun awaitSafeTravelDown() = Commands.waitUntil { getAngle() > 180.0 }
 
     fun stowAngle() = setAngle(290.0)
@@ -43,7 +45,5 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
         io.periodic()
 
         SmartDashboard.putNumber("Pivot Angle", getAngle())
-
-        println(atDesiredAngle())
     }
 }
