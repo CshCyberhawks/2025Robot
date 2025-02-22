@@ -1,56 +1,65 @@
 package frc.robot.subsystems.superstructure.elevator.implementation
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration
+import com.ctre.phoenix6.controls.Follower
+import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC
 import com.ctre.phoenix6.hardware.TalonFX
-import com.ctre.phoenix6.controls.MotionMagicVoltage
+import com.ctre.phoenix6.signals.InvertedValue
+import frc.robot.constants.CANConstants
+import frc.robot.math.MiscCalculations
 import frc.robot.subsystems.superstructure.elevator.ElevatorConstants
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO
 
-class ElevatorIOReal : ElevatorIO {
+class ElevatorIOReal() : ElevatorIO {
+    private val rightMotor = TalonFX(CANConstants.Elevator.rightMotorId)
+    private val leftMotor = TalonFX(CANConstants.Elevator.leftMotorId)
 
-    //    var talonFX = TalonFX(ElevatorConstants.id, ElevatorConstants.canbus)
-    var talonFXConfigurations = TalonFXConfiguration()
+    private var rightMotorConfiguration = TalonFXConfiguration()
+
+    private val motionMagic = MotionMagicTorqueCurrentFOC(0.0)
+
+    private var desiredPosition = 0.0
 
     init {
-//        talonFXConfigurations.Slot0.kG = ElevatorConstants.kG
-//        talonFXConfigurations.Slot0.kS = ElevatorConstants.kS
-//        talonFXConfigurations.Slot0.kV = ElevatorConstants.kV
-//        talonFXConfigurations.Slot0.kA = ElevatorConstants.kA
-//        talonFXConfigurations.Slot0.kP = ElevatorConstants.kP
-//        talonFXConfigurations.Slot0.kI = ElevatorConstants.kI
-//        talonFXConfigurations.Slot0.kD = ElevatorConstants.kD
-//        talonFXConfigurations.MotionMagic.MotionMagicCruiseVelocity = ElevatorConstants.targetVelocity
-//        talonFXConfigurations.MotionMagic.MotionMagicAcceleration = ElevatorConstants.targetAcceleration
-//        talonFXConfigurations.MotionMagic.MotionMagicJerk = ElevatorConstants.targetJerk
-//        talonFX.getConfigurator().apply(talonFXConfigurations)
-    }
+        val feedBackConfigs = rightMotorConfiguration.Feedback
 
-    fun getElevatorEncoder(): Double {
-        TODO("Not yet implemented")
-        return 0.0;
-    }
+        // Converts 1 rotation to 1 in on the elevator
+        feedBackConfigs.SensorToMechanismRatio =
+            ElevatorConstants.conversionFactor
 
-    fun setElevatorMotor(rotations: Double) {
-        TODO("Not yet implemented")
-    }
+        val slot0Configs = rightMotorConfiguration.Slot0;
 
-    fun setMotorPosition(rotations: Double) {
-//        talonFX.setControl(MotionMagicVoltage(rotations))
+        // TODO: These values need to be changed
+        slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
+        slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
+        slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
+        slot0Configs.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
+        slot0Configs.kI = 0.0; // no output for integrated error
+        slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
+
+        // set Motion Magic settings
+        val motionMagicConfigs = rightMotorConfiguration.MotionMagic;
+        motionMagicConfigs.MotionMagicCruiseVelocity = ElevatorConstants.velocityInches// Target cruise velocity in rps
+        motionMagicConfigs.MotionMagicAcceleration = ElevatorConstants.accelationInches // Target acceleration in rps/s
+//        motionMagicConfigs.MotionMagicJerk = 1600; Optional // Target jerk of 1600 rps/s/s (0.1 seconds)
+        rightMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive
+
+        rightMotor.configurator.apply(rightMotorConfiguration);
+
+        leftMotor.setControl(Follower(rightMotor.deviceID, true))
     }
 
     override fun getPosition(): Double {
-        TODO("Not yet implemented")
+        return rightMotor.position.valueAsDouble
     }
 
-    override fun atDesiredPosition(): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun atDesiredPosition(): Boolean =
+        MiscCalculations.appxEqual(getPosition(), desiredPosition, ElevatorConstants.positionTolerance)
 
     override fun setPosition(positionInches: Double) {
-        TODO("Not yet implemented")
+        desiredPosition = positionInches
+        rightMotor.setControl(motionMagic.withPosition(positionInches))
     }
 
-    override fun periodic() {
-        TODO("Not yet implemented")
-    }
+    override fun periodic() {}
 }

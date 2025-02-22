@@ -1,16 +1,21 @@
 package frc.robot.subsystems.superstructure.elevator.implementation
 
-import MiscCalculations
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import frc.robot.subsystems.superstructure.elevator.ElevatorConstants
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO
 import cshcyberhawks.lib.math.Timer
+import frc.robot.math.MiscCalculations
 
 class ElevatorIOSim : ElevatorIO {
-    val trapProfile = TrapezoidProfile(ElevatorConstants.trapConstraints)
-    var currentState = TrapezoidProfile.State(0.0, 0.0)
-    var desiredState = TrapezoidProfile.State(0.0, 0.0)
-    var lastTime = Timer.getFPGATimestamp()
+    private val trapProfile = TrapezoidProfile(
+        TrapezoidProfile.Constraints(
+            ElevatorConstants.velocityInches,
+            ElevatorConstants.accelationInches
+        )
+    )
+    private var currentState = TrapezoidProfile.State(0.0, 0.0)
+    private var desiredState = TrapezoidProfile.State(0.0, 0.0)
+    private var lastTime = Timer.getFPGATimestamp()
 
     override fun getPosition(): Double = currentState.position
 

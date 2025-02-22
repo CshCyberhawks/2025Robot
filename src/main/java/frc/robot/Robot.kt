@@ -1,6 +1,5 @@
 package frc.robot
 
-import MiscCalculations
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
