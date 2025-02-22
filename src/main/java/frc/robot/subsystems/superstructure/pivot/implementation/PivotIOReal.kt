@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.controls.MotionMagicVoltage
 import com.ctre.phoenix6.signals.InvertedValue
+import edu.wpi.first.wpilibj.DutyCycleEncoder
 import frc.robot.constants.CANConstants
 import frc.robot.math.MiscCalculations
 import frc.robot.subsystems.superstructure.pivot.PivotConstants
@@ -12,6 +13,7 @@ import frc.robot.subsystems.superstructure.pivot.PivotIO
 
 class PivotIOReal() : PivotIO {
     private val motor = TalonFX(CANConstants.Pivot.motorId)
+    private val encoder = DutyCycleEncoder(CANConstants.Pivot.encoderId)
 
     private var motorConfiguration = TalonFXConfiguration()
 
@@ -46,6 +48,12 @@ class PivotIOReal() : PivotIO {
         motorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive
 
         motor.configurator.apply(motorConfiguration);
+
+        // TODO: Also need to mess with this on bringup
+        val currentPosition =
+            encoder.get() * (24 / 32) * 360.0 // Clockwise should be positive and zero should probably be 45 degrees up from motor zero (position we likely won't start at but allowing for full rotation with the ratio)
+
+        motor.setPosition((currentPosition - 45.0) / 360.0)
     }
 
     override fun getAngle(): Double {

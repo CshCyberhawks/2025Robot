@@ -10,6 +10,7 @@ object CANConstants {
 
     object Pivot {
         const val motorId = 30
+        const val encoderId = 0 // Roborio DIO not CAN
     }
 
     // Intake
