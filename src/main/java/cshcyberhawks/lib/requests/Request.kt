@@ -25,12 +25,24 @@ abstract class Request {
 
     private var prerequisites: MutableList<Prerequisite> = mutableListOf()
 
+    /**
+     * Adds a prerequisite to the current request.
+     *
+     * @param prerequisite The prerequisite to be added.
+     * @return The current request with the added prerequisite.
+     */
     fun withPrerequisite(prerequisite: Prerequisite): Request {
         prerequisites.add(prerequisite)
 
         return this
     }
 
+    /**
+     * Adds the specified prerequisites to the request.
+     *
+     * @param prerequisites Prerequisites to be added.
+     * @return The current Request instance with the added prerequisites.
+     */
     fun withPrerequisites(vararg prerequisites: Prerequisite): Request {
         for (prerequisite in prerequisites) {
             this.prerequisites.add(prerequisite)
