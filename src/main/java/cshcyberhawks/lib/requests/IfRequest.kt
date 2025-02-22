@@ -1,5 +1,12 @@
 package cshcyberhawks.lib.requests
 
+/**
+ * Represents a conditional request that can be used to perform actions based on certain conditions.
+ *
+ * @param condition The condition to evaluate.
+ * @param ifBranch The request to perform if the condition is true.
+ * @param elseBranch The request to perform if the condition is false (optional).
+ */
 class IfRequest(
     private val condition: () -> Boolean,
     private val ifBranch: Request,

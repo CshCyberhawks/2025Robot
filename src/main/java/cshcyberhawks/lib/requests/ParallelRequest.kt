@@ -1,5 +1,10 @@
 package cshcyberhawks.lib.requests
 
+/**
+ * A class that represents a parallel request, which runs multiple requests simultaneously.
+ *
+ * @param requests Request objects to be executed in parallel.
+ */
 class ParallelRequest(vararg requests: Request) : Request() {
     private val idleRequests = requests.toMutableList()
     private val inProgressRequests: MutableList<Request> = mutableListOf()

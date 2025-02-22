@@ -2,6 +2,11 @@ package cshcyberhawks.lib.requests
 
 import java.util.*
 
+/**
+ * A class representing a sequential request that executes multiple requests in sequence. Waits until the previous request is completed to execute the next one.
+ *
+ * @param requests The requests to be executed in sequence.
+ */
 class SequentialRequest(vararg requests: Request) : Request() {
     private val idleRequests = requests.toMutableList()
     private var currentRequest = if (idleRequests.isNotEmpty()) idleRequests.removeAt(0) else EmptyRequest()
