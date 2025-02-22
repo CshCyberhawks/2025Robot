@@ -20,7 +20,6 @@ import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOReal
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOEmpty
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOReal
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOSim
-import frc.robot.util.commandsystem.IfCommand
 import java.util.Optional
 
 object Superstructure : SubsystemBase() {
@@ -123,32 +122,33 @@ object Superstructure : SubsystemBase() {
         )
     )
 
+    private fun prepL4Request() = SequentialRequest(
+        ParallelRequest(
+            pivotSystem.l4Angle(),
+            elevatorSystem.safeUpPosition()
+        ),
+        elevatorSystem.l4Position().withPrerequisite(pivotSystem.safeTravelUp()),
+        //        elevatorSystem.awaitDesiredPosition(),
+        //        pivotSystem.awaitDesiredAngle()
+    )
+
     fun prepL4() = request(
-        SequentialRequest(
-            ParallelRequest(
-                pivotSystem.l4Angle(),
-                elevatorSystem.safeUpPosition()
-            ),
-            elevatorSystem.l4Position().withPrerequisite(pivotSystem.safeTravelUp()),
-            //        elevatorSystem.awaitDesiredPosition(),
-            //        pivotSystem.awaitDesiredAngle()
-        )
+        prepL4Request()
     )
 
 
-//    fun scoreL4() = SuperstructureAction(
-//        prepL4(), Commands.runOnce({}), Commands.sequence(
-//            Commands.parallel(
-//                pivotSystem.travelAngle(),
-//                elevatorSystem.safeDownPosition()
-//            ),
-//            pivotSystem.awaitSafeTravelDown(),
-//            Commands.parallel(
-//                pivotSystem.stowAngle(),
-//                elevatorSystem.stowPosition()
-//            )
-//        )
-//    )
-
-    fun scoreL4() = request(EmptyRequest())
+    fun scoreL4() = request(
+        SuperstructureAction.create(
+            prepL4Request(), EmptyRequest(), SequentialRequest(
+                ParallelRequest(
+                    pivotSystem.travelAngle(),
+                    elevatorSystem.safeDownPosition()
+                ),
+                ParallelRequest(
+                    pivotSystem.stowAngle(),
+                    elevatorSystem.stowPosition()
+                ).withPrerequisite(pivotSystem.safeTravelDown())
+            )
+        )
+    )
 }

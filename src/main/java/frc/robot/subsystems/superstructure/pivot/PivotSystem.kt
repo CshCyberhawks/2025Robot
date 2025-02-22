@@ -31,7 +31,7 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
         }
 
     fun safeTravelUp() = Prerequisite.withCondition { getAngle() < 245.0 }
-    fun awaitSafeTravelDown() = Commands.waitUntil { getAngle() > 180.0 }
+    fun safeTravelDown() = Prerequisite.withCondition { getAngle() > 180.0 }
 
     fun stowAngle() = setAngle(290.0)
 
