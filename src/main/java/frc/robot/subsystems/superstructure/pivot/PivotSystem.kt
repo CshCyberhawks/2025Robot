@@ -1,5 +1,6 @@
 package frc.robot.subsystems.superstructure.pivot
 
+import cshcyberhawks.lib.requests.Request
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
@@ -12,7 +13,7 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
 
     fun atDesiredAngle() = io.atDesiredAngle()
 
-    private fun setAngle(angleDegrees: Double): Command = runOnce {
+    private fun setAngle(angleDegrees: Double) = Request.withAction {
         io.setAngle(angleDegrees)
     }
 

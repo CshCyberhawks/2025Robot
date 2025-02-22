@@ -25,6 +25,7 @@ import frc.robot.RobotContainer.vision
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.util.Visualizer
 import frc.robot.util.input.DriverAction
+import org.xml.sax.SAXNotSupportedException
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -109,6 +110,8 @@ object Robot : TimedRobot() {
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
         autonomousCommand.schedule()
+
+        Superstructure.initialize()
     }
 
     /** This method is called periodically during autonomous.  */
@@ -119,6 +122,8 @@ object Robot : TimedRobot() {
         // This makes sure that the autonomous stops running when teleop starts running. If you want the
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
         autonomousCommand.cancel()
+
+        Superstructure.initialize()
     }
 
     /** This method is called periodically during operator control.  */

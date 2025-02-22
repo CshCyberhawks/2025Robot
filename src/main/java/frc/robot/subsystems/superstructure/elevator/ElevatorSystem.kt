@@ -1,6 +1,7 @@
 package frc.robot.subsystems.superstructure.elevator
 
 import MiscCalculations
+import cshcyberhawks.lib.requests.Request
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import edu.wpi.first.wpilibj2.command.Command
@@ -24,7 +25,7 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
 
     fun awaitBelowSafeUpPosition() = Commands.waitUntil { !aboveSafeUpPosition() }
 
-    private fun setPosition(positionInches: Double): Command = runOnce {
+    private fun setPosition(positionInches: Double) = Request.withAction {
         io.setPosition(positionInches)
     }
 
@@ -42,5 +43,4 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun safeDownPosition() = setPosition(safeDownPosition)
 
     fun l4Position() = setPosition(30.0)
-
 }
