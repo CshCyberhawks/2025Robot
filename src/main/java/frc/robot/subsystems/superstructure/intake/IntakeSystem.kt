@@ -46,6 +46,21 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
 
     override fun periodic() {
         io.periodic()
+        when (io.getIntakeState()) {
+            IntakeState.CoralIntake -> {
+                if(io.hasCoral())
+                    RobotState.gamePieceState = GamePieceState.Coral
+            }
+
+            IntakeState.AlgaeIntake -> {
+                if (io.hasAlgae())
+                    RobotState.gamePieceState = GamePieceState.Algae
+            }
+
+            else -> {}
+        }
+
+        setIntakeState(IntakeState.Idle)
     }
 
     override fun simulationPeriodic() {}

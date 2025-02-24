@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkLowLevel
 import com.revrobotics.spark.SparkMax
 import com.revrobotics.spark.config.SparkMaxConfig
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.units.Measure
 import frc.robot.RobotState
 import frc.robot.constants.CANConstants
 import frc.robot.subsystems.superstructure.intake.GamePieceState
@@ -23,7 +24,8 @@ class IntakeIOReal : IntakeIO {
 
     private var intakeState = IntakeState.Idle
 
-    private var watchingCurrent = false
+    private val coralLaserCAN=LaserCan(IntakeConstants.coralLaserCANid)
+    private val algaeLaserCAN=LaserCan(IntakeConstants.algaeLaserCANid)
 
     init {
         val coralIntakeMotorConfiguration = TalonFXConfiguration()
@@ -36,29 +38,21 @@ class IntakeIOReal : IntakeIO {
         intakeMotor.set(state.speed)
     }
 
-    override fun watchForIntake() {
-        watchingCurrent = true
+    override fun getIntakeState():IntakeState{
+        return intakeState
+    }
+
+    override fun hasCoral():Boolean{
+        val measurement:Measurement=coralLaserCAN.measurement
+        @Suppress("SENSELESS_COMPARISON")
+        return (measurement!=null&&measurement.status==LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT&&measurement.distance_mm<Units.inchesToMeters(3.5))
+    }
+    override fun hasAlgae():Boolean{
+        val measurement:Measurement=algaeLaserCAN.measurement
+        @Suppress("SENSELESS_COMPARISON")
+        return (measurement!=null&&measurement.status==LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT&&measurement.distance_mm<Units.inchesToMeters(12.5))
     }
 
     override fun periodic() {
-        if (watchingCurrent) {
-            if (intakeMotor.supplyCurrent.valueAsDouble > IntakeConstants.intakeCurrentThreshold) {
-                when (intakeState) {
-                    IntakeState.CoralIntake -> {
-                        RobotState.gamePieceState = GamePieceState.Coral
-                    }
-
-                    IntakeState.AlgaeIntake -> {
-                        RobotState.gamePieceState = GamePieceState.Algae
-                    }
-
-                    else -> {}
-                }
-
-                setIntakeState(IntakeState.Idle)
-
-                watchingCurrent = false
-            }
-        }
     }
 }
