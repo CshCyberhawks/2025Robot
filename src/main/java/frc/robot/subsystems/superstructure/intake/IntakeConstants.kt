@@ -7,4 +7,7 @@ object IntakeConstants {
     const val algaeScoreTimeoutSeconds = 0.5
 
     const val intakeCurrentThreshold = 10.0 // 10 Amps before system knows it has a game piece
+
+    const val coralLaserCANid=0 //?
+    const val algaeLaserCANid=1 //?
 }

@@ -13,14 +13,12 @@ import frc.robot.subsystems.superstructure.intake.*
 // It also reduces the need to have reference variables for the subsystems to be passed around.
 class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     private fun setIntakeState(state: IntakeState) = Request.withAction { io.setIntakeState(state) }
-    private fun watchForIntake() = Request.withAction { io.watchForIntake() }
 
     private fun setGamePieceState(state: GamePieceState) = Request.withAction { RobotState.gamePieceState = state }
 
     fun coralIntake() = SequentialRequest(
         setIntakeState(IntakeState.CoralIntake),
-        WaitRequest(IntakeConstants.coralIntakeTimeoutSeconds),
-        watchForIntake()
+        WaitRequest(IntakeConstants.coralIntakeTimeoutSeconds)
     )
 
     fun coralScore() = SequentialRequest(
@@ -32,8 +30,7 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
 
     fun algaeIntake() = SequentialRequest(
         setIntakeState(IntakeState.AlgaeIntake),
-        WaitRequest(IntakeConstants.algaeIntakeTimeoutSeconds),
-        watchForIntake()
+        WaitRequest(IntakeConstants.algaeIntakeTimeoutSeconds)
     )
 
     fun algaeScore() = SequentialRequest(
@@ -46,6 +43,21 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
 
     override fun periodic() {
         io.periodic()
+        when (io.getIntakeState()) {
+            IntakeState.CoralIntake -> {
+                if(io.hasCoral())
+                    RobotState.gamePieceState = GamePieceState.Coral
+            }
+
+            IntakeState.AlgaeIntake -> {
+                if (io.hasAlgae())
+                    RobotState.gamePieceState = GamePieceState.Algae
+            }
+
+            else -> {}
+        }
+
+        setIntakeState(IntakeState.Idle)
     }
 
     override fun simulationPeriodic() {}
