@@ -28,9 +28,9 @@ class IntakeIOReal : IntakeIO {
     private val algaeLaserCAN=LaserCan(IntakeConstants.algaeLaserCANid)
 
     init {
-        val coralIntakeMotorConfiguration = TalonFXConfiguration()
-        coralIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive
-        intakeMotor.configurator.apply(coralIntakeMotorConfiguration)
+        val intakeMotorConfiguration = TalonFXConfiguration()
+        intakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive
+        intakeMotor.configurator.apply(intakeMotorConfiguration)
     }
 
     override fun setIntakeState(state: IntakeState) {
