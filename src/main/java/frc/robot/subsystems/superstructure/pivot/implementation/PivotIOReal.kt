@@ -1,5 +1,6 @@
 package frc.robot.subsystems.superstructure.pivot.implementation
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC
 import com.ctre.phoenix6.hardware.TalonFX
@@ -46,6 +47,10 @@ class PivotIOReal() : PivotIO {
             PivotConstants.accelerationDegrees / 360.0 // Target acceleration in rps/s
 //        motionMagicConfigs.MotionMagicJerk = 1600; Optional // Target jerk of 1600 rps/s/s (0.1 seconds)
         motorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive
+
+        val currentConfigs = motorConfiguration.CurrentLimits
+        currentConfigs.StatorCurrentLimitEnable = true
+        currentConfigs.StatorCurrentLimit = 60.0
 
         motor.configurator.apply(motorConfiguration);
 

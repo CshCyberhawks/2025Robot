@@ -1,6 +1,7 @@
 package frc.robot.subsystems.superstructure.elevator
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile
+import edu.wpi.first.math.util.Units
 
 object ElevatorConstants {
     const val velocityInches = 26.5 // Guessed values for now
@@ -11,4 +12,7 @@ object ElevatorConstants {
         20.0 * 1.751
 
     const val positionTolerance = 0.1
+
+    // The torque to hold the elevator against gravity (Newton-Meters)
+    val kGNM = Units.inchesToMeters(1.751 / 2.0) * (25.6 * 4.4482216153)
 }

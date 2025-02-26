@@ -15,8 +15,9 @@ class ElevatorIOReal() : ElevatorIO {
     private val leftMotor = TalonFX(CANConstants.Elevator.leftMotorId)
 
     private var rightMotorConfiguration = TalonFXConfiguration()
+    private var leftMotorConfiguration = TalonFXConfiguration()
 
-    private val motionMagic = MotionMagicTorqueCurrentFOC(0.0)
+    private val motionMagic = MotionMagicTorqueCurrentFOC(0.0).withFeedForward(1.0 * rightMotor.motorKT.valueAsDouble)
 
     private var desiredPosition = 0.0
 
@@ -44,7 +45,16 @@ class ElevatorIOReal() : ElevatorIO {
 //        motionMagicConfigs.MotionMagicJerk = 1600; Optional // Target jerk of 1600 rps/s/s (0.1 seconds)
         rightMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive
 
+        val rightCurrentConfigs = rightMotorConfiguration.CurrentLimits
+        rightCurrentConfigs.StatorCurrentLimitEnable = true
+        rightCurrentConfigs.StatorCurrentLimit = 60.0
+
+        val leftCurrentConfigs = leftMotorConfiguration.CurrentLimits
+        leftCurrentConfigs.StatorCurrentLimitEnable = true
+        leftCurrentConfigs.StatorCurrentLimit = 60.0
+
         rightMotor.configurator.apply(rightMotorConfiguration);
+        leftMotor.configurator.apply(leftCurrentConfigs)
 
         leftMotor.setControl(Follower(rightMotor.deviceID, true))
     }
@@ -58,7 +68,9 @@ class ElevatorIOReal() : ElevatorIO {
 
     override fun setPosition(positionInches: Double) {
         desiredPosition = positionInches
-        rightMotor.setControl(motionMagic.withPosition(positionInches))
+        rightMotor.setControl(
+            motionMagic.withPosition(positionInches)
+        )
     }
 
     override fun periodic() {}
