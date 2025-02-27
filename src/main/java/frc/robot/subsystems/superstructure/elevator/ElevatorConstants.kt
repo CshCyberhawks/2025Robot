@@ -9,7 +9,7 @@ object ElevatorConstants {
 
     // Conversion so one (I guess its mechanism rotation) is 1 inch on the elevator
     const val conversionFactor =
-        20.0 * 1.751
+        20.0 * 1.751 * Math.PI / 30.0
 
     const val positionTolerance = 0.1
 

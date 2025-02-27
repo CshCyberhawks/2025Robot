@@ -1,5 +1,10 @@
 package frc.robot
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration
+import com.ctre.phoenix6.controls.VoltageOut
+import com.ctre.phoenix6.hardware.TalonFX
+import com.ctre.phoenix6.signals.InvertedValue
+import com.ctre.phoenix6.signals.NeutralModeValue
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
@@ -21,7 +26,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer.leftJoystick
 import frc.robot.RobotContainer.vision
+import frc.robot.constants.CANConstants
+import frc.robot.math.MiscCalculations
 import frc.robot.subsystems.superstructure.Superstructure
+import frc.robot.subsystems.superstructure.elevator.ElevatorConstants
 import frc.robot.util.Visualizer
 import frc.robot.util.input.DriverAction
 import org.xml.sax.SAXNotSupportedException
@@ -160,7 +168,6 @@ object Robot : TimedRobot() {
     }
 
 //    var lastLoopTime = 0.0
-
     /** This method is called once when the robot is first started up.  */
     override fun simulationInit() {
 //        lastLoopTime = MiscCalculations.getCurrentTime()

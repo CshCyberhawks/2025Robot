@@ -44,9 +44,9 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun safeDownPosition() = setPosition(safeDownPosition)
 
     fun l3Position() = setPosition(2.5)
-    fun l4Position() = setPosition(30.0)
+    fun l4Position() = setPosition(20.0) // Should be 30 eventually but not safe right now
 
     fun algaeRemoveLowPosition() = setPosition(1.0)
     fun algaeRemoveHighPosition() = setPosition(17.5)
-    fun bargePosition() = setPosition(30.0)
+    fun bargePosition() = setPosition(20.0) // Should be 30 eventually but not safe right now
 }
