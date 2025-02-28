@@ -17,5 +17,10 @@ object ManualOperatorInput {
                 Superstructure.elevatorSystem.l3Position()
             )
         }))
+        RobotContainer.xbox.b().onTrue(Commands.runOnce({
+            Superstructure.request(
+                Superstructure.elevatorSystem.stowPosition()
+            )
+        }))
     }
 }

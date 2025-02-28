@@ -12,6 +12,7 @@ import frc.robot.RobotState
 import frc.robot.RobotType
 import frc.robot.subsystems.superstructure.elevator.ElevatorSystem
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOEmpty
+import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOPID
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOReal
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOSim
 import frc.robot.subsystems.superstructure.intake.GamePieceState
@@ -36,7 +37,7 @@ object Superstructure : SubsystemBase() {
         when (RobotConfiguration.robotType) {
             RobotType.Real -> ElevatorIOReal()
             RobotType.Simulated -> ElevatorIOSim()
-            RobotType.Empty -> ElevatorIOReal()
+            RobotType.Empty -> ElevatorIOPID()
         }
     )
     val intakeSystem = IntakeSystem(

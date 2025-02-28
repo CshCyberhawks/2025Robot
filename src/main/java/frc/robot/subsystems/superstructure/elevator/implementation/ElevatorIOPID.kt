@@ -7,8 +7,10 @@ import com.ctre.phoenix6.controls.TorqueCurrentFOC
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
+import edu.wpi.first.math.controller.ElevatorFeedforward
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.trajectory.TrapezoidProfile
+import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.CANConstants
 import frc.robot.math.MiscCalculations
@@ -21,19 +23,22 @@ class ElevatorIOPID() : ElevatorIO {
 
     val elevatorPIDController =
         ProfiledPIDController(
-            0.01,
+            11.5,
             0.0,
-            0.0,
+            0.29,
             TrapezoidProfile.Constraints(ElevatorConstants.velocityInches, ElevatorConstants.accelationInches)
         )
 
     private var rightMotorConfiguration = TalonFXConfiguration()
     private var leftMotorConfiguration = TalonFXConfiguration()
 
-    private val motionMagic = MotionMagicTorqueCurrentFOC(0.0).withFeedForward(1.0 * rightMotor.motorKT.valueAsDouble)
     private val torqueRequest = TorqueCurrentFOC(0.0)
 
     private var desiredPosition = 0.0
+
+//    private var currentNeutralMode = NeutralModeValue.Coast
+
+    private var neutralCoast = false;
 
     init {
         val feedBackConfigs = rightMotorConfiguration.Feedback
@@ -71,8 +76,11 @@ class ElevatorIOPID() : ElevatorIO {
         rightMotor.configurator.apply(rightMotorConfiguration);
         leftMotor.configurator.apply(leftMotorConfiguration)
 
-        rightMotor.setNeutralMode(NeutralModeValue.Coast)
-        leftMotor.setNeutralMode(NeutralModeValue.Coast)
+        SmartDashboard.putBoolean("coast", false)
+
+        rightMotor.setNeutralMode(if (neutralCoast) NeutralModeValue.Coast else NeutralModeValue.Brake)
+        leftMotor.setNeutralMode(if (neutralCoast) NeutralModeValue.Coast else NeutralModeValue.Brake)
+
 
 //        leftMotor.setControl(Follower(rightMotor.deviceID, true))
 
@@ -97,11 +105,23 @@ class ElevatorIOPID() : ElevatorIO {
     override fun periodic() {
         SmartDashboard.putNumber("Elevator Desired Position", desiredPosition)
 
+        val gravityFF = 3.85
         val positionPIDOut = elevatorPIDController.calculate(getPosition())
 
-        val motorSet = 0.1
+        SmartDashboard.putNumber("Elevator Position Elevator", elevatorPIDController.positionError)
+
+        val motorSet = positionPIDOut + gravityFF
 
         SmartDashboard.putNumber("Elevator Output", motorSet)
+
+
+        val sdCoast = SmartDashboard.getBoolean("coast", false)
+        if (sdCoast != neutralCoast) {
+            neutralCoast = sdCoast
+            rightMotor.setNeutralMode(if (neutralCoast) NeutralModeValue.Coast else NeutralModeValue.Brake)
+            leftMotor.setNeutralMode(if (neutralCoast) NeutralModeValue.Coast else NeutralModeValue.Brake)
+        }
+
 
         rightMotor.setControl(torqueRequest.withOutput(motorSet))
         leftMotor.setControl(torqueRequest.withOutput(motorSet))

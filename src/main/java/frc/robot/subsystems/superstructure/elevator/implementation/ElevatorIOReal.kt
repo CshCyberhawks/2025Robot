@@ -35,7 +35,8 @@ class ElevatorIOReal() : ElevatorIO {
         slot0Configs.kS = 0.2; // Add 0.25 V output to overcome static friction
         slot0Configs.kV = 0.43; // A velocity target of 1 rps results in 0.12 V output
         slot0Configs.kA = 0.1; // An acceleration of 1 rps/s requires 0.01 V output
-        slot0Configs.kP = 0.1; // A position error of 2.5 rotations results in 12 V output
+        slot0Configs.kG = 0.01;
+        slot0Configs.kP = 0.01; // A position error of 2.5 rotations results in 12 V output
         slot0Configs.kI = 0.0; // no output for integrated error
         slot0Configs.kD = 0.0; // A velocity error of 1 rps results in 0.1 V output
 

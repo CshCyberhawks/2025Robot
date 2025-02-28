@@ -38,7 +38,7 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
 
     fun feederPosition() = setPosition(6.5)
 
-    fun stowPosition() = setPosition(0.0)
+    fun stowPosition() = setPosition(1.0)
 
     fun safeUpPosition() = setPosition(safeUpPosition)
     fun safeDownPosition() = setPosition(safeDownPosition)
