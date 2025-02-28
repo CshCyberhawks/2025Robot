@@ -4,7 +4,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile
 import frc.robot.subsystems.superstructure.pivot.PivotConstants
 import frc.robot.subsystems.superstructure.pivot.PivotIO
 import cshcyberhawks.lib.math.Timer
-import frc.robot.math.MiscCalculations
+import cshcyberhawks.lib.math.MiscCalculations
 
 class PivotIOSim : PivotIO {
     val trapProfile = TrapezoidProfile(

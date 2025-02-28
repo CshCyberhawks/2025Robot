@@ -9,7 +9,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.CANConstants
-import frc.robot.math.MiscCalculations
+import cshcyberhawks.lib.math.MiscCalculations
 import frc.robot.subsystems.superstructure.elevator.ElevatorConstants
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO
 

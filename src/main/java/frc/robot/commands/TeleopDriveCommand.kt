@@ -4,7 +4,7 @@ import edu.wpi.first.math.MathUtil
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.RobotContainer
-import frc.robot.math.MiscCalculations
+import cshcyberhawks.lib.math.MiscCalculations
 import frc.robot.subsystems.ExampleSubsystem.runOnce
 import frc.robot.subsystems.swerve.SwerveConstants
 

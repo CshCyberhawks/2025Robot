@@ -1,38 +1,18 @@
 package frc.robot
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration
-import com.ctre.phoenix6.controls.VoltageOut
-import com.ctre.phoenix6.hardware.TalonFX
-import com.ctre.phoenix6.signals.InvertedValue
-import com.ctre.phoenix6.signals.NeutralModeValue
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
-import edu.wpi.first.math.MathUtil
-import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Pose3d
-import edu.wpi.first.math.geometry.Rotation3d
-import edu.wpi.first.math.geometry.Translation3d
-import edu.wpi.first.math.util.Units
-import edu.wpi.first.networktables.NetworkTableInstance
-import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
-import frc.robot.RobotContainer.leftJoystick
-import frc.robot.RobotContainer.vision
-import frc.robot.constants.CANConstants
-import frc.robot.math.MiscCalculations
 import frc.robot.subsystems.superstructure.Superstructure
-import frc.robot.subsystems.superstructure.elevator.ElevatorConstants
 import frc.robot.util.Visualizer
 import frc.robot.util.input.DriverAction
-import org.xml.sax.SAXNotSupportedException
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),

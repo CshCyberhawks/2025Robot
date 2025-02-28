@@ -15,6 +15,7 @@ import frc.robot.subsystems.superstructure.intake.IntakeSystem
 import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOEmpty
 import frc.robot.subsystems.superstructure.pivot.PivotSystem
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOEmpty
+import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOPID
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOSim
 import java.util.Optional
 
@@ -22,9 +23,9 @@ object Superstructure : SubsystemBase() {
     val pivotSystem =
             PivotSystem(
                     when (RobotConfiguration.robotType) {
-                        RobotType.Real -> PivotIOEmpty()
+                        RobotType.Real -> PivotIOPID()
                         RobotType.Simulated -> PivotIOSim()
-                        RobotType.Empty -> PivotIOEmpty()
+                        RobotType.Empty -> PivotIOPID()
                     }
             )
     val elevatorSystem =
@@ -32,7 +33,7 @@ object Superstructure : SubsystemBase() {
                     when (RobotConfiguration.robotType) {
                         RobotType.Real -> ElevatorIOPID()
                         RobotType.Simulated -> ElevatorIOSim()
-                        RobotType.Empty -> ElevatorIOEmpty()
+                        RobotType.Empty -> ElevatorIOPID()
                     }
             )
     val intakeSystem =

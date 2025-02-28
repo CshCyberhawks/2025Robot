@@ -7,7 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.CANConstants
-import frc.robot.math.MiscCalculations
+import cshcyberhawks.lib.math.MiscCalculations
 import frc.robot.subsystems.superstructure.elevator.ElevatorConstants
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO
 

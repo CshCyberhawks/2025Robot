@@ -1,9 +1,9 @@
-package frc.robot.math
+package cshcyberhawks.lib.math
 
 import edu.wpi.first.math.geometry.Translation2d
-import edu.wpi.first.util.WPIUtilJNI
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.sign
 
 /** Miscellaneous calculations. */
 object MiscCalculations {
@@ -96,4 +96,6 @@ object MiscCalculations {
     fun positionToRotations(speed: Double, radius: Double, reduction: Double = 1.0): Double {
         return (speed / (2 * PI * radius)) * reduction
     }
+
+    fun wrapAroundAngles(angle: Double) = ((abs(angle) % 360.0) * sign(angle) + 360.0) % 360.0
 }

@@ -5,18 +5,19 @@ import com.ctre.phoenix6.controls.TorqueCurrentFOC
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
+import cshcyberhawks.lib.hardware.AbsoluteDutyCycleEncoder
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.trajectory.TrapezoidProfile
-import edu.wpi.first.wpilibj.DutyCycleEncoder
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.CANConstants
-import frc.robot.math.MiscCalculations
+import cshcyberhawks.lib.math.MiscCalculations
 import frc.robot.subsystems.superstructure.pivot.PivotConstants
 import frc.robot.subsystems.superstructure.pivot.PivotIO
 
 class PivotIOPID() : PivotIO {
     private val motor = TalonFX(CANConstants.Pivot.motorId)
-    private val encoder = DutyCycleEncoder(CANConstants.Pivot.encoderId)
+//    private val encoderDutyCycle = DutyCycle()
+    private val encoder = AbsoluteDutyCycleEncoder(CANConstants.Pivot.encoderId)
 
     val pivotPIDController =
             ProfiledPIDController(
@@ -35,8 +36,9 @@ class PivotIOPID() : PivotIO {
 
     private var desiredAngle = 290.0
 
-    private val tbOffset = 0.0
-    private fun getTBAngleRotations() = encoder.get() * (24 / 32) - tbOffset
+    private val tbOffset = 70.0
+//    private fun getTBDegrees() =
+
 
     init {
         val feedBackConfigs = motorConfig.Feedback
@@ -58,9 +60,8 @@ class PivotIOPID() : PivotIO {
 
         motor.configurator.apply(motorConfig)
 
-        motor.setNeutralMode(NeutralModeValue.Brake)
+        motor.setNeutralMode(NeutralModeValue.Coast)
 
-        motor.setPosition(0.0)
 
         // TODO: Also need to mess with this on bringup
         //        val currentPosition =
@@ -69,10 +70,13 @@ class PivotIOPID() : PivotIO {
         // allowing for full rotation with the ratio)
         //
         //        motor.setPosition((currentPosition - 45.0))
+
+        pivotPIDController.goal = TrapezoidProfile.State(290.0, 0.0)
     }
 
     override fun getAngle(): Double {
-        return motor.position.valueAsDouble
+        return MiscCalculations.wrapAroundAngles((MiscCalculations.wrapAroundAngles(encoder
+            .absolutePosition * 360.0) - tbOffset) * (32.0 / 24.0))
     }
 
     override fun getDesiredAngle(): Double {
@@ -92,7 +96,7 @@ class PivotIOPID() : PivotIO {
     }
 
     override fun periodic() {
-        SmartDashboard.putNumber("Pivot TB Angle", getTBAngleRotations() * 360.0)
+        SmartDashboard.putNumber("Pivot Raw TB Angle", MiscCalculations.wrapAroundAngles(encoder.absolutePosition * 360.0))
         SmartDashboard.putNumber("Pivot Desired Angle", desiredAngle)
 
         val gravityFF = 0.0

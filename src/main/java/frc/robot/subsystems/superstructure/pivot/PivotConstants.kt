@@ -8,7 +8,7 @@ object PivotConstants {
 
     // Conversion so one (I guess its mechanism rotation) is 1 rotation of the pivot
     const val conversionFactor =
-        100.0 * (24 / 32)
+        100.0 * (32.0 / 24.0) / 360.0
 
     const val angleToleranceDegrees = 2.0
 }
