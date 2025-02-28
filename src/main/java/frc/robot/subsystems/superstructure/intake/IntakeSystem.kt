@@ -15,8 +15,6 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     private fun setIntakeState(state: IntakeState) = Request.withAction { io.setIntakeState(state) }
     private fun watchForIntake() = Request.withAction { io.watchForIntake() }
 
-    private fun setGamePieceState(state: GamePieceState) = Request.withAction { RobotState.gamePieceState = state }
-
     fun coralIntake() = SequentialRequest(
         setIntakeState(IntakeState.CoralIntake),
         WaitRequest(IntakeConstants.coralIntakeTimeoutSeconds),
@@ -26,7 +24,6 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     fun coralScore() = SequentialRequest(
         setIntakeState(IntakeState.CoralScore),
         WaitRequest(IntakeConstants.coralScoreTimeoutSeconds),
-        setGamePieceState(GamePieceState.Empty),
         setIntakeState(IntakeState.Idle)
     )
 
@@ -39,13 +36,15 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     fun algaeScore() = SequentialRequest(
         setIntakeState(IntakeState.AlgaeIntake),
         WaitRequest(IntakeConstants.algaeScoreTimeoutSeconds),
-        setGamePieceState(GamePieceState.Empty),
         setIntakeState(IntakeState.Idle)
     )
 
 
     override fun periodic() {
         io.periodic()
+
+        RobotState.gamePieceState = if (io.hasCoral()) GamePieceState.Coral else if (io.hasAlgae()) GamePieceState
+            .Algae else GamePieceState.Empty
     }
 
     override fun simulationPeriodic() {}

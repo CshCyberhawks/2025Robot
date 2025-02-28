@@ -15,6 +15,8 @@ object CANConstants {
 
     object Intake {
         const val motorId = 40
+        const val coralLaserCANId = 41
+        const val algaeLaserCANId = 42
     }
 
     // Climb

@@ -6,6 +6,18 @@ import frc.robot.subsystems.superstructure.intake.IntakeState
 
 class IntakeIOEmpty() : IntakeIO {
     override fun setIntakeState(state: IntakeState) {}
-    override fun watchForIntake() {}
+
+    override fun watchForIntake() {
+
+    }
+
+    override fun hasAlgae(): Boolean {
+        return false
+    }
+
+    override fun hasCoral(): Boolean {
+        return false
+    }
+
     override fun periodic() {}
 }
