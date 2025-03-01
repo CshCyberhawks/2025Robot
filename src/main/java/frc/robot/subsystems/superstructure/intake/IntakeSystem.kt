@@ -13,6 +13,8 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     private fun setIntakeState(state: IntakeState) = Request.withAction { io.setIntakeState(state) }
     private fun watchForIntake() = Request.withAction { io.watchForIntake() }
 
+    fun idle() = setIntakeState(IntakeState.Idle)
+
     fun coralIntake() = SequentialRequest(
         setIntakeState(IntakeState.CoralIntake),
         WaitRequest(IntakeConstants.coralIntakeTimeoutSeconds),

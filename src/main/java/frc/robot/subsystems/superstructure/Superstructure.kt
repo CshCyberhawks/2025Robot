@@ -123,7 +123,7 @@ object Superstructure : SubsystemBase() {
                                     intakeSystem.coralIntake()
                             ),
                             EmptyRequest(),
-                            ParallelRequest(stowRequest()),
+                            ParallelRequest(stowRequest(), intakeSystem.idle()),
                             confirmed = { RobotState.gamePieceState == GamePieceState.Coral }
                     )
             )
@@ -133,7 +133,8 @@ object Superstructure : SubsystemBase() {
                     SuperstructureAction.create(
                             ParallelRequest(pivotSystem.l2Angle(), elevatorSystem.stowPosition()),
                             intakeSystem.coralScore(),
-                            stowRequest()
+                            stowRequest(),
+                        forceManualRetract = true
                     )
             )
 
@@ -142,7 +143,8 @@ object Superstructure : SubsystemBase() {
                     SuperstructureAction.create(
                             ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position()),
                             intakeSystem.coralScore(),
-                            stowRequest()
+                            stowRequest(),
+                        forceManualRetract = true
                     )
             )
 
@@ -159,7 +161,8 @@ object Superstructure : SubsystemBase() {
                                             .withPrerequisite(pivotSystem.safeTravelUp()),
                             ),
                             intakeSystem.coralScore(),
-                            safeRetractRequest()
+                            safeRetractRequest(),
+                        forceManualRetract = true
                     )
             )
 
@@ -172,7 +175,10 @@ object Superstructure : SubsystemBase() {
                                     intakeSystem.algaeIntake()
                             ),
                             EmptyRequest(),
+                        SequentialRequest(
                             ParallelRequest(pivotSystem.stowAngle(), elevatorSystem.stowPosition()),
+                            intakeSystem.idle()
+                        ),
                             { RobotState.gamePieceState == GamePieceState.Algae },
                     )
             )
@@ -191,7 +197,10 @@ object Superstructure : SubsystemBase() {
                                     intakeSystem.algaeIntake()
                             ),
                             EmptyRequest(),
+                        SequentialRequest(
                             safeRetractRequest(),
+                            intakeSystem.idle()
+                        ),
                             { RobotState.gamePieceState == GamePieceState.Algae }
                     )
             )

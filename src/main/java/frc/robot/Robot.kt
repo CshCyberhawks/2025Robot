@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
+import frc.robot.commands.TeleopDriveCommand
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.util.Visualizer
 import frc.robot.util.input.DriverAction
@@ -40,14 +41,8 @@ object Robot : TimedRobot() {
 //    val wristPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Wrist Pose", Pose3d.struct).publish();
 //
 
-    private val actionChooser = SendableChooser<DriverAction>()
 
     init {
-        for (action in DriverAction.entries) {
-            actionChooser.addOption(action.name, action)
-        }
-
-        SmartDashboard.putData(actionChooser)
 
         SmartDashboard.putBoolean("Action", false)
         SmartDashboard.putBoolean("Confirm", false)
@@ -113,31 +108,13 @@ object Robot : TimedRobot() {
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
         autonomousCommand.cancel()
 
+//        TeleopDriveCommand().schedule()
         Superstructure.initialize()
     }
 
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
 //        vision.updateOdometry(1, false)
-
-        if (SmartDashboard.getBoolean("Action", false)) {
-            actionChooser.selected.cmd.schedule()
-            println("Scheduled action")
-
-            SmartDashboard.putBoolean("Action", false)
-        }
-
-        if (SmartDashboard.getBoolean("Confirm", false)) {
-            RobotState.actionConfirmed = true
-            SmartDashboard.putBoolean("Confirm", false)
-        }
-
-
-        if (SmartDashboard.getBoolean("Cancel", false)) {
-            println("Cancelled")
-            RobotState.actionCancelled = true
-            SmartDashboard.putBoolean("Cancel", false)
-        }
     }
 
     override fun testInit() {
