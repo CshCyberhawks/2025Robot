@@ -11,6 +11,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.CANConstants
 import cshcyberhawks.lib.math.MiscCalculations
+import edu.wpi.first.math.controller.ArmFeedforward
+import edu.wpi.first.math.controller.PIDController
+import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import frc.robot.subsystems.superstructure.pivot.PivotConstants
 import frc.robot.subsystems.superstructure.pivot.PivotIO
 
@@ -21,14 +24,16 @@ class PivotIOPID() : PivotIO {
 
     val pivotPIDController =
             ProfiledPIDController(
-                    0.1,
+                    0.7,
                     0.0,
-                    0.0,
+                    0.05,
                     TrapezoidProfile.Constraints(
                             PivotConstants.velocityDegrees,
                             PivotConstants.accelerationDegrees
                     )
             )
+
+//    val correctivePID = PIDController(0.3, 0.0, 0.0)
 
     private var motorConfig = TalonFXConfiguration()
 
@@ -36,9 +41,10 @@ class PivotIOPID() : PivotIO {
 
     private var desiredAngle = 290.0
 
-    private val tbOffset = 70.0
+    private val tbOffset = 200.0
 //    private fun getTBDegrees() =
 
+    private var neutralCoast = false
 
     init {
         val feedBackConfigs = motorConfig.Feedback
@@ -60,7 +66,7 @@ class PivotIOPID() : PivotIO {
 
         motor.configurator.apply(motorConfig)
 
-        motor.setNeutralMode(NeutralModeValue.Coast)
+        motor.setNeutralMode(NeutralModeValue.Brake)
 
 
         // TODO: Also need to mess with this on bringup
@@ -72,11 +78,17 @@ class PivotIOPID() : PivotIO {
         //        motor.setPosition((currentPosition - 45.0))
 
         pivotPIDController.goal = TrapezoidProfile.State(290.0, 0.0)
+
+        SmartDashboard.putBoolean("Pivot coast", false)
+
+        motor.setNeutralMode(
+            if (neutralCoast) NeutralModeValue.Coast else NeutralModeValue.Brake
+        )
     }
 
     override fun getAngle(): Double {
         return MiscCalculations.wrapAroundAngles((MiscCalculations.wrapAroundAngles(encoder
-            .absolutePosition * 360.0) - tbOffset) * (32.0 / 24.0))
+            .absolutePosition * 360.0) - tbOffset))
     }
 
     override fun getDesiredAngle(): Double {
@@ -101,13 +113,24 @@ class PivotIOPID() : PivotIO {
 
         val gravityFF = 0.0
         val positionPIDOut = pivotPIDController.calculate(getAngle())
+//        val correctivePIDOut = correctivePID.calculate(getAngle(), desiredAngle)
 
         SmartDashboard.putNumber("Pivot Position Error", pivotPIDController.positionError)
+        SmartDashboard.putNumber("Position PID Output", positionPIDOut)
+        //SmartDashboard.putNumber("Corrective PID Output", correctivePIDOut)
 
-        val motorSet = positionPIDOut + gravityFF
+        val motorSet = positionPIDOut + gravityFF// + correctivePIDOut
 
         SmartDashboard.putNumber("Pivot Output", motorSet)
 
         motor.setControl(torqueRequest.withOutput(motorSet))
+
+        val sdCoast = SmartDashboard.getBoolean("Pivot coast", false)
+        if (sdCoast != neutralCoast) {
+            neutralCoast = sdCoast
+            motor.setNeutralMode(
+                if (neutralCoast) NeutralModeValue.Coast else NeutralModeValue.Brake
+            )
+        }
     }
 }

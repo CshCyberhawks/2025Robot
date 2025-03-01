@@ -33,7 +33,7 @@ object Superstructure : SubsystemBase() {
                     when (RobotConfiguration.robotType) {
                         RobotType.Real -> ElevatorIOPID()
                         RobotType.Simulated -> ElevatorIOSim()
-                        RobotType.Empty -> ElevatorIOPID()
+                        RobotType.Empty -> ElevatorIOEmpty()
                     }
             )
     val intakeSystem =

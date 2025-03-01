@@ -77,7 +77,7 @@ class ElevatorIOPID() : ElevatorIO {
         rightMotor.configurator.apply(rightMotorConfiguration)
         leftMotor.configurator.apply(leftMotorConfiguration)
 
-        SmartDashboard.putBoolean("coast", false)
+        SmartDashboard.putBoolean("Elevator coast", false)
 
         rightMotor.setNeutralMode(
                 if (neutralCoast) NeutralModeValue.Coast else NeutralModeValue.Brake
@@ -122,7 +122,7 @@ class ElevatorIOPID() : ElevatorIO {
 
         SmartDashboard.putNumber("Elevator Output", motorSet)
 
-        val sdCoast = SmartDashboard.getBoolean("coast", false)
+        val sdCoast = SmartDashboard.getBoolean("Elevator coast", false)
         if (sdCoast != neutralCoast) {
             neutralCoast = sdCoast
             rightMotor.setNeutralMode(
