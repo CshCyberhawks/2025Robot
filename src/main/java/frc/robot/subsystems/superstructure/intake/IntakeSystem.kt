@@ -1,9 +1,6 @@
 package frc.robot.subsystems.superstructure.intake
 
-import cshcyberhawks.lib.requests.Prerequisite
-import cshcyberhawks.lib.requests.Request
-import cshcyberhawks.lib.requests.SequentialRequest
-import cshcyberhawks.lib.requests.WaitRequest
+import cshcyberhawks.lib.requests.*
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -30,13 +27,13 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
 
     fun algaeIntake() = SequentialRequest(
         setIntakeState(IntakeState.AlgaeIntake),
-        WaitRequest(IntakeConstants.algaeIntakeTimeoutSeconds),
         watchForIntake()
     )
 
     fun algaeScore() = SequentialRequest(
-        setIntakeState(IntakeState.AlgaeIntake),
-        WaitRequest(IntakeConstants.algaeScoreTimeoutSeconds),
+        setIntakeState(IntakeState.AlgaeScore),
+        WaitRequest(IntakeConstants.algaeScoreTimeoutSeconds).withPrerequisite(Prerequisite.withCondition { !io.hasAlgae() }),
+        Request.withAction { println("Done Scoring") },
         setIntakeState(IntakeState.Idle)
     )
 

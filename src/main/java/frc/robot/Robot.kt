@@ -1,5 +1,6 @@
 package frc.robot
 
+import au.grapplerobotics.CanBridge
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
@@ -51,6 +52,8 @@ object Robot : TimedRobot() {
         SmartDashboard.putBoolean("Action", false)
         SmartDashboard.putBoolean("Confirm", false)
         SmartDashboard.putBoolean("Cancel", false)
+
+        CanBridge.runTCP()
     }
 
     /**

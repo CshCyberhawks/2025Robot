@@ -40,9 +40,9 @@ object Superstructure : SubsystemBase() {
     val intakeSystem =
             IntakeSystem(
                     when (RobotConfiguration.robotType) {
-                        RobotType.Real -> IntakeIOEmpty()
+                        RobotType.Real -> IntakeIOReal()
                         RobotType.Simulated -> IntakeIOEmpty()
-                        RobotType.Empty -> IntakeIOReal()
+                        RobotType.Empty -> IntakeIOEmpty()
                     }
             )
 

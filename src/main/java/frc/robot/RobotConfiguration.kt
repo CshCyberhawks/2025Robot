@@ -12,7 +12,7 @@ enum class OperatorType {
 }
 
 object RobotConfiguration {
-    val robotType = RobotType.Empty
+    val robotType = RobotType.Real
 
     val operatorType = OperatorType.Manual
 }
