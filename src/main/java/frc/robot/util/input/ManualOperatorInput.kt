@@ -2,6 +2,7 @@ package frc.robot.util.IO
 
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer
+import frc.robot.RobotState
 import frc.robot.subsystems.superstructure.Superstructure
 
 object ManualOperatorInput {
@@ -23,18 +24,16 @@ object ManualOperatorInput {
 //            )
 //        }))
         RobotContainer.xbox.y().onTrue(Commands.runOnce({
-            Superstructure.request(Superstructure.pivotSystem.l3Angle())
-
+            Superstructure.scoreL4()
+        }))
+        RobotContainer.xbox.x().onTrue(Commands.runOnce({
+            Superstructure.intakeFeeder()
         }))
         RobotContainer.xbox.b().onTrue(Commands.runOnce({
-            Superstructure.request(
-                Superstructure.pivotSystem.travelAngle()
-            )
+            Superstructure.scoreBarge()
         }))
         RobotContainer.xbox.a().onTrue(Commands.runOnce({
-            Superstructure.request(
-                Superstructure.pivotSystem.stowAngle()
-            )
+            RobotState.actionCancelled = true
         }))
     }
 }

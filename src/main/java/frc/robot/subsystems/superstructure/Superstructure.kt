@@ -13,6 +13,7 @@ import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOSim
 import frc.robot.subsystems.superstructure.intake.GamePieceState
 import frc.robot.subsystems.superstructure.intake.IntakeSystem
 import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOEmpty
+import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOReal
 import frc.robot.subsystems.superstructure.pivot.PivotSystem
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOEmpty
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOPID
@@ -25,7 +26,7 @@ object Superstructure : SubsystemBase() {
                     when (RobotConfiguration.robotType) {
                         RobotType.Real -> PivotIOPID()
                         RobotType.Simulated -> PivotIOSim()
-                        RobotType.Empty -> PivotIOPID()
+                        RobotType.Empty -> PivotIOEmpty()
                     }
             )
     val elevatorSystem =
@@ -41,7 +42,7 @@ object Superstructure : SubsystemBase() {
                     when (RobotConfiguration.robotType) {
                         RobotType.Real -> IntakeIOEmpty()
                         RobotType.Simulated -> IntakeIOEmpty()
-                        RobotType.Empty -> IntakeIOEmpty()
+                        RobotType.Empty -> IntakeIOReal()
                     }
             )
 
@@ -106,8 +107,9 @@ object Superstructure : SubsystemBase() {
     private fun safeRetractRequest() =
             SequentialRequest(
                     ParallelRequest(pivotSystem.travelAngle(), elevatorSystem.safeDownPosition()),
-                    elevatorSystem.stowPosition().withPrerequisite(pivotSystem.safeTravelDown()),
-                    pivotSystem.stowAngle().withPrerequisite(elevatorSystem.belowSafeUpPosition())
+                    WaitRequest(0.1),
+                    ParallelRequest(elevatorSystem.stowPosition().withPrerequisite(pivotSystem.safeTravelDown()),
+                        pivotSystem.stowAngle().withPrerequisite(elevatorSystem.belowSafeUpPosition()))
             )
 
     fun stow() = request(stowRequest())

@@ -4,6 +4,7 @@ import cshcyberhawks.lib.requests.Prerequisite
 import cshcyberhawks.lib.requests.Request
 import cshcyberhawks.lib.requests.SequentialRequest
 import cshcyberhawks.lib.requests.WaitRequest
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotState
@@ -45,6 +46,9 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
 
         RobotState.gamePieceState = if (io.hasCoral()) GamePieceState.Coral else if (io.hasAlgae()) GamePieceState
             .Algae else GamePieceState.Empty
+
+        SmartDashboard.putBoolean("Has coral", io.hasCoral())
+        SmartDashboard.putBoolean("Has algae", io.hasAlgae())
     }
 
     override fun simulationPeriodic() {}

@@ -21,7 +21,7 @@ class ElevatorIOPID() : ElevatorIO {
             ProfiledPIDController(
                     11.5,
                     0.0,
-                    0.29,
+                    0.6,
                     TrapezoidProfile.Constraints(
                             ElevatorConstants.velocityInches,
                             ElevatorConstants.accelationInches
