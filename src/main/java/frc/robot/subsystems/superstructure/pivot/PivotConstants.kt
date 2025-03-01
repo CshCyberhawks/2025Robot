@@ -1,16 +1,14 @@
 package frc.robot.subsystems.superstructure.pivot
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile
+
 object PivotConstants {
-    val kG = 0.0
-    val kS = 0.0
-    val kV = 0.0
-    val kA = 0.0
-    val kP = 0.0
-    val kI = 0.0
-    val kD = 0.0
-    val targetVelocity = 0.0
-    val targetAcceleration = 0.0
-    val targetJerk = 0.0
-    val id = 0
-    val canbus = ""
+    const val velocityDegrees = 180.0 // Guessed values for now
+    const val accelerationDegrees = 200.0
+
+    // Conversion so one (I guess its mechanism rotation) is 1 rotation of the pivot
+    const val conversionFactor =
+        100.0 * (24 / 32)
+
+    const val angleToleranceDegrees = 2.0
 }

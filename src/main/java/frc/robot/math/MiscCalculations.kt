@@ -1,4 +1,4 @@
-//package cshcyberhawks.swolib.math
+package frc.robot.math
 
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.util.WPIUtilJNI
@@ -43,13 +43,6 @@ object MiscCalculations {
         return abs(n1 - n2) <= range
     }
 
-    /**
-     * A function to get the current time in milliseconds
-     *
-     * @return The current time in milliseconds
-     */
-    fun getCurrentTime(): Double = WPIUtilJNI.now() * 1.0e-6
-
     fun translation2dWithinRange(current: Translation2d, range: Pair<Translation2d, Translation2d>): Boolean {
         val rangeStart = range.first
         val rangeEnd = range.second
@@ -92,8 +85,15 @@ object MiscCalculations {
 //    }
 
 
-    // rpm to units per sec conversion factor
-    // (rpm) * 2pi (rad/r) * r (r units/rad) * 1/60 (min/s)
-    fun rpm2ups(r: Double): Double = PI * r / 30.0
-    fun ups2rpm(r: Double): Double = 30.0 / (PI * r)
+    /**
+     * Converts a speed/acceleration in units to motor rotations.
+     *
+     * @param speed The speed in units.
+     * @param radius The radius of the wheel in units.
+     * @param reduction The gear reduction ratio (default is 1.0, meaning no reduction).
+     * @return The equivalent speed in motor rotations.
+     */
+    fun positionToRotations(speed: Double, radius: Double, reduction: Double = 1.0): Double {
+        return (speed / (2 * PI * radius)) * reduction
+    }
 }

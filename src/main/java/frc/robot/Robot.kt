@@ -1,16 +1,19 @@
 package frc.robot
 
-import MiscCalculations
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Pose3d
+import edu.wpi.first.math.geometry.Rotation3d
+import edu.wpi.first.math.geometry.Translation3d
+import edu.wpi.first.math.util.Units
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
@@ -18,6 +21,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer.leftJoystick
 import frc.robot.RobotContainer.vision
+import frc.robot.subsystems.superstructure.Superstructure
+import frc.robot.util.Visualizer
+import frc.robot.util.input.DriverAction
+import org.xml.sax.SAXNotSupportedException
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -35,21 +42,34 @@ object Robot : TimedRobot() {
      * the [autonomousInit] method will set it to the value selected in
      *the  AutoChooser on the dashboard.
      */
-    private var autonomousCommand: Command = Commands.runOnce({})
-    val robotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose", Pose2d.struct).publish();
-    val elevatorPosePublisher =
-        NetworkTableInstance.getDefault().getStructTopic("Elevator Pose", Pose3d.struct).publish();
-    val pivotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Pivot Pose", Pose3d.struct).publish();
-    val wristPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Wrist Pose", Pose3d.struct).publish();
+//    private var autonomousCommand: Command = Commands.runOnce({})
+    private var autonomousCommand: Command = Commands.runOnce({ Superstructure.scoreL4() })
 
+//    val elevatorPosePublisher =
+//        NetworkTableInstance.getDefault().getStructTopic("Elevator Pose", Pose3d.struct).publish();
+//    val pivotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Pivot Pose", Pose3d.struct).publish();
+//    val wristPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Wrist Pose", Pose3d.struct).publish();
+//
+
+    private val actionChooser = SendableChooser<DriverAction>()
+
+    init {
+        for (action in DriverAction.entries) {
+            actionChooser.addOption(action.name, action)
+        }
+
+        SmartDashboard.putData(actionChooser)
+
+        SmartDashboard.putBoolean("Action", false)
+        SmartDashboard.putBoolean("Confirm", false)
+        SmartDashboard.putBoolean("Cancel", false)
+    }
 
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
      */
-    override
-
-    fun robotInit() {
+    override fun robotInit() {
         // Report the use of the Kotlin Language for "FRC Usage Report" statistics
         HAL.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Kotlin, 0, WPILibVersion.Version)
         // Access the RobotContainer object so that it is initialized. This will perform all our
@@ -72,12 +92,7 @@ object Robot : TimedRobot() {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
 
-        robotPosePublisher.set(RobotContainer.drivetrain.getSwervePose())
-        elevatorPosePublisher.set(Pose3d())
-        pivotPosePublisher.set(Pose3d())
-        wristPosePublisher.set(Pose3d())
-
-        SmartDashboard.putNumberArray("Test", arrayOf(0.0, 0.0, 0.0))
+        Visualizer.periodic()
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */
@@ -93,6 +108,9 @@ object Robot : TimedRobot() {
     override fun autonomousInit() {
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
+        autonomousCommand.schedule()
+
+        Superstructure.initialize()
     }
 
     /** This method is called periodically during autonomous.  */
@@ -103,11 +121,32 @@ object Robot : TimedRobot() {
         // This makes sure that the autonomous stops running when teleop starts running. If you want the
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
         autonomousCommand.cancel()
+
+        Superstructure.initialize()
     }
 
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
 //        vision.updateOdometry(1, false)
+
+        if (SmartDashboard.getBoolean("Action", false)) {
+            actionChooser.selected.cmd.schedule()
+            println("Scheduled action")
+
+            SmartDashboard.putBoolean("Action", false)
+        }
+
+        if (SmartDashboard.getBoolean("Confirm", false)) {
+            RobotState.actionConfirmed = true
+            SmartDashboard.putBoolean("Confirm", false)
+        }
+
+
+        if (SmartDashboard.getBoolean("Cancel", false)) {
+            println("Cancelled")
+            RobotState.actionCancelled = true
+            SmartDashboard.putBoolean("Cancel", false)
+        }
     }
 
     override fun testInit() {

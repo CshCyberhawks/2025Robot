@@ -1,11 +1,11 @@
 package frc.robot
 
-import frc.robot.subsystems.superstructure.intake.AlgaeState
-import frc.robot.subsystems.superstructure.intake.CoralState
+import frc.robot.subsystems.superstructure.intake.GamePieceState
+
 
 object RobotState {
-    // Sure we need these
-    // I don't think we want to use them in the superstructure, but it might make sense to reference them in swerve or auto
-    var coralState = CoralState.Empty
-    var algaeState = AlgaeState.Empty
+    var gamePieceState = GamePieceState.Empty
+
+    var actionCancelled = false
+    var actionConfirmed = false
 }

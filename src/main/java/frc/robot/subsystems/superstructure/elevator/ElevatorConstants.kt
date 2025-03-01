@@ -1,16 +1,14 @@
 package frc.robot.subsystems.superstructure.elevator
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile
+
 object ElevatorConstants {
-    val kG = 0.0
-    val kS = 0.0
-    val kV = 0.0
-    val kA = 0.0
-    val kP = 0.0
-    val kI = 0.0
-    val kD = 0.0
-    val targetVelocity = 0.0
-    val targetAcceleration = 0.0
-    val targetJerk = 0.0
-    val id = 0
-    val canbus = ""
+    const val velocityInches = 26.5 // Guessed values for now
+    const val accelationInches = 30.0
+
+    // Conversion so one (I guess its mechanism rotation) is 1 inch on the elevator
+    const val conversionFactor =
+        20.0 * 1.751
+
+    const val positionTolerance = 0.1
 }
