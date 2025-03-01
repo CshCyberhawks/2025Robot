@@ -7,12 +7,12 @@ import frc.robot.subsystems.superstructure.Superstructure
 
 object ManualOperatorInput {
     fun configureBindings() {
-        RobotContainer.xbox.x().onTrue(Commands.runOnce({
-            Superstructure.request(Superstructure.intakeSystem.algaeIntake())
-        }))
-        RobotContainer.xbox.b().onTrue(Commands.runOnce({
-            Superstructure.request(Superstructure.intakeSystem.algaeScore())
-        }))
+//        RobotContainer.xbox.x().onTrue(Commands.runOnce({
+//            Superstructure.request(Superstructure.intakeSystem.algaeIntake())
+//        }))
+//        RobotContainer.xbox.b().onTrue(Commands.runOnce({
+//            Superstructure.request(Superstructure.intakeSystem.algaeScore())
+//        }))
 //            Superstructure.request(Superstructure.elevatorSystem.algaeRemoveHighPosition())
 //
 //        }))
@@ -35,8 +35,20 @@ object ManualOperatorInput {
 //        RobotContainer.xbox.b().onTrue(Commands.runOnce({
 //            Superstructure.scoreBarge()
 //        }))
-//        RobotContainer.xbox.a().onTrue(Commands.runOnce({
-//            RobotState.actionCancelled = true
-//        }))
+        RobotContainer.xbox.y().onTrue(Commands.runOnce({
+            Superstructure.scoreBarge()
+        }))
+        RobotContainer.xbox.b().onTrue(Commands.runOnce({
+            Superstructure.removeAlgaeHigh()
+        }))
+        RobotContainer.xbox.x().onTrue(Commands.runOnce({
+            Superstructure.removeAlgaeLow()
+        }))
+        RobotContainer.xbox.back().onTrue(Commands.runOnce({
+            RobotState.actionCancelled = true
+        }))
+        RobotContainer.xbox.start().onTrue(Commands.runOnce({
+            RobotState.actionConfirmed = true
+        }))
     }
 }

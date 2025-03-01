@@ -15,8 +15,8 @@ class TeleopDriveCommand : Command() {
     }
 
     override fun initialize() {
-        RobotContainer.rightJoystick.button(2)
-            .onTrue(runOnce { RobotContainer.drivetrain.seedFieldCentric() })
+//        RobotContainer.rightJoystick.button(2)
+//            .onTrue(runOnce { RobotContainer.drivetrain.seedFieldCentric() })
 
         super.initialize()
     }
