@@ -19,7 +19,7 @@ class VisionSystem {
     val max_distance_m = 6.0
 
     val limelightNames: Array<String> = when (RobotConfiguration.robotType) {
-        RobotType.Real -> arrayOf("limelight-front")
+        RobotType.Real -> arrayOf("limelight-fleft", "limelight-tright", "limelight-bfront")
         else -> emptyArray()
     }
 
