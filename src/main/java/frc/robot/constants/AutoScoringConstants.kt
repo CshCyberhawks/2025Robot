@@ -1,48 +1,65 @@
 package frc.robot.constants
 
 import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.math.geometry.Transform2d
+import edu.wpi.first.math.geometry.Translation2d
+import edu.wpi.first.math.util.Units
 
 object AutoScoringConstants {
+    enum class CoralScoringPositions(var left: Pose2d, var right: Pose2d) {
+        A(Pose2d(), Pose2d()),
+        B(Pose2d(), Pose2d()),
+        C(Pose2d(), Pose2d()),
+        D(Pose2d(), Pose2d()),
+        E(Pose2d(), Pose2d()),
+        F(Pose2d(), Pose2d()),
+    }
+
     object CoralScoring {
-        object A {
-            val left: Pose2d = Pose2d(/*3.117, */);
-            val right: Pose2d = Pose2d();
-            val center: Pose2d = Pose2d();
-        }
+        init {
+            for (face in 0..5) {
+                val poseDirection = Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * face)).toDouble()))
+                val adjustX: Double = Units.inchesToMeters(30.738)
+                val adjustY: Double = Units.inchesToMeters(6.469)
 
-        object B {
-            val left: Pose2d = Pose2d();
-            val right: Pose2d = Pose2d();
-            val center: Pose2d = Pose2d();
+                val rightPose =
+                    Pose2d(
+                        Translation2d(
+                            poseDirection
+                                .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
+                                .x,
+                            poseDirection
+                                .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
+                                .y
+                            ),
+                        Rotation2d(
+                            poseDirection.rotation.radians
+                        )
+                    )
 
-        }
+                val leftPose =
+                    Pose2d(
+                        Translation2d(
+                            poseDirection
+                                .transformBy(Transform2d(adjustX, -adjustY, Rotation2d()))
+                                .x,
+                            poseDirection
+                                .transformBy(Transform2d(adjustX, -adjustY, Rotation2d()))
+                                .y
+                        ),
+                        Rotation2d(
+                            poseDirection.rotation.radians
+                        )
+                    )
 
-        object C {
-            val left: Pose2d = Pose2d();
-            val right: Pose2d = Pose2d();
-            val center: Pose2d = Pose2d();
 
-        }
+                println("$face right: $rightPose")
+                println("$face left: $leftPose")
 
-        object D {
-            val left: Pose2d = Pose2d();
-            val right: Pose2d = Pose2d();
-            val center: Pose2d = Pose2d();
-
-        }
-
-        object E {
-            val left: Pose2d = Pose2d();
-            val right: Pose2d = Pose2d();
-            val center: Pose2d = Pose2d();
-
-        }
-
-        object F {
-            val left: Pose2d = Pose2d();
-            val right: Pose2d = Pose2d();
-            val center: Pose2d = Pose2d();
-
+                CoralScoringPositions.entries[face].right = rightPose
+                CoralScoringPositions.entries[face].left = leftPose
+            }
         }
     }
 
