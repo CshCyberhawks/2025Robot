@@ -15,6 +15,7 @@ object SuperstructureAction {
         Request.withAction {
             RobotState.actionCancelled = false
             RobotState.actionConfirmed = false
+            RobotState.superstructureActionRunning = true
         },
         prepAction,
         AwaitRequest {
@@ -24,6 +25,10 @@ object SuperstructureAction {
         IfRequest({ forceManualRetract }, AwaitRequest {
             cancelled()
         }),
-        returnAction
+        returnAction,
+        Superstructure.awaitAtDesiredPosition(),
+        Request.withAction {
+            RobotState.superstructureActionRunning = false
+        }
     )
 }

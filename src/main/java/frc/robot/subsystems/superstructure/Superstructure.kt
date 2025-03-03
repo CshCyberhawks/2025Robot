@@ -98,7 +98,13 @@ object Superstructure : SubsystemBase() {
         SmartDashboard.putBoolean("All Requests Complete", allRequestsComplete)
     }
 
-    private fun awaitAtDesiredPosition() =
+    fun requestSuperstructureAction(action: Request) {
+        if (!RobotState.superstructureActionRunning) {
+            request(action)
+        }
+    }
+
+    fun awaitAtDesiredPosition() =
             ParallelRequest(elevatorSystem.awaitDesiredPosition(), pivotSystem.awaitDesiredAngle())
 
     private fun stowRequest() =
@@ -112,10 +118,10 @@ object Superstructure : SubsystemBase() {
                         pivotSystem.stowAngle().withPrerequisite(elevatorSystem.belowSafeUpPosition()))
             )
 
-    fun stow() = request(stowRequest())
+    fun stow() = requestSuperstructureAction(stowRequest())
 
     fun intakeFeeder() =
-            request(
+        requestSuperstructureAction(
                     SuperstructureAction.create(
                             ParallelRequest(
                                     elevatorSystem.feederPosition(),
@@ -129,7 +135,7 @@ object Superstructure : SubsystemBase() {
             )
 
     fun scoreL2() =
-            request(
+        requestSuperstructureAction(
                     SuperstructureAction.create(
                             ParallelRequest(pivotSystem.l2Angle(), elevatorSystem.stowPosition()),
                             intakeSystem.coralScore(),
@@ -139,7 +145,7 @@ object Superstructure : SubsystemBase() {
             )
 
     fun scoreL3() =
-            request(
+        requestSuperstructureAction(
                     SuperstructureAction.create(
                             ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position()),
                             intakeSystem.coralScore(),
@@ -149,7 +155,7 @@ object Superstructure : SubsystemBase() {
             )
 
     fun scoreL4() =
-            request(
+        requestSuperstructureAction(
                     SuperstructureAction.create(
                             SequentialRequest(
                                     ParallelRequest(
@@ -167,7 +173,7 @@ object Superstructure : SubsystemBase() {
             )
 
     fun removeAlgaeLow() =
-            request(
+            requestSuperstructureAction(
                     SuperstructureAction.create(
                             ParallelRequest(
                                     pivotSystem.algaeRemoveAngle(),
@@ -184,7 +190,7 @@ object Superstructure : SubsystemBase() {
             )
 
     fun removeAlgaeHigh() =
-            request(
+        requestSuperstructureAction(
                     SuperstructureAction.create(
                             SequentialRequest(
                                     ParallelRequest(
@@ -205,7 +211,7 @@ object Superstructure : SubsystemBase() {
                     )
             )
 
-    fun scoreProcessor() = request(
+    fun scoreProcessor() = requestSuperstructureAction(
         SuperstructureAction.create(
             ParallelRequest(elevatorSystem.processorPosition(), pivotSystem.processorAngle()),
             intakeSystem.algaeScore(),
@@ -214,7 +220,7 @@ object Superstructure : SubsystemBase() {
     )
 
     fun scoreBarge() =
-            request(
+        requestSuperstructureAction(
                     SuperstructureAction.create(
                             SequentialRequest(
                                     ParallelRequest(
