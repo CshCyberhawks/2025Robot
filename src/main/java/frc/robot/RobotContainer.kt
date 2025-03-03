@@ -1,5 +1,6 @@
 package frc.robot
 
+import com.fasterxml.jackson.databind.JsonSerializer.None
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick
@@ -18,7 +19,9 @@ import frc.robot.util.VisionSystem
 import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID
+import frc.robot.util.input.ManualDriverInput
 import frc.robot.util.input.TestingOperatorInput
+import java.util.*
 
 object RobotContainer {
     val leftJoystick: CommandJoystick = CommandJoystick(0)
@@ -39,9 +42,12 @@ object RobotContainer {
 
     val teleopDriveCommand = when (RobotConfiguration.robotType) {
         RobotType.Real -> TeleopDriveCommand()
+//        RobotType.Real -> Commands.run({})
         RobotType.Simulated -> SimTeleopDriveCommand()
         RobotType.Empty -> Commands.run({})
     }
+
+    var currentDriveCommand: Optional<Command> = Optional.empty();
 
     init {
         configureBindings()
@@ -53,7 +59,7 @@ object RobotContainer {
     }
 
     private fun configureBindings() {
-        teleopDriveCommand.addRequirements(drivetrain)
+//        teleopDriveCommand.addRequirements(drivetrain)
         drivetrain.setDefaultCommand(teleopDriveCommand)
 
 // We might need this?
@@ -64,6 +70,10 @@ object RobotContainer {
             OperatorType.Manual -> ManualOperatorInput.configureBindings()
             OperatorType.Testing -> TestingOperatorInput.configureBindings()
         }
+
+        ManualDriverInput.configureBindings()
+
+        ManualOperatorInput.configureBindings()
     }
 
     val autonomousCommand: Command

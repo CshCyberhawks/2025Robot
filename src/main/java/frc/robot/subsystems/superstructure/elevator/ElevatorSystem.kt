@@ -24,7 +24,7 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
 
     fun awaitDesiredPosition() = AwaitRequest { atDesiredPosition() }
 
-    fun belowSafeUpPosition() = Prerequisite.withCondition { !aboveSafeUpPosition() }
+    fun belowSafeUpPosition() = Prerequisite.withCondition { getPosition() < safeUpPosition }
 
     private fun setPosition(positionInches: Double) = Request.withAction {
         io.setPosition(positionInches)
@@ -38,15 +38,17 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
 
     fun feederPosition() = setPosition(6.5)
 
-    fun stowPosition() = setPosition(0.0)
+    fun stowPosition() = setPosition(1.0)
 
     fun safeUpPosition() = setPosition(safeUpPosition)
     fun safeDownPosition() = setPosition(safeDownPosition)
 
-    fun l3Position() = setPosition(2.5)
-    fun l4Position() = setPosition(30.0)
+    fun l3Position() = setPosition(4.0)
+    fun l4Position() = setPosition(29.5) // Should be 30 eventually but not safe right now
 
     fun algaeRemoveLowPosition() = setPosition(1.0)
-    fun algaeRemoveHighPosition() = setPosition(17.5)
-    fun bargePosition() = setPosition(30.0)
+    fun algaeRemoveHighPosition() = setPosition(18.0)
+
+    fun processorPosition() = setPosition(1.0)
+    fun bargePosition() = setPosition(29.0) // Should be 30 eventually but not safe right now
 }

@@ -15,6 +15,11 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
 
     fun atDesiredAngle() = io.atDesiredAngle()
 
+    init {
+        SmartDashboard.putNumber("L3 Angle", 125.0)
+        SmartDashboard.putNumber("L4 Angle", 127.0)
+    }
+
     private fun setAngle(angleDegrees: Double) = Request.withAction {
         io.setAngle(angleDegrees)
     }
@@ -35,16 +40,18 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
 
     fun stowAngle() = setAngle(290.0)
 
-    fun travelAngle() = setAngle(230.0)
+    fun travelAngle() = setAngle(220.0)
 
     fun feederAngle() = setAngle(310.0)
 
     fun l2Angle() = setAngle(160.0)
-    fun l3Angle() = setAngle(125.0)
-    fun l4Angle() = setAngle(135.0)
+    fun l3Angle() = setAngle(SmartDashboard.getNumber("L3 Angle", 125.0))
+    fun l4Angle() = setAngle(SmartDashboard.getNumber("L4 Angle", 127.0))
 
-    fun algaeRemoveAngle() = setAngle(245.0)
+    fun algaeRemoveAngle() = setAngle(220.0)
     fun bargeAngle() = setAngle(130.0)
+
+    fun processorAngle() = setAngle(295.0)
 
     override fun periodic() {
         io.periodic()

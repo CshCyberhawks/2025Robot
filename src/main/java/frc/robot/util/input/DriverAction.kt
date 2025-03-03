@@ -2,6 +2,7 @@ package frc.robot.util.input
 
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
+import frc.robot.commands.TeleopAutoScore
 import frc.robot.subsystems.superstructure.Superstructure
 
 enum class DriverAction(val cmd: Command) {
@@ -12,5 +13,5 @@ enum class DriverAction(val cmd: Command) {
     ScoreL4(Commands.runOnce({ Superstructure.scoreL4() })),
     RemoveAlgaeLow(Commands.runOnce({ Superstructure.removeAlgaeLow() })),
     RemoveAlgaeHigh(Commands.runOnce({ Superstructure.removeAlgaeHigh() })),
-    ScoreBarge(Commands.runOnce({ Superstructure.scoreBarge() }))
+    ScoreBarge(Commands.runOnce({ Superstructure.scoreBarge() })),
 }

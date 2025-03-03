@@ -5,8 +5,9 @@ import com.ctre.phoenix6.controls.Follower
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.CANConstants
-import frc.robot.math.MiscCalculations
+import cshcyberhawks.lib.math.MiscCalculations
 import frc.robot.subsystems.superstructure.elevator.ElevatorConstants
 import frc.robot.subsystems.superstructure.elevator.ElevatorIO
 
@@ -15,8 +16,9 @@ class ElevatorIOReal() : ElevatorIO {
     private val leftMotor = TalonFX(CANConstants.Elevator.leftMotorId)
 
     private var rightMotorConfiguration = TalonFXConfiguration()
+    private var leftMotorConfiguration = TalonFXConfiguration()
 
-    private val motionMagic = MotionMagicTorqueCurrentFOC(0.0)
+    private val motionMagic = MotionMagicTorqueCurrentFOC(0.0).withFeedForward(1.0 * rightMotor.motorKT.valueAsDouble)
 
     private var desiredPosition = 0.0
 
@@ -30,12 +32,13 @@ class ElevatorIOReal() : ElevatorIO {
         val slot0Configs = rightMotorConfiguration.Slot0;
 
         // TODO: These values need to be changed
-        slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
-        slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
-        slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-        slot0Configs.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
+        slot0Configs.kS = 0.2; // Add 0.25 V output to overcome static friction
+        slot0Configs.kV = 0.43; // A velocity target of 1 rps results in 0.12 V output
+        slot0Configs.kA = 0.1; // An acceleration of 1 rps/s requires 0.01 V output
+        slot0Configs.kG = 0.01;
+        slot0Configs.kP = 0.01; // A position error of 2.5 rotations results in 12 V output
         slot0Configs.kI = 0.0; // no output for integrated error
-        slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
+        slot0Configs.kD = 0.0; // A velocity error of 1 rps results in 0.1 V output
 
         // set Motion Magic settings
         val motionMagicConfigs = rightMotorConfiguration.MotionMagic;
@@ -44,9 +47,20 @@ class ElevatorIOReal() : ElevatorIO {
 //        motionMagicConfigs.MotionMagicJerk = 1600; Optional // Target jerk of 1600 rps/s/s (0.1 seconds)
         rightMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive
 
+        val rightCurrentConfigs = rightMotorConfiguration.CurrentLimits
+        rightCurrentConfigs.StatorCurrentLimitEnable = true
+        rightCurrentConfigs.StatorCurrentLimit = 60.0
+
+        val leftCurrentConfigs = leftMotorConfiguration.CurrentLimits
+        leftCurrentConfigs.StatorCurrentLimitEnable = true
+        leftCurrentConfigs.StatorCurrentLimit = 60.0
+
         rightMotor.configurator.apply(rightMotorConfiguration);
+        leftMotor.configurator.apply(leftMotorConfiguration)
 
         leftMotor.setControl(Follower(rightMotor.deviceID, true))
+
+        rightMotor.setPosition(0.0)
     }
 
     override fun getPosition(): Double {
@@ -58,8 +72,12 @@ class ElevatorIOReal() : ElevatorIO {
 
     override fun setPosition(positionInches: Double) {
         desiredPosition = positionInches
-        rightMotor.setControl(motionMagic.withPosition(positionInches))
+        rightMotor.setControl(
+            motionMagic.withPosition(positionInches)
+        )
     }
 
-    override fun periodic() {}
+    override fun periodic() {
+        SmartDashboard.putNumber("Elevator Desired Position", desiredPosition)
+    }
 }

@@ -9,7 +9,8 @@ object SuperstructureAction {
         confirmAction: Request,
         returnAction: Request,
         confirmed: () -> Boolean = { RobotState.actionConfirmed },
-        cancelled: () -> Boolean = { RobotState.actionCancelled }
+        cancelled: () -> Boolean = { RobotState.actionCancelled },
+        forceManualRetract: Boolean = false
     ): Request = SequentialRequest(
         Request.withAction {
             RobotState.actionCancelled = false
@@ -20,6 +21,9 @@ object SuperstructureAction {
             confirmed() || cancelled()
         },
         IfRequest(confirmed, confirmAction),
+        IfRequest({ forceManualRetract }, AwaitRequest {
+            cancelled()
+        }),
         returnAction
     )
 }

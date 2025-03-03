@@ -12,4 +12,11 @@ object SwerveConstants {
         RotationsPerSecond.of(0.75).`in`(RadiansPerSecond) // 3/4 of a rotation per second max angular velocity
 
     var ControlledAngularRate = MaxAngularRateConst
+
+
+    val maxAutoSpeed = 2.0
+    val maxAutoAccel = 3.0
+
+    val maxAutoTwist = 350.0
+    val maxAutoTwistAccel = 450.0
 }

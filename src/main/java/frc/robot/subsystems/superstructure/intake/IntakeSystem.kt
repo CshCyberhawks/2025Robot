@@ -1,9 +1,7 @@
 package frc.robot.subsystems.superstructure.intake
 
-import cshcyberhawks.lib.requests.Prerequisite
-import cshcyberhawks.lib.requests.Request
-import cshcyberhawks.lib.requests.SequentialRequest
-import cshcyberhawks.lib.requests.WaitRequest
+import cshcyberhawks.lib.requests.*
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotState
@@ -15,7 +13,7 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     private fun setIntakeState(state: IntakeState) = Request.withAction { io.setIntakeState(state) }
     private fun watchForIntake() = Request.withAction { io.watchForIntake() }
 
-    private fun setGamePieceState(state: GamePieceState) = Request.withAction { RobotState.gamePieceState = state }
+    fun idle() = setIntakeState(IntakeState.Idle)
 
     fun coralIntake() = SequentialRequest(
         setIntakeState(IntakeState.CoralIntake),
@@ -26,26 +24,30 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     fun coralScore() = SequentialRequest(
         setIntakeState(IntakeState.CoralScore),
         WaitRequest(IntakeConstants.coralScoreTimeoutSeconds),
-        setGamePieceState(GamePieceState.Empty),
         setIntakeState(IntakeState.Idle)
     )
 
     fun algaeIntake() = SequentialRequest(
         setIntakeState(IntakeState.AlgaeIntake),
-        WaitRequest(IntakeConstants.algaeIntakeTimeoutSeconds),
         watchForIntake()
     )
 
     fun algaeScore() = SequentialRequest(
-        setIntakeState(IntakeState.AlgaeIntake),
-        WaitRequest(IntakeConstants.algaeScoreTimeoutSeconds),
-        setGamePieceState(GamePieceState.Empty),
+        setIntakeState(IntakeState.AlgaeScore),
+        WaitRequest(IntakeConstants.algaeScoreTimeoutSeconds).withPrerequisite(Prerequisite.withCondition { !io.hasAlgae() }),
+        Request.withAction { println("Done Scoring") },
         setIntakeState(IntakeState.Idle)
     )
 
 
     override fun periodic() {
         io.periodic()
+
+        RobotState.gamePieceState = if (io.hasCoral()) GamePieceState.Coral else if (io.hasAlgae()) GamePieceState
+            .Algae else GamePieceState.Empty
+
+        SmartDashboard.putBoolean("Has coral", io.hasCoral())
+        SmartDashboard.putBoolean("Has algae", io.hasAlgae())
     }
 
     override fun simulationPeriodic() {}

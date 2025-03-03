@@ -1,30 +1,20 @@
 package frc.robot
 
+import au.grapplerobotics.CanBridge
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
-import edu.wpi.first.math.MathUtil
-import edu.wpi.first.math.geometry.Pose2d
-import edu.wpi.first.math.geometry.Pose3d
-import edu.wpi.first.math.geometry.Rotation3d
-import edu.wpi.first.math.geometry.Translation3d
-import edu.wpi.first.math.util.Units
-import edu.wpi.first.networktables.NetworkTableInstance
-import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
-import frc.robot.RobotContainer.leftJoystick
-import frc.robot.RobotContainer.vision
+import frc.robot.commands.TeleopDriveCommand
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.util.Visualizer
 import frc.robot.util.input.DriverAction
-import org.xml.sax.SAXNotSupportedException
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -42,8 +32,12 @@ object Robot : TimedRobot() {
      * the [autonomousInit] method will set it to the value selected in
      *the  AutoChooser on the dashboard.
      */
-//    private var autonomousCommand: Command = Commands.runOnce({})
-    private var autonomousCommand: Command = Commands.runOnce({ Superstructure.scoreL4() })
+    private var autonomousCommand: Command = Commands.runOnce({})
+//    private var autonomousCommand: Command = Commands.sequence(
+//        Commands.run({ RobotContainer.drivetrain.applyDriveRequest(-1.0, 0.0, 0.0) }).raceWith(Commands.waitSeconds(1.0)),
+//        Commands.runOnce({ RobotContainer.drivetrain.applyDriveRequest(0.0, 0.0, 0.0) }),
+//    )
+//    private var autonomousCommand = Commands.run({ RobotContainer.drivetrain.applyDriveRequest(-1.0, 0.0, 0.0) })
 
 //    val elevatorPosePublisher =
 //        NetworkTableInstance.getDefault().getStructTopic("Elevator Pose", Pose3d.struct).publish();
@@ -51,18 +45,14 @@ object Robot : TimedRobot() {
 //    val wristPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Wrist Pose", Pose3d.struct).publish();
 //
 
-    private val actionChooser = SendableChooser<DriverAction>()
 
     init {
-        for (action in DriverAction.entries) {
-            actionChooser.addOption(action.name, action)
-        }
-
-        SmartDashboard.putData(actionChooser)
 
         SmartDashboard.putBoolean("Action", false)
         SmartDashboard.putBoolean("Confirm", false)
         SmartDashboard.putBoolean("Cancel", false)
+
+        CanBridge.runTCP()
     }
 
     /**
@@ -74,6 +64,8 @@ object Robot : TimedRobot() {
         HAL.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Kotlin, 0, WPILibVersion.Version)
         // Access the RobotContainer object so that it is initialized. This will perform all our
         // button bindings, and put our autonomous chooser on the dashboard.
+
+        SmartDashboard.putBoolean("full reset with vision", false)
 
         RobotContainer
     }
@@ -92,6 +84,8 @@ object Robot : TimedRobot() {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
 
+//        SmartDashboard.putNumber("robot pose x: ", RobotContainer.drivetrain.getSwervePose().x)
+
         Visualizer.periodic()
     }
 
@@ -101,7 +95,7 @@ object Robot : TimedRobot() {
     }
 
     override fun disabledPeriodic() {
-//        vision.updateOdometryFromDisabled()
+//        RobotContainer.vision.updateOdometryFromDisabled()
     }
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
@@ -109,6 +103,9 @@ object Robot : TimedRobot() {
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
         autonomousCommand.schedule()
+
+
+
 
         Superstructure.initialize()
     }
@@ -122,31 +119,13 @@ object Robot : TimedRobot() {
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
         autonomousCommand.cancel()
 
+//        TeleopDriveCommand().schedule()
         Superstructure.initialize()
     }
 
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
-//        vision.updateOdometry(1, false)
-
-        if (SmartDashboard.getBoolean("Action", false)) {
-            actionChooser.selected.cmd.schedule()
-            println("Scheduled action")
-
-            SmartDashboard.putBoolean("Action", false)
-        }
-
-        if (SmartDashboard.getBoolean("Confirm", false)) {
-            RobotState.actionConfirmed = true
-            SmartDashboard.putBoolean("Confirm", false)
-        }
-
-
-        if (SmartDashboard.getBoolean("Cancel", false)) {
-            println("Cancelled")
-            RobotState.actionCancelled = true
-            SmartDashboard.putBoolean("Cancel", false)
-        }
+//        RobotContainer.vision.updateOdometry(1, false)
     }
 
     override fun testInit() {
@@ -160,7 +139,6 @@ object Robot : TimedRobot() {
     }
 
 //    var lastLoopTime = 0.0
-
     /** This method is called once when the robot is first started up.  */
     override fun simulationInit() {
 //        lastLoopTime = MiscCalculations.getCurrentTime()
