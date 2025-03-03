@@ -8,25 +8,30 @@ import java.util.*
 
 object ManualDriverInput {
 
-    val cancel = 2;
+    val cancel = 4;
     fun configureBindings() {
         RobotContainer.rightJoystick.button(2)
-        .onTrue(Commands.runOnce({ RobotContainer.drivetrain.seedFieldCentric() }))
+        .onTrue(Commands.runOnce({ RobotContainer.drivetrain.seedFieldCentric(); println("seeding field relative") }))
 
-        RobotContainer.leftJoystick.button(cancel).onTrue(Commands.runOnce({
+        RobotContainer.rightJoystick.button(cancel).onTrue(Commands.runOnce({
             if (!RobotContainer.currentDriveCommand.isEmpty) {
                 RobotContainer.currentDriveCommand.get().cancel()
                 RobotContainer.currentDriveCommand = Optional.empty()
-                RobotState.actionCancelled = true
             }
         }))
 
         RobotContainer.leftJoystick.button(3).onTrue(Commands.runOnce({
-            if (RobotContainer.currentDriveCommand.isEmpty) {
-                TeleopAutoScore.score()
-            } else {
-                RobotState.actionConfirmed = true
-            }
+            RobotState.actionCancelled = true
+            println("action cancelled")
+        }))
+
+        RobotContainer.leftJoystick.button(4).onTrue(Commands.runOnce({
+            println("action confirmed")
+            RobotState.actionConfirmed = true
+//            if (RobotContainer.currentDriveCommand.isEmpty) {
+//                TeleopAutoScore.score()
+//            } else {
+//            }
         }))
     }
 

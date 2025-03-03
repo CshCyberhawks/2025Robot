@@ -20,6 +20,7 @@ open class SwerveIOBase() : SubsystemBase() {
 
     open fun addVisionMeasurement(visionRobotPoseMeters: Pose2d, timestampSeconds: Double) {}
     open fun setVisionMeasurementStdDevs(visionMeasurementStdDevs: Matrix<N3, N1>) {}
+    open fun resetPose(pose2d: Pose2d) {}
 
     open fun applyDriveRequest(x: Double, y: Double, twistRadians: Double) {}
     open fun applyRobotRelativeDriveRequest(x: Double, y: Double, twistRadians: Double) {}

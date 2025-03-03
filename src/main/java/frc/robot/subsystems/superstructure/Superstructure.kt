@@ -205,6 +205,14 @@ object Superstructure : SubsystemBase() {
                     )
             )
 
+    fun scoreProcessor() = request(
+        SuperstructureAction.create(
+            ParallelRequest(elevatorSystem.processorPosition(), pivotSystem.processorAngle()),
+            intakeSystem.algaeScore(),
+            stowRequest()
+        )
+    )
+
     fun scoreBarge() =
             request(
                     SuperstructureAction.create(

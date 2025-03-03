@@ -39,6 +39,9 @@ class SwerveIOReal() : SwerveIOBase() {
 //        drivetrain.defaultCommand = command
 //    }
 
+    override fun resetPose(pose2d: Pose2d) {
+        drivetrain.resetPose(pose2d)
+    }
     private fun configurePathPlanner() {
 //        drivetrain.get
         AutoBuilder.configure(

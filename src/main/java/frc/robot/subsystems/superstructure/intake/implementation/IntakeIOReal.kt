@@ -14,7 +14,7 @@ import frc.robot.subsystems.superstructure.intake.IntakeState
 
 class IntakeIOReal() : IntakeIO {
     private val intakeMotor = TalonFX(CANConstants.Intake.motorId)
-//    private val coralLaserCAN = LaserCan(CANConstants.Intake.coralLaserCANId)
+    private val coralLaserCAN = LaserCan(CANConstants.Intake.coralLaserCANId)
     private val algaeLaserCAN = LaserCan(CANConstants.Intake.algaeLaserCANId)
 
     private val torqueRequest = TorqueCurrentFOC(0.0)
@@ -30,9 +30,9 @@ class IntakeIOReal() : IntakeIO {
 
         intakeMotor.configurator.apply(coralIntakeMotorConfiguration)
 
-//        coralLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
-//        //coralLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
-//        coralLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
+        coralLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
+        //coralLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
+        coralLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
 
         algaeLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
         //algaeLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
@@ -58,13 +58,10 @@ class IntakeIOReal() : IntakeIO {
     }
 
     override fun hasCoral(): Boolean {
-//        val measurement: LaserCanInterface.Measurement = coralLaserCAN.measurement
-//        @Suppress("SENSELESS_COMPARISON")
-//        return (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < Units.inchesToMeters(
-//                1.0 // Plates are 2in apart
-//            )
-//        )
-        return false
+        val measurement: LaserCanInterface.Measurement = coralLaserCAN.measurement
+        SmartDashboard.putNumber("Coral Measurement", measurement.distance_mm.toDouble())
+        @Suppress("SENSELESS_COMPARISON")
+        return (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 48.0)
     }
 
     override fun periodic() {
@@ -77,5 +74,9 @@ class IntakeIOReal() : IntakeIO {
                 watchingForIntake = false
             }
         }
+
+        SmartDashboard.putNumber("Intake position", intakeMotor.position.valueAsDouble)
+        SmartDashboard.putNumber("Intake velocity", intakeMotor.velocity.valueAsDouble)
+        SmartDashboard.putNumber("Intake acceleration", intakeMotor.acceleration.valueAsDouble)
     }
 }

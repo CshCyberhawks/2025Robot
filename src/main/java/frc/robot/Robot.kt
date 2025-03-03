@@ -32,8 +32,12 @@ object Robot : TimedRobot() {
      * the [autonomousInit] method will set it to the value selected in
      *the  AutoChooser on the dashboard.
      */
-//    private var autonomousCommand: Command = Commands.runOnce({})
-    private var autonomousCommand: Command = Commands.runOnce({ Superstructure.scoreL4() })
+    private var autonomousCommand: Command = Commands.runOnce({})
+//    private var autonomousCommand: Command = Commands.sequence(
+//        Commands.run({ RobotContainer.drivetrain.applyDriveRequest(-1.0, 0.0, 0.0) }).raceWith(Commands.waitSeconds(1.0)),
+//        Commands.runOnce({ RobotContainer.drivetrain.applyDriveRequest(0.0, 0.0, 0.0) }),
+//    )
+//    private var autonomousCommand = Commands.run({ RobotContainer.drivetrain.applyDriveRequest(-1.0, 0.0, 0.0) })
 
 //    val elevatorPosePublisher =
 //        NetworkTableInstance.getDefault().getStructTopic("Elevator Pose", Pose3d.struct).publish();
@@ -61,6 +65,8 @@ object Robot : TimedRobot() {
         // Access the RobotContainer object so that it is initialized. This will perform all our
         // button bindings, and put our autonomous chooser on the dashboard.
 
+        SmartDashboard.putBoolean("full reset with vision", false)
+
         RobotContainer
     }
 
@@ -78,6 +84,8 @@ object Robot : TimedRobot() {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run()
 
+//        SmartDashboard.putNumber("robot pose x: ", RobotContainer.drivetrain.getSwervePose().x)
+
         Visualizer.periodic()
     }
 
@@ -87,7 +95,7 @@ object Robot : TimedRobot() {
     }
 
     override fun disabledPeriodic() {
-//        vision.updateOdometryFromDisabled()
+//        RobotContainer.vision.updateOdometryFromDisabled()
     }
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
@@ -95,6 +103,9 @@ object Robot : TimedRobot() {
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
         autonomousCommand.schedule()
+
+
+
 
         Superstructure.initialize()
     }
@@ -114,7 +125,7 @@ object Robot : TimedRobot() {
 
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
-//        vision.updateOdometry(1, false)
+//        RobotContainer.vision.updateOdometry(1, false)
     }
 
     override fun testInit() {

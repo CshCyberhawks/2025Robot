@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d
 object AutoScoringConstants {
     object CoralScoring {
         object A {
-            val left: Pose2d = Pose2d();
+            val left: Pose2d = Pose2d(/*3.117, */);
             val right: Pose2d = Pose2d();
             val center: Pose2d = Pose2d();
         }

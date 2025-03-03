@@ -2,7 +2,7 @@ package frc.robot.subsystems.superstructure.intake
 
 object IntakeConstants {
     const val coralIntakeTimeoutSeconds = 0.5
-    const val coralScoreTimeoutSeconds = 0.2
+    const val coralScoreTimeoutSeconds = 0.5
     const val algaeIntakeTimeoutSeconds = 0.3
     const val algaeScoreTimeoutSeconds = 0.5
 

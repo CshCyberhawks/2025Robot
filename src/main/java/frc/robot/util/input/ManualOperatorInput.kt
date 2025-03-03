@@ -36,13 +36,25 @@ object ManualOperatorInput {
 //            Superstructure.scoreBarge()
 //        }))
         RobotContainer.xbox.y().onTrue(Commands.runOnce({
-            Superstructure.scoreBarge()
+            Superstructure.scoreL4()
         }))
         RobotContainer.xbox.b().onTrue(Commands.runOnce({
-            Superstructure.removeAlgaeHigh()
+            Superstructure.scoreL3()
         }))
         RobotContainer.xbox.x().onTrue(Commands.runOnce({
+            Superstructure.intakeFeeder()
+        }))
+        RobotContainer.xbox.leftBumper().onTrue(Commands.runOnce({
             Superstructure.removeAlgaeLow()
+        }))
+        RobotContainer.xbox.rightBumper().onTrue(Commands.runOnce({
+            Superstructure.removeAlgaeHigh()
+        }))
+        RobotContainer.xbox.a().onTrue(Commands.runOnce({
+            Superstructure.scoreBarge()
+        }))
+        RobotContainer.xbox.povUp().onTrue(Commands.runOnce({
+            Superstructure.scoreProcessor()
         }))
         RobotContainer.xbox.back().onTrue(Commands.runOnce({
             RobotState.actionCancelled = true

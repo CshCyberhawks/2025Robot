@@ -19,6 +19,7 @@ import frc.robot.util.VisionSystem
 import com.pathplanner.lib.auto.NamedCommands
 import edu.wpi.first.wpilibj.GenericHID
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID
+import frc.robot.util.input.ManualDriverInput
 import frc.robot.util.input.TestingOperatorInput
 import java.util.*
 
@@ -69,6 +70,8 @@ object RobotContainer {
             OperatorType.Manual -> ManualOperatorInput.configureBindings()
             OperatorType.Testing -> TestingOperatorInput.configureBindings()
         }
+
+        ManualDriverInput.configureBindings()
 
         ManualOperatorInput.configureBindings()
     }

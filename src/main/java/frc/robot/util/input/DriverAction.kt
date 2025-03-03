@@ -14,5 +14,4 @@ enum class DriverAction(val cmd: Command) {
     RemoveAlgaeLow(Commands.runOnce({ Superstructure.removeAlgaeLow() })),
     RemoveAlgaeHigh(Commands.runOnce({ Superstructure.removeAlgaeHigh() })),
     ScoreBarge(Commands.runOnce({ Superstructure.scoreBarge() })),
-    AutoScore(Commands.runOnce({TeleopAutoScore()}))
 }
