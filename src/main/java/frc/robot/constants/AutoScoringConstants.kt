@@ -13,53 +13,48 @@ object AutoScoringConstants {
         C(Pose2d(), Pose2d()),
         D(Pose2d(), Pose2d()),
         E(Pose2d(), Pose2d()),
-        F(Pose2d(), Pose2d()),
+        F(Pose2d(), Pose2d())
     }
 
-    object CoralScoring {
-        init {
-            for (face in 0..5) {
-                val poseDirection = Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * face)).toDouble()))
-                val adjustX: Double = .6
-                val adjustY: Double = Units.inchesToMeters(6.469)
+    fun initialize() {
+        for (face in 0..5) {
+            val poseDirection =
+                Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * face)).toDouble()))
+            val adjustX: Double = .6 + .74
+            val adjustY: Double = Units.inchesToMeters(6.469)
 
-                val rightPose =
-                    Pose2d(
-                        Translation2d(
-                            poseDirection
-                                .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
-                                .x,
-                            poseDirection
-                                .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
-                                .y
-                            ),
-                        Rotation2d(
-                            poseDirection.rotation.radians
-                        )
-                    )
+            val rightPose =
+                Pose2d(
+                    Translation2d(
+                        poseDirection
+                            .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
+                            .x,
+                        poseDirection
+                            .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
+                            .y
+                    ),
+                    Rotation2d(
+                        poseDirection.rotation.radians
+                    ).rotateBy(Rotation2d.k180deg)
+                )
 
-                val leftPose =
-                    Pose2d(
-                        Translation2d(
-                            poseDirection
-                                .transformBy(Transform2d(adjustX, -adjustY, Rotation2d()))
-                                .x,
-                            poseDirection
-                                .transformBy(Transform2d(adjustX, -adjustY, Rotation2d()))
-                                .y
-                        ),
-                        Rotation2d(
-                            poseDirection.rotation.radians
-                        )
-                    )
+            val leftPose =
+                Pose2d(
+                    Translation2d(
+                        poseDirection
+                            .transformBy(Transform2d(adjustX, -adjustY, Rotation2d()))
+                            .x,
+                        poseDirection
+                            .transformBy(Transform2d(adjustX, -adjustY, Rotation2d()))
+                            .y
+                    ),
+                    Rotation2d(
+                        poseDirection.rotation.radians
+                    ).rotateBy(Rotation2d.k180deg)
+                )
 
-
-                println("$face right: $rightPose")
-                println("$face left: $leftPose")
-
-                CoralScoringPositions.entries[face].right = rightPose
-                CoralScoringPositions.entries[face].left = leftPose
-            }
+            CoralScoringPositions.entries[face].right = rightPose
+            CoralScoringPositions.entries[face].left = leftPose
         }
     }
 
