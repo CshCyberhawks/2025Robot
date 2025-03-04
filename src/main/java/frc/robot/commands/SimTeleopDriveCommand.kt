@@ -10,7 +10,7 @@ import frc.robot.subsystems.swerve.SwerveConstants
 
 class SimTeleopDriveCommand : Command() {
     init {
-//        addRequirements(RobotContainer.drivetrain)
+        addRequirements(RobotContainer.drivetrain)
     }
 
     override fun initialize() {
