@@ -95,7 +95,7 @@ object Robot : TimedRobot() {
     }
 
     override fun disabledPeriodic() {
-//        RobotContainer.vision.updateOdometryFromDisabled()
+        RobotContainer.vision.updateOdometryFromDisabled()
     }
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
@@ -103,8 +103,6 @@ object Robot : TimedRobot() {
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
         autonomousCommand.schedule()
-
-
 
 
         Superstructure.initialize()

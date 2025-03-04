@@ -9,13 +9,13 @@ import frc.robot.util.input.OperatorControls
 import java.util.*
 
 object TeleopAutoScore {
-    fun score(): Command {
-        val driveCommand = AutoTargeting.autoToNearestCoral(OperatorControls.coralSideChooser.selected, RobotContainer.drivetrain.getSwervePose())
-
-        RobotContainer.currentDriveCommand = Optional.of(driveCommand);
-
-        return Commands.parallel(
-            driveCommand
-        )
-    }
+//    fun score(): Command {
+//        val driveCommand = AutoTargeting.autoToNearestCoral(OperatorControls.coralSideChooser.selected, RobotContainer.drivetrain.getSwervePose())
+//
+//        RobotContainer.currentDriveCommand = Optional.of(driveCommand);
+//
+//        return Commands.parallel(
+//            driveCommand
+//        )
+//    }
 }
