@@ -16,6 +16,7 @@ import frc.robot.constants.AutoScoringConstants
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.util.Visualizer
 import frc.robot.util.input.DriverAction
+import frc.robot.util.input.OperatorControls
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -70,6 +71,7 @@ object Robot : TimedRobot() {
         RobotContainer
 
         AutoScoringConstants.initialize()
+        OperatorControls
     }
 
     /**

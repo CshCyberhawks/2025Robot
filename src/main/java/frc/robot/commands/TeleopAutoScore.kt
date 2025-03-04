@@ -6,14 +6,28 @@ import frc.robot.AutoTargeting
 import frc.robot.RobotContainer
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import frc.robot.RobotState
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.util.input.OperatorControls
 import java.util.*
 
 object TeleopAutoScore {
+
+    init {
+
+    }
+
+
     fun score(): Command {
-        val driveCommand = AutoTargeting.goToPose(Pose2d(2.37, 4.0, Rotation2d.fromDegrees(0.0)))
+        val reefSide = OperatorControls.reefSideSelector.selected
+
+        val position = when (OperatorControls.coralSideChooser.selected) {
+            AutoTargeting.CoralSide.Left -> reefSide.left
+            AutoTargeting.CoralSide.Right -> reefSide.right
+        }
+
+        val driveCommand = AutoTargeting.goToPose(position)
 //        val driveCommand = AutoTargeting.autoToNearestCoral(OperatorControls.coralSideChooser.selected, RobotContainer.drivetrain.getSwervePose())
 
         RobotContainer.currentDriveCommand = Optional.of(driveCommand);

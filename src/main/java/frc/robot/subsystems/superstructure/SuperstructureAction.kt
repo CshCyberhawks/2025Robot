@@ -26,7 +26,7 @@ object SuperstructureAction {
             cancelled()
         }),
         returnAction,
-        Superstructure.awaitAtDesiredPosition(),
+//        Superstructure.awaitAtDesiredPosition(),
         Request.withAction {
             RobotState.superstructureActionRunning = false
         }

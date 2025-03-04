@@ -61,7 +61,7 @@ class IntakeIOReal() : IntakeIO {
         val measurement: LaserCanInterface.Measurement = coralLaserCAN.measurement
         SmartDashboard.putNumber("Coral Measurement", measurement.distance_mm.toDouble())
         @Suppress("SENSELESS_COMPARISON")
-        return (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 48.0)
+        return (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 40.0)
     }
 
     override fun periodic() {
