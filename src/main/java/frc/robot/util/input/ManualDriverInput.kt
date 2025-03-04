@@ -15,8 +15,10 @@ object ManualDriverInput {
 
         RobotContainer.rightJoystick.button(cancel).onTrue(Commands.runOnce({
             if (!RobotContainer.currentDriveCommand.isEmpty) {
+                println("cancelling auto drive")
                 RobotContainer.currentDriveCommand.get().cancel()
                 RobotContainer.currentDriveCommand = Optional.empty()
+                RobotState.autoDriving = false
             }
         }))
 
@@ -26,10 +28,10 @@ object ManualDriverInput {
         }))
 
         RobotContainer.leftJoystick.button(4).onTrue(Commands.runOnce({
-            println("action confirmed")
-            RobotState.actionConfirmed = true
+//            println("action confirmed")
+//            RobotState.actionConfirmed = true
 //            if (RobotContainer.currentDriveCommand.isEmpty) {
-//                TeleopAutoScore.score()
+              TeleopAutoScore.score().schedule()
 //            } else {
 //            }
         }))

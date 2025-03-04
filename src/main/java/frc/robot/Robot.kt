@@ -45,7 +45,6 @@ object Robot : TimedRobot() {
 //    val wristPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Wrist Pose", Pose3d.struct).publish();
 //
 
-
     init {
 
         SmartDashboard.putBoolean("Action", false)
@@ -123,7 +122,7 @@ object Robot : TimedRobot() {
 
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
-//        RobotContainer.vision.updateOdometry(1, false)
+        RobotContainer.vision.updateOdometry(1, false)
     }
 
     override fun testInit() {

@@ -25,6 +25,8 @@ class TeleopDriveCommand : Command() {
 
 //        println("Execute")
 
+        SmartDashboard.putBoolean("is auto driving", RobotState.autoDriving)
+
         if (RobotState.autoDriving) return
 
         val deadzonedLeftY = MiscCalculations.calculateDeadzone(RobotContainer.leftJoystick.y, .5)
