@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.commands.TeleopDriveCommand
 import frc.robot.constants.AutoScoringConstants
+import frc.robot.constants.FieldConstants
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.util.Visualizer
 import frc.robot.util.input.DriverAction
@@ -91,6 +92,8 @@ object Robot : TimedRobot() {
 //        SmartDashboard.putNumber("robot pose x: ", RobotContainer.drivetrain.getSwervePose().x)
 
         Visualizer.periodic()
+
+        SmartDashboard.putNumber("Reef Position", FieldConstants.Reef.center.getDistance(RobotContainer.drivetrain.getSwervePose().translation))
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */

@@ -3,9 +3,8 @@ package frc.robot.subsystems.superstructure
 import cshcyberhawks.lib.requests.*
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import frc.robot.RobotConfiguration
-import frc.robot.RobotState
-import frc.robot.RobotType
+import frc.robot.*
+import frc.robot.constants.FieldConstants
 import frc.robot.subsystems.superstructure.elevator.ElevatorSystem
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOEmpty
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOPID
@@ -18,6 +17,7 @@ import frc.robot.subsystems.superstructure.pivot.PivotSystem
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOEmpty
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOPID
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOSim
+import frc.robot.util.AllianceFlipUtil
 import java.util.Optional
 
 object Superstructure : SubsystemBase() {
@@ -107,6 +107,15 @@ object Superstructure : SubsystemBase() {
     fun awaitAtDesiredPosition() =
             ParallelRequest(elevatorSystem.awaitDesiredPosition(), pivotSystem.awaitDesiredAngle())
 
+    fun safeToRetract(): Boolean {
+        val swervePose = RobotContainer.drivetrain.getSwervePose()
+        val blueReefDistance = FieldConstants.Reef.center.getDistance(swervePose.translation) > 1.7
+        val redReefDistance = AllianceFlipUtil.apply(FieldConstants.Reef.center).getDistance(swervePose.translation) > 1.7
+        val clearOfBarge = swervePose.x < 7.0 || swervePose.x > 10.5
+
+        return blueReefDistance && redReefDistance && clearOfBarge
+    }
+
     private fun stowRequest() =
             ParallelRequest(elevatorSystem.stowPosition(), pivotSystem.stowAngle())
 
@@ -140,7 +149,7 @@ object Superstructure : SubsystemBase() {
                             ParallelRequest(pivotSystem.l2Angle(), elevatorSystem.stowPosition()),
                             intakeSystem.coralScore(),
                             stowRequest(),
-                        forceManualRetract = true
+                        safeRetract = true
                     )
             )
 
@@ -150,7 +159,7 @@ object Superstructure : SubsystemBase() {
                             ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position()),
                             intakeSystem.coralScore(),
                             stowRequest(),
-                        forceManualRetract = true
+                        safeRetract = true
                     )
             )
 
@@ -168,7 +177,7 @@ object Superstructure : SubsystemBase() {
                             ),
                             intakeSystem.coralScore(),
                             safeRetractRequest(),
-                        forceManualRetract = true
+                        safeRetract = true
                     )
             )
 
@@ -232,7 +241,8 @@ object Superstructure : SubsystemBase() {
                                             .withPrerequisite(pivotSystem.safeTravelUp()),
                             ),
                             intakeSystem.algaeScore(),
-                            safeRetractRequest()
+                            safeRetractRequest(),
+                        safeRetract = true
                     )
             )
 }

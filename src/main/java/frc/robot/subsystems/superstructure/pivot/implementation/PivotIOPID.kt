@@ -1,10 +1,15 @@
 package frc.robot.subsystems.superstructure.pivot.implementation
 
+
+import com.ctre.phoenix6.configs.CANcoderConfiguration
+import com.ctre.phoenix6.configs.MagnetSensorConfigs
+import com.ctre.phoenix6.hardware.CANcoder
 import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.controls.TorqueCurrentFOC
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
+import com.ctre.phoenix6.signals.SensorDirectionValue
 import cshcyberhawks.lib.hardware.AbsoluteDutyCycleEncoder
 import edu.wpi.first.math.controller.ProfiledPIDController
 import edu.wpi.first.math.trajectory.TrapezoidProfile
@@ -20,7 +25,8 @@ import frc.robot.subsystems.superstructure.pivot.PivotIO
 class PivotIOPID() : PivotIO {
     private val motor = TalonFX(CANConstants.Pivot.motorId)
 //    private val encoderDutyCycle = DutyCycle()
-    private val encoder = AbsoluteDutyCycleEncoder(CANConstants.Pivot.encoderId)
+//    private val encoder = AbsoluteDutyCycleEncoder(CANConstants.Pivot.encoderId)
+    private val encoder = CANcoder(CANConstants.Pivot.encoderId)
 
     val pivotPIDController =
             ProfiledPIDController(
@@ -37,11 +43,16 @@ class PivotIOPID() : PivotIO {
 
     private var motorConfig = TalonFXConfiguration()
 
+    private var encoderConfig = CANcoderConfiguration()
+    private var encoderMagnetSensorConfig = MagnetSensorConfigs()
+
     private val torqueRequest = TorqueCurrentFOC(0.0)
 
     private var desiredAngle = 290.0
 
-    private val tbOffset = 200.0
+    //138.6 = 180
+
+    private val tbOffset = -43.2
 //    private fun getTBDegrees() =
 
     private var neutralCoast = false
@@ -66,6 +77,12 @@ class PivotIOPID() : PivotIO {
 
         motor.configurator.apply(motorConfig)
 
+        encoderMagnetSensorConfig.SensorDirection = SensorDirectionValue.CounterClockwise_Positive
+//        encoderMagnetSensorConfig.AbsoluteSensorDiscontinuityPoint
+
+        encoderConfig.withMagnetSensor(encoderMagnetSensorConfig)
+        encoder.configurator.apply(encoderConfig)
+
         motor.setNeutralMode(NeutralModeValue.Brake)
 
 
@@ -88,7 +105,7 @@ class PivotIOPID() : PivotIO {
 
     override fun getAngle(): Double {
         return MiscCalculations.wrapAroundAngles((MiscCalculations.wrapAroundAngles(encoder
-            .absolutePosition * 360.0) - tbOffset))
+            .absolutePosition.valueAsDouble * 360.0) - tbOffset))
     }
 
     override fun getDesiredAngle(): Double {
@@ -108,7 +125,7 @@ class PivotIOPID() : PivotIO {
     }
 
     override fun periodic() {
-        SmartDashboard.putNumber("Pivot Raw TB Angle", MiscCalculations.wrapAroundAngles(encoder.absolutePosition * 360.0))
+        SmartDashboard.putNumber("Pivot Raw TB Angle", MiscCalculations.wrapAroundAngles(encoder.absolutePosition.valueAsDouble * 360.0))
         SmartDashboard.putNumber("Pivot Desired Angle", desiredAngle)
 
         val gravityFF = 0.0
