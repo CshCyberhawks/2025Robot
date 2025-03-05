@@ -23,4 +23,7 @@ object SwerveConstants {
 
     val translationPIDConstants = PIDConstants(12.0, 0.0, 0.0)
     val rotationPIDConstants = PIDConstants(4.0, 0.0, 0.1)
+
+    val positionDeadzone = 0.025
+    val rotationDeadzone = 2.0
 }

@@ -20,8 +20,8 @@ object AutoScoringConstants {
         for (face in 0..5) {
             val poseDirection =
                 Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * face)).toDouble()))
-            val adjustX: Double = .6 + .74
-            val adjustY: Double = Units.inchesToMeters(6.469)
+            val adjustX: Double = .6 + .74 - Units.inchesToMeters(5.5)
+            val adjustY: Double = Units.inchesToMeters(6.469 + 3.0)
 
             val rightPose =
                 Pose2d(

@@ -92,8 +92,6 @@ object Robot : TimedRobot() {
 //        SmartDashboard.putNumber("robot pose x: ", RobotContainer.drivetrain.getSwervePose().x)
 
         Visualizer.periodic()
-
-        SmartDashboard.putString("Swerve Speeds", RobotContainer.drivetrain.getSpeeds().toString())
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */

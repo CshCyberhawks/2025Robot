@@ -40,24 +40,23 @@ object ManualOperatorInput {
             Superstructure.scoreL4()
         }))
         RobotContainer.xbox.b().onTrue(Commands.runOnce({
-            Superstructure.request(Superstructure.pivotSystem.algaeRemoveAngle())
-//            Superstructure.scoreL3()
+//            Superstructure.request(Superstructure.pivotSystem.algaeRemoveAngle())
+            Superstructure.scoreL3()
         }))
         RobotContainer.xbox.x().onTrue(Commands.runOnce({
-//            Superstructure.intakeFeeder()
+            Superstructure.intakeFeeder()
 //            Superstructure.pivotTest()
-            Superstructure.request(Superstructure.pivotSystem.l3Angle())
+//            Superstructure.request(Superstructure.pivotSystem.l3Angle())
         }))
         RobotContainer.xbox.leftBumper().onTrue(Commands.runOnce({
-//            Superstructure.removeAlgaeLow()
+            Superstructure.removeAlgaeLow()
         }))
         RobotContainer.xbox.rightBumper().onTrue(Commands.runOnce({
             Superstructure.removeAlgaeHigh()
         }))
         RobotContainer.xbox.a().onTrue(Commands.runOnce({
-//            Superstructure.scoreBarge()
-            Superstructure.request(Superstructure.pivotSystem.stowAngle())
-
+            Superstructure.scoreBarge()
+//            Superstructure.request(Superstructure.pivotSystem.stowAngle())
         }))
         RobotContainer.xbox.povUp().onTrue(Commands.runOnce({
             Superstructure.scoreProcessor()

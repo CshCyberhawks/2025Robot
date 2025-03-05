@@ -29,7 +29,7 @@ object TeleopAutoScore {
 //            AutoTargeting.CoralSide.Right -> reefSide.right
 //        }
 
-        val driveCommand = AutoTargeting.goToPose(position)
+        val driveCommand = GoToPose(position)
 //        val driveCommand = AutoTargeting.autoToNearestCoral(OperatorControls.coralSideChooser.selected, RobotContainer.drivetrain.getSwervePose())
 
         RobotContainer.currentDriveCommand = Optional.of(driveCommand);
