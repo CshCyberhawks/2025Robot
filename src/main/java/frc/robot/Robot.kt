@@ -93,7 +93,7 @@ object Robot : TimedRobot() {
 
         Visualizer.periodic()
 
-        SmartDashboard.putNumber("Reef Position", FieldConstants.Reef.center.getDistance(RobotContainer.drivetrain.getSwervePose().translation))
+        SmartDashboard.putString("Swerve Speeds", RobotContainer.drivetrain.getSpeeds().toString())
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */

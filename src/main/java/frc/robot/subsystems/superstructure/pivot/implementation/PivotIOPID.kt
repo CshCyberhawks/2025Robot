@@ -21,6 +21,7 @@ import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.math.controller.SimpleMotorFeedforward
 import frc.robot.subsystems.superstructure.pivot.PivotConstants
 import frc.robot.subsystems.superstructure.pivot.PivotIO
+import kotlin.math.sin
 
 class PivotIOPID() : PivotIO {
     private val motor = TalonFX(CANConstants.Pivot.motorId)
@@ -30,9 +31,9 @@ class PivotIOPID() : PivotIO {
 
     val pivotPIDController =
             ProfiledPIDController(
-                    0.7,
+                    1.5,
                     0.0,
-                    0.05,
+                    0.06,
                     TrapezoidProfile.Constraints(
                             PivotConstants.velocityDegrees,
                             PivotConstants.accelerationDegrees
@@ -128,7 +129,8 @@ class PivotIOPID() : PivotIO {
         SmartDashboard.putNumber("Pivot Raw TB Angle", MiscCalculations.wrapAroundAngles(encoder.absolutePosition.valueAsDouble * 360.0))
         SmartDashboard.putNumber("Pivot Desired Angle", desiredAngle)
 
-        val gravityFF = 0.0
+        val kG = if (getAngle() > 270) 8.25 else 10.5
+        val gravityFF = kG * sin(Math.toRadians(getAngle() + 90))
         val positionPIDOut = pivotPIDController.calculate(getAngle())
 //        val correctivePIDOut = correctivePID.calculate(getAngle(), desiredAngle)
 
@@ -136,7 +138,9 @@ class PivotIOPID() : PivotIO {
         SmartDashboard.putNumber("Position PID Output", positionPIDOut)
         //SmartDashboard.putNumber("Corrective PID Output", correctivePIDOut)
 
-        val motorSet = positionPIDOut + gravityFF// + correctivePIDOut
+        val motorSet = positionPIDOut + gravityFF// +
+//        val motorSet = gravityFF// + correctivePIDOut
+
 
         SmartDashboard.putNumber("Pivot Output", motorSet)
 

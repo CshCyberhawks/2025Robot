@@ -181,6 +181,8 @@ object Superstructure : SubsystemBase() {
                     )
             )
 
+//    fun pivotTest() = requestSuperstructureAction(SuperstructureAction.create())
+
     fun removeAlgaeLow() =
             requestSuperstructureAction(
                     SuperstructureAction.create(

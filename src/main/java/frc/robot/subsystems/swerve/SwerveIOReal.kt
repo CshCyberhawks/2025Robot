@@ -53,8 +53,8 @@ class SwerveIOReal() : SwerveIOBase() {
             { drivetrain.state.Speeds },
             { speeds -> applyRobotRelativeDriveRequest(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond) },
             PPHolonomicDriveController(
-                PIDConstants(5.0, 0.0, 0.0),
-                PIDConstants(1.0, 0.0, 0.1),
+                SwerveConstants.translationPIDConstants,
+                SwerveConstants.rotationPIDConstants,
             ),
             RobotConfig.fromGUISettings(),
             {
@@ -63,6 +63,8 @@ class SwerveIOReal() : SwerveIOBase() {
             }, this
         )
     }
+
+    override fun getSpeeds() = drivetrain.state.Speeds
 
     override fun getAutoPath(name: String): Command {
         return PathPlannerAuto(name)
