@@ -34,13 +34,4 @@ object AutoTargeting {
 //
 //        return goToPose(targetPose)
 //    }
-
-    enum class CoralSide {
-        Left,
-        Right
-    }
-
-    enum class CoralLevel {
-        L2, L3, L4
-    }
 }

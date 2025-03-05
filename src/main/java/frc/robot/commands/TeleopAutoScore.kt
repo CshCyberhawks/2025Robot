@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import frc.robot.RobotState
 import frc.robot.constants.AutoScoringConstants
 import frc.robot.subsystems.superstructure.Superstructure
+import frc.robot.util.input.CoralSide
 import frc.robot.util.input.OperatorControls
 import java.util.*
 
@@ -21,13 +22,13 @@ object TeleopAutoScore {
 
 
     fun score(): Command {
-//        val reefSide = OperatorControls.reefSideSelector.selected
-        val position = AutoScoringConstants.CoralScoringPositions.A.left
+        val reefSide = OperatorControls.position
+//        val position = AutoScoringConstants.CoralScoringPositions.A.left
 
-//        val position = when (OperatorControls.coralSideChooser.selected) {
-//            AutoTargeting.CoralSide.Left -> reefSide.left
-//            AutoTargeting.CoralSide.Right -> reefSide.right
-//        }
+        val position = when (OperatorControls.side) {
+            CoralSide.Left -> reefSide.left
+            CoralSide.Right -> reefSide.right
+        }
 
         val driveCommand = GoToPose(position)
 //        val driveCommand = AutoTargeting.autoToNearestCoral(OperatorControls.coralSideChooser.selected, RobotContainer.drivetrain.getSwervePose())
