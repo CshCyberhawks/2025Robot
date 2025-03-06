@@ -5,18 +5,14 @@ import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
-import frc.robot.commands.TeleopDriveCommand
 import frc.robot.constants.AutoScoringConstants
-import frc.robot.constants.FieldConstants
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.util.Visualizer
-import frc.robot.util.input.DriverAction
 import frc.robot.util.input.OperatorControls
 
 /**
@@ -92,6 +88,10 @@ object Robot : TimedRobot() {
 //        SmartDashboard.putNumber("robot pose x: ", RobotContainer.drivetrain.getSwervePose().x)
 
         Visualizer.periodic()
+
+        SmartDashboard.putString("Driver Action", OperatorControls.action.name)
+        SmartDashboard.putString("Reef Position", OperatorControls.reefPosition.name)
+        SmartDashboard.putString("Reef Side", OperatorControls.coralSide.name)
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */

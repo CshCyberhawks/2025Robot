@@ -1,15 +1,13 @@
 package frc.robot.util.input
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
-import frc.robot.AutoTargeting
 import frc.robot.constants.AutoScoringConstants
 import frc.robot.subsystems.superstructure.Superstructure
 
 enum class DriverAction(val cmd: Command) {
-    Stow(Commands.runOnce({ Superstructure.stow() })),
+//    Stow(Commands.runOnce({ Superstructure.stow() })),
     IntakeFeeder(Commands.runOnce({ Superstructure.intakeFeeder() })),
     ScoreL2(Commands.runOnce({ Superstructure.scoreL2() })),
     ScoreL3(Commands.runOnce({ Superstructure.scoreL3() })),
@@ -29,6 +27,7 @@ enum class CoralSide {
 object OperatorControls {
     val action
         get() = when (SmartDashboard.getString("ConsoleDriverAction", "")) {
+            "Feeder" -> DriverAction.IntakeFeeder
             "L3" -> DriverAction.ScoreL3
             "L4" -> DriverAction.ScoreL4
             "Barge" -> DriverAction.ScoreBarge
@@ -38,13 +37,13 @@ object OperatorControls {
             else -> DriverAction.None
     }
 
-    val side
+    val coralSide
         get() = when (SmartDashboard.getString("ConsoleCoralSide", "")) {
             "Right" -> CoralSide.Right
             else -> CoralSide.Left
         }
 
-    val position
+    val reefPosition
         get() = when (SmartDashboard.getString("ConsoleCoralPosition", "")) {
             "A" -> AutoScoringConstants.CoralScoringPositions.A
             "B" -> AutoScoringConstants.CoralScoringPositions.B
