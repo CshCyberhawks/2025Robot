@@ -3,7 +3,7 @@ package frc.robot.util.input
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer
 import frc.robot.RobotState
-import frc.robot.commands.TeleopAutoScore
+import frc.robot.commands.CoralReefAlign
 import java.util.*
 
 object ManualDriverInput {
@@ -23,7 +23,7 @@ object ManualDriverInput {
         }))
 
         RobotContainer.rightJoystick.button(3).onTrue(Commands.runOnce({
-            TeleopAutoScore.score().schedule()
+            CoralReefAlign.score().schedule()
         }))
 
         RobotContainer.leftJoystick.button(3).onTrue(Commands.runOnce({

@@ -8,7 +8,7 @@ import frc.robot.util.input.CoralSide
 import frc.robot.util.input.OperatorControls
 import java.util.*
 
-object TeleopAutoScore {
+object CoralReefAlign {
 
     init {
 
