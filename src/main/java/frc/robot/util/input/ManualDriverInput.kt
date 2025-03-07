@@ -23,10 +23,10 @@ object ManualDriverInput {
 
         RobotContainer.rightJoystick.button(3).whileTrue(OperatorControls.action.alignCommand)
 
-//        RobotContainer.leftJoystick.button(3).onTrue(Commands.runOnce({
-//            RobotState.actionCancelled = true
-//            println("action cancelled")
-//        }))
+        RobotContainer.leftJoystick.button(3).onTrue(Commands.runOnce({
+            RobotState.actionCancelled = true
+            println("action cancelled")
+        }))
 
         RobotContainer.leftJoystick.button(4).onTrue(Commands.runOnce({
             RobotState.actionConfirmed = true
@@ -35,6 +35,8 @@ object ManualDriverInput {
 //            } else {
 //            }
         }))
+
+        RobotContainer.leftJoystick.button(2).onTrue(OperatorControls.action.superStructureCommand)
     }
 
 }
