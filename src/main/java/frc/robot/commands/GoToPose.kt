@@ -10,19 +10,24 @@ import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.Robot
 import frc.robot.RobotConfiguration
 import frc.robot.RobotContainer
+import frc.robot.RobotState
 import frc.robot.subsystems.swerve.SwerveConstants
+import java.util.*
 import kotlin.math.abs
 
-class GoToPose(val targetPose: Pose2d): Command() {
+class GoToPose(val targetPoseGetter: () -> Pose2d): Command() {
     val xController = ProfiledPIDController(SwerveConstants.translationPIDConstants.kP, SwerveConstants.translationPIDConstants.kI, SwerveConstants.translationPIDConstants.kD, TrapezoidProfile.Constraints(1.0, 1.0))
     val yController = ProfiledPIDController(SwerveConstants.translationPIDConstants.kP, SwerveConstants.translationPIDConstants.kI, SwerveConstants.translationPIDConstants.kD, TrapezoidProfile.Constraints(1.0, 1.0))
     val rotationController = ProfiledPIDController(SwerveConstants.rotationPIDConstants.kP, SwerveConstants.rotationPIDConstants.kI, SwerveConstants.rotationPIDConstants.kD, TrapezoidProfile.Constraints(Units.degreesToRadians(180.0), Units.degreesToRadians(180.0)))
+    var targetPose = targetPoseGetter()
 
     init {
         rotationController.enableContinuousInput(-180.0, 180.0)
     }
 
     override fun initialize() {
+        targetPose = targetPoseGetter()
+
         val robotPose = RobotContainer.drivetrain.getSwervePose()
         val robotVel = ChassisSpeeds.fromRobotRelativeSpeeds(RobotContainer.drivetrain.getSpeeds(), robotPose.rotation)
 
@@ -31,6 +36,9 @@ class GoToPose(val targetPose: Pose2d): Command() {
         rotationController.reset(robotPose.rotation.radians, robotVel.omegaRadiansPerSecond)
 
         SmartDashboard.putString("Goal Position", targetPose.toString())
+
+        RobotContainer.currentDriveCommand = Optional.of(this);
+        RobotState.autoDriving = true
     }
 
     override fun execute() {
@@ -67,5 +75,11 @@ class GoToPose(val targetPose: Pose2d): Command() {
         val currentPose = RobotContainer.drivetrain.getSwervePose()
 
         return (abs(currentPose.x - targetPose.x) < SwerveConstants.positionDeadzone && abs(currentPose.y - targetPose.y) < SwerveConstants.positionDeadzone && abs(currentPose.rotation.degrees - targetPose.rotation.degrees) < SwerveConstants.rotationDeadzone)
+    }
+
+    override fun end(interrupted: Boolean) {
+        println("drive command and then ending")
+        RobotState.autoDriving = false
+        RobotContainer.currentDriveCommand = Optional.empty()
     }
 }

@@ -27,7 +27,7 @@ import frc.robot.util.input.OperatorControls
  * object or package, it will get changed everywhere.)
  */
 object Robot : TimedRobot() {
-    private var autonomousCommand = Commands.runOnce({})
+    private var autonomousCommand = RobotContainer.drivetrain.getAutoPath("3 L4 Left")
 
 //    private var autonomousCommand: Command = Commands.sequence(
 //        Commands.run({ RobotContainer.drivetrain.applyDriveRequest(-1.0, 0.0, 0.0) }).raceWith(Commands.waitSeconds(1.0)),

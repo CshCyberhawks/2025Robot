@@ -7,20 +7,22 @@ import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.util.Units
 
 object AutoScoringConstants {
-    enum class CoralScoringPositions(var left: Pose2d, var right: Pose2d) {
-        A(Pose2d(), Pose2d()),
-        B(Pose2d(), Pose2d()),
-        C(Pose2d(), Pose2d()),
-        D(Pose2d(), Pose2d()),
-        E(Pose2d(), Pose2d()),
-        F(Pose2d(), Pose2d())
+    private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(4.0)
+
+    enum class ReefPositions(var left: Pose2d, var right: Pose2d, var center: Pose2d) {
+        A(Pose2d(), Pose2d(), Pose2d()),
+        B(Pose2d(), Pose2d(), Pose2d()),
+        C(Pose2d(), Pose2d(), Pose2d()),
+        D(Pose2d(), Pose2d(), Pose2d()),
+        E(Pose2d(), Pose2d(), Pose2d()),
+        F(Pose2d(), Pose2d(), Pose2d())
     }
 
-    fun initialize() {
+    private fun initializeReef() {
         for (face in 0..5) {
             val poseDirection =
                 Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * face)).toDouble()))
-            val adjustX: Double = .6 + .74 - Units.inchesToMeters(4.0)
+            val adjustX: Double = reefFaceOffset
             val adjustY: Double = Units.inchesToMeters(6.469 + 1.5)
 
             val rightPose =
@@ -53,24 +55,28 @@ object AutoScoringConstants {
                     ).rotateBy(Rotation2d.k180deg)
                 )
 
-            CoralScoringPositions.entries[face].right = rightPose
-            CoralScoringPositions.entries[face].left = leftPose
+            val centerPose = Pose2d(
+                Translation2d(
+                    poseDirection
+                        .transformBy(Transform2d(adjustX, 0.0, Rotation2d()))
+                        .x,
+                    poseDirection
+                        .transformBy(Transform2d(adjustX, 0.0, Rotation2d()))
+                        .y
+                ),
+                Rotation2d(
+                    poseDirection.rotation.radians
+                ).rotateBy(Rotation2d.k180deg)
+            )
 
-            println("$face Right: $rightPose, Left: $leftPose")
+            ReefPositions.entries[face].right = rightPose
+            ReefPositions.entries[face].left = leftPose
+            ReefPositions.entries[face].center = centerPose
+//            println("$face Right: $rightPose, Left: $leftPose")
         }
     }
 
-    object AlgaePickup {
-        val A: Pose2d = Pose2d();
-
-        val B: Pose2d = Pose2d();
-
-        val C: Pose2d = Pose2d();
-
-        val D: Pose2d = Pose2d();
-
-        val E: Pose2d = Pose2d();
-
-        val F: Pose2d = Pose2d();
+    fun initialize() {
+        initializeReef()
     }
 }
