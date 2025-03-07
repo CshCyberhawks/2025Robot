@@ -23,7 +23,7 @@ object ManualDriverInput {
         }))
 
         RobotContainer.rightJoystick.button(3).onTrue(Commands.runOnce({
-            CoralReefAlign.score().schedule()
+            OperatorControls.action.alignCommand.schedule()
         }))
 
         RobotContainer.leftJoystick.button(3).onTrue(Commands.runOnce({
