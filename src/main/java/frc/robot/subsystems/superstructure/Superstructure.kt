@@ -152,7 +152,7 @@ object Superstructure : SubsystemBase() {
     fun scoreL2() =
         requestSuperstructureAction(
             SuperstructureAction.create(
-                ParallelRequest(pivotSystem.l2Angle(), elevatorSystem.stowPosition()),
+                ParallelRequest(pivotSystem.l2Angle(), elevatorSystem.l2Position()),
                 intakeSystem.coralScore(),
                 stowRequest(),
                 safeRetract = true

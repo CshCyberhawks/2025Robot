@@ -43,6 +43,7 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun safeUpPosition() = setPosition(safeUpPosition)
     fun safeDownPosition() = setPosition(safeDownPosition)
 
+    fun l2Position() = setPosition(0.0)
     fun l3Position() = setPosition(4.0)
     fun l4Position() = setPosition(29.95) // Should be 30 eventually but not safe right now
 
