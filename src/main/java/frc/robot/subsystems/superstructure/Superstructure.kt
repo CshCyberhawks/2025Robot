@@ -101,6 +101,9 @@ object Superstructure : SubsystemBase() {
     fun requestSuperstructureAction(action: Request) {
         if (!RobotState.superstructureActionRunning) {
             request(action)
+        } else {
+            queuedRequests.clear()
+            queuedRequests.add(action)
         }
     }
 
@@ -166,18 +169,20 @@ object Superstructure : SubsystemBase() {
             )
         )
 
+    private fun l4PrepRequest() = SequentialRequest(
+        ParallelRequest(
+            pivotSystem.l4Angle(),
+            elevatorSystem.safeUpPosition()
+        ),
+        elevatorSystem
+            .l4Position()
+            .withPrerequisite(pivotSystem.safeTravelUp()),
+    )
+
     fun scoreL4() =
         requestSuperstructureAction(
             SuperstructureAction.create(
-                SequentialRequest(
-                    ParallelRequest(
-                        pivotSystem.l4Angle(),
-                        elevatorSystem.safeUpPosition()
-                    ),
-                    elevatorSystem
-                        .l4Position()
-                        .withPrerequisite(pivotSystem.safeTravelUp()),
-                ),
+                l4PrepRequest(),
                 intakeSystem.coralScore(),
                 safeRetractRequest(),
                 safeRetract = true
@@ -250,4 +255,19 @@ object Superstructure : SubsystemBase() {
                 safeRetract = true
             )
         )
+
+    object Auto {
+        fun prepL4() = requestSuperstructureAction(
+            l4PrepRequest()
+        )
+
+        fun justScoreL4() = requestSuperstructureAction(
+            SuperstructureAction.create(
+                EmptyRequest(),
+                intakeSystem.coralScore(),
+                safeRetractRequest(),
+                safeRetract = true
+            )
+        )
+    }
 }

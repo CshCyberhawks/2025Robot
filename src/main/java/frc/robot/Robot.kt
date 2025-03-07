@@ -1,6 +1,7 @@
 package frc.robot
 
 import au.grapplerobotics.CanBridge
+import com.pathplanner.lib.auto.AutoBuilder
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
@@ -26,12 +27,8 @@ import frc.robot.util.input.OperatorControls
  * object or package, it will get changed everywhere.)
  */
 object Robot : TimedRobot() {
-    /**
-     * The autonomous command to run. While a default value is set here,
-     * the [autonomousInit] method will set it to the value selected in
-     *the  AutoChooser on the dashboard.
-     */
-    private var autonomousCommand: Command = Commands.runOnce({})
+    private var autonomousCommand = Commands.runOnce({})
+
 //    private var autonomousCommand: Command = Commands.sequence(
 //        Commands.run({ RobotContainer.drivetrain.applyDriveRequest(-1.0, 0.0, 0.0) }).raceWith(Commands.waitSeconds(1.0)),
 //        Commands.runOnce({ RobotContainer.drivetrain.applyDriveRequest(0.0, 0.0, 0.0) }),
@@ -51,6 +48,8 @@ object Robot : TimedRobot() {
         SmartDashboard.putBoolean("Cancel", false)
 
         CanBridge.runTCP()
+
+        AutoBuilder.buildAutoChooser()
     }
 
     /**
@@ -107,8 +106,9 @@ object Robot : TimedRobot() {
     override fun autonomousInit() {
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
-        autonomousCommand.schedule()
 
+        autonomousCommand = RobotContainer.autonomousCommand
+        autonomousCommand.execute()
 
         Superstructure.initialize()
     }

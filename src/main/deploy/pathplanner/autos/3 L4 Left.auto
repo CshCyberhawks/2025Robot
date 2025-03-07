@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start to Reef"
+            "pathName": "1.1"
           }
         },
         {
@@ -19,19 +19,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef to feeder"
+            "pathName": "1.2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Stow"
+            "name": "AwaitIntake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Feeder to reef"
+            "pathName": "1.3"
           }
         },
         {
@@ -43,25 +43,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef to feeder 2"
+            "pathName": "1.4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Stow"
+            "name": "AwaitIntake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "feeder to reef 2"
+            "pathName": "1.5"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1.6"
           }
         }
       ]
