@@ -46,7 +46,7 @@ object RobotContainer {
 
     var currentDriveCommand: Optional<Command> = Optional.empty();
 
-    val autoChooser = AutoBuilder.buildAutoChooser()
+//    val autoChooser = AutoBuilder.buildAutoChooser()
 
     init {
         configureBindings()
@@ -55,7 +55,7 @@ object RobotContainer {
             NamedCommands.registerCommand(pathplannerCommand.name, pathplannerCommand.cmd)
         }
 
-        SmartDashboard.putData("Auto Chooser", autoChooser)
+//        SmartDashboard.putData("Auto Chooser", autoChooser)
     }
 
     private fun configureBindings() {
@@ -76,6 +76,6 @@ object RobotContainer {
         ManualOperatorInput.configureBindings()
     }
 
-    val autonomousCommand: Command
-        get() = autoChooser.selected
+//    val autonomousCommand: Command
+//        get() = autoChooser.selected
 }

@@ -48,8 +48,6 @@ object Robot : TimedRobot() {
         SmartDashboard.putBoolean("Cancel", false)
 
         CanBridge.runTCP()
-
-        AutoBuilder.buildAutoChooser()
     }
 
     /**
@@ -107,7 +105,7 @@ object Robot : TimedRobot() {
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
 
-        autonomousCommand = RobotContainer.autonomousCommand
+//        autonomousCommand = RobotContainer.autonomousCommand
         autonomousCommand.execute()
 
         Superstructure.initialize()
@@ -124,6 +122,8 @@ object Robot : TimedRobot() {
 
 //        TeleopDriveCommand().schedule()
         Superstructure.initialize()
+
+        RobotState.autoDriving = false
     }
 
     /** This method is called periodically during operator control.  */

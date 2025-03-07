@@ -117,7 +117,7 @@ class VisionSystem {
                 return
             }
 
-            LimelightHelpers.SetRobotOrientation(llName, headingDeg, 0.0, 0.0, 0.0, 0.0, 0.0);
+//            LimelightHelpers.SetRobotOrientation(llName, headingDeg, 0.0, 0.0, 0.0, 0.0, 0.0);
 
 
             if (LimelightHelpers.getBotPoseEstimate_wpiBlue(llName) == null) {
@@ -129,7 +129,7 @@ class VisionSystem {
             SmartDashboard.putBoolean("ll " + llName + " is valid", true)
 
             var llMeasure: LimelightHelpers.PoseEstimate =
-                LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(llName)
+                LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
 
 
             if (llMeasure.tagCount >= tagCount && llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {

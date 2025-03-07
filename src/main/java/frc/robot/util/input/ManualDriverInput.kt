@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer
 import frc.robot.RobotState
 import frc.robot.commands.CoralReefAlign
+import frc.robot.commands.CoralReefAutoAlign
 import java.util.*
 
 object ManualDriverInput {
@@ -26,10 +27,12 @@ object ManualDriverInput {
             OperatorControls.action.alignCommand.schedule()
         }))
 
-        RobotContainer.leftJoystick.button(3).onTrue(Commands.runOnce({
-            RobotState.actionCancelled = true
-            println("action cancelled")
-        }))
+        RobotContainer.rightJoystick.button(3).whileTrue(CoralReefAutoAlign())
+
+//        RobotContainer.leftJoystick.button(3).onTrue(Commands.runOnce({
+//            RobotState.actionCancelled = true
+//            println("action cancelled")
+//        }))
 
         RobotContainer.leftJoystick.button(4).onTrue(Commands.runOnce({
             RobotState.actionConfirmed = true

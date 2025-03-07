@@ -20,8 +20,8 @@ object AutoScoringConstants {
         for (face in 0..5) {
             val poseDirection =
                 Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * face)).toDouble()))
-            val adjustX: Double = .6 + .74 - Units.inchesToMeters(5.5)
-            val adjustY: Double = Units.inchesToMeters(6.469 + 3.0)
+            val adjustX: Double = .6 + .74 - Units.inchesToMeters(4.0)
+            val adjustY: Double = Units.inchesToMeters(6.469 + 1.5)
 
             val rightPose =
                 Pose2d(
@@ -55,6 +55,8 @@ object AutoScoringConstants {
 
             CoralScoringPositions.entries[face].right = rightPose
             CoralScoringPositions.entries[face].left = leftPose
+
+            println("$face Right: $rightPose, Left: $leftPose")
         }
     }
 

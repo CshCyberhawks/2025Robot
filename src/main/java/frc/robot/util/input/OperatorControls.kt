@@ -10,9 +10,9 @@ import frc.robot.subsystems.superstructure.Superstructure
 enum class DriverAction(val superStructureCommand: Command, val alignCommand: Command = Commands.runOnce({})) {
 //    Stow(Commands.runOnce({ Superstructure.stow() })),
     IntakeFeeder(Commands.runOnce({ Superstructure.intakeFeeder() })),
-    ScoreL2(Commands.runOnce({ Superstructure.scoreL2() }), CoralReefAlign.score()),
-    ScoreL3(Commands.runOnce({ Superstructure.scoreL3() }), CoralReefAlign.score()),
-    ScoreL4(Commands.runOnce({ Superstructure.scoreL4() }), CoralReefAlign.score()),
+    ScoreL2(Commands.runOnce({ Superstructure.scoreL2() }), Commands.runOnce({CoralReefAlign.score().schedule()})),
+    ScoreL3(Commands.runOnce({ Superstructure.scoreL3() }), Commands.runOnce({CoralReefAlign.score().schedule()})),
+    ScoreL4(Commands.runOnce({ Superstructure.scoreL4() }), Commands.runOnce({CoralReefAlign.score().schedule()})),
     RemoveAlgaeLow(Commands.runOnce({ Superstructure.removeAlgaeLow() })),
     RemoveAlgaeHigh(Commands.runOnce({ Superstructure.removeAlgaeHigh() })),
     ScoreBarge(Commands.runOnce({ Superstructure.scoreBarge() })),
