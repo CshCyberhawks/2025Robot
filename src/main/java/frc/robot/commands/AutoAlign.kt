@@ -6,19 +6,19 @@ import frc.robot.util.input.OperatorControls
 
 object AutoAlign {
     fun coralReefAlign(): Command {
-        return GoToPose {
+        return GoToPose({
             val reefSide = OperatorControls.reefPosition
 
             when (OperatorControls.coralSide) {
                 CoralSide.Left -> reefSide.left
                 CoralSide.Right -> reefSide.right
             }
-        }
+        }, { false })
     }
 
     fun algaeReefAlign(): Command {
-        return GoToPose {
+        return GoToPose({
             OperatorControls.reefPosition.center
-        }
+        })
     }
 }

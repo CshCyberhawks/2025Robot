@@ -15,11 +15,18 @@ import frc.robot.subsystems.swerve.SwerveConstants
 import java.util.*
 import kotlin.math.abs
 
-class GoToPose(val targetPoseGetter: () -> Pose2d): Command() {
+class GoToPose(val targetPoseGetter: () -> Pose2d, val endCondition: () -> Boolean = {
+    val currentPose = RobotContainer.drivetrain.getSwervePose()
+    val targetPose = targetPoseGetter()
+
+    (abs(currentPose.x - targetPose.x) < SwerveConstants.positionDeadzone && abs(currentPose.y - targetPose.y) < SwerveConstants.positionDeadzone && abs(currentPose.rotation.degrees - targetPose.rotation.degrees) < SwerveConstants.rotationDeadzone)
+}): Command() {
     val xController = ProfiledPIDController(SwerveConstants.translationPIDConstants.kP, SwerveConstants.translationPIDConstants.kI, SwerveConstants.translationPIDConstants.kD, TrapezoidProfile.Constraints(1.0, 1.0))
     val yController = ProfiledPIDController(SwerveConstants.translationPIDConstants.kP, SwerveConstants.translationPIDConstants.kI, SwerveConstants.translationPIDConstants.kD, TrapezoidProfile.Constraints(1.0, 1.0))
     val rotationController = ProfiledPIDController(SwerveConstants.rotationPIDConstants.kP, SwerveConstants.rotationPIDConstants.kI, SwerveConstants.rotationPIDConstants.kD, TrapezoidProfile.Constraints(Units.degreesToRadians(180.0), Units.degreesToRadians(180.0)))
     var targetPose = targetPoseGetter()
+
+
 
     init {
         rotationController.enableContinuousInput(-180.0, 180.0)
@@ -71,11 +78,7 @@ class GoToPose(val targetPoseGetter: () -> Pose2d): Command() {
         RobotContainer.drivetrain.applyDriveRequest(xVel, yVel, rotVel)
     }
 
-    override fun isFinished(): Boolean {
-        val currentPose = RobotContainer.drivetrain.getSwervePose()
-
-        return (abs(currentPose.x - targetPose.x) < SwerveConstants.positionDeadzone && abs(currentPose.y - targetPose.y) < SwerveConstants.positionDeadzone && abs(currentPose.rotation.degrees - targetPose.rotation.degrees) < SwerveConstants.rotationDeadzone)
-    }
+    override fun isFinished(): Boolean = endCondition()
 
     override fun end(interrupted: Boolean) {
         println("drive command and then ending")

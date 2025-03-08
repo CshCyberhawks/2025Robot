@@ -21,7 +21,13 @@ object ManualDriverInput {
             }
         }))
 
-        RobotContainer.rightJoystick.button(3).whileTrue(OperatorControls.action.alignCommand)
+        RobotContainer.rightJoystick.button(3).onTrue(Commands.runOnce({
+            OperatorControls.action.alignCommand.schedule()
+        }))
+
+        RobotContainer.rightJoystick.button(3).onFalse(Commands.runOnce({
+            OperatorControls.action.alignCommand.cancel()
+        }))
 
         RobotContainer.leftJoystick.button(3).onTrue(Commands.runOnce({
             RobotState.actionCancelled = true
@@ -36,7 +42,10 @@ object ManualDriverInput {
 //            }
         }))
 
-        RobotContainer.leftJoystick.button(2).onTrue(OperatorControls.action.superStructureCommand)
+        RobotContainer.leftJoystick.button(2).onTrue(Commands.runOnce({
+            OperatorControls.action.superStructureCommand.schedule()
+            println("running superstructure command")
+        }))
     }
 
 }

@@ -25,6 +25,7 @@ object Superstructure : SubsystemBase() {
         PivotSystem(
             when (RobotConfiguration.robotType) {
                 RobotType.Real -> PivotIOPID()
+//                RobotType.Real -> PivotIOEmpty()
                 RobotType.Simulated -> PivotIOSim()
                 RobotType.Empty -> PivotIOEmpty()
             }
@@ -33,6 +34,7 @@ object Superstructure : SubsystemBase() {
         ElevatorSystem(
             when (RobotConfiguration.robotType) {
                 RobotType.Real -> ElevatorIOPID()
+//                RobotType.Real -> ElevatorIOEmpty()
                 RobotType.Simulated -> ElevatorIOSim()
                 RobotType.Empty -> ElevatorIOEmpty()
             }
@@ -41,6 +43,7 @@ object Superstructure : SubsystemBase() {
         IntakeSystem(
             when (RobotConfiguration.robotType) {
                 RobotType.Real -> IntakeIOReal()
+//                RobotType.Real -> IntakeIOEmpty()
                 RobotType.Simulated -> IntakeIOEmpty()
                 RobotType.Empty -> IntakeIOEmpty()
             }

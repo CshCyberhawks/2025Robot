@@ -21,9 +21,9 @@ object SwerveConstants {
     val maxAutoTwist = 350.0
     val maxAutoTwistAccel = 450.0
 
-    val translationPIDConstants = PIDConstants(12.0, 0.0, 0.0)
-    val rotationPIDConstants = PIDConstants(4.0, 0.0, 0.1)
+    val translationPIDConstants = PIDConstants(16.0, 0.0, 0.0)
+    val rotationPIDConstants = PIDConstants(1.5, 0.0, 0.15)
 
     val positionDeadzone = 0.01
-    val rotationDeadzone = 0.5
+    val rotationDeadzone = 1.5
 }
