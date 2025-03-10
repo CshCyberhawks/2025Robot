@@ -10,11 +10,13 @@ object CANConstants {
 
     object Pivot {
         const val motorId = 30
-        const val encoderId = 0 // Roborio DIO not CAN
+        const val encoderId = 31 // Roborio DIO not CAN
     }
 
     object Intake {
         const val motorId = 40
+        const val coralLaserCANId = 41
+        const val algaeLaserCANId = 42
     }
 
     // Climb

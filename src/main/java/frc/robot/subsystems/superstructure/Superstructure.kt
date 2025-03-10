@@ -2,50 +2,55 @@ package frc.robot.subsystems.superstructure
 
 import cshcyberhawks.lib.requests.*
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.Commands
-import edu.wpi.first.wpilibj2.command.ConditionalCommand
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.SubsystemBase
 import frc.robot.RobotConfiguration
+import frc.robot.RobotContainer
 import frc.robot.RobotState
 import frc.robot.RobotType
+import frc.robot.constants.FieldConstants
 import frc.robot.subsystems.superstructure.elevator.ElevatorSystem
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOEmpty
-import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOReal
+import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOPID
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOSim
 import frc.robot.subsystems.superstructure.intake.GamePieceState
-import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOEmpty
-import frc.robot.subsystems.superstructure.pivot.PivotSystem
 import frc.robot.subsystems.superstructure.intake.IntakeSystem
+import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOEmpty
 import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOReal
+import frc.robot.subsystems.superstructure.pivot.PivotSystem
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOEmpty
-import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOReal
+import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOPID
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOSim
-import java.util.Optional
+import frc.robot.util.AllianceFlipUtil
+import java.util.*
 
 object Superstructure : SubsystemBase() {
-    val pivotSystem = PivotSystem(
-        when (RobotConfiguration.robotType) {
-            RobotType.Real -> PivotIOReal()
-            RobotType.Simulated -> PivotIOSim()
-            RobotType.Empty -> PivotIOEmpty()
-        }
-    )
-    val elevatorSystem = ElevatorSystem(
-        when (RobotConfiguration.robotType) {
-            RobotType.Real -> ElevatorIOReal()
-            RobotType.Simulated -> ElevatorIOSim()
-            RobotType.Empty -> ElevatorIOEmpty()
-        }
-    )
-    val intakeSystem = IntakeSystem(
-        when (RobotConfiguration.robotType) {
-            RobotType.Real -> IntakeIOReal()
-            RobotType.Simulated -> IntakeIOEmpty()
-            RobotType.Empty -> IntakeIOEmpty()
-        }
-    )
+    val pivotSystem =
+        PivotSystem(
+            when (RobotConfiguration.robotType) {
+                RobotType.Real -> PivotIOPID()
+//                RobotType.Real -> PivotIOEmpty()
+                RobotType.Simulated -> PivotIOSim()
+                RobotType.Empty -> PivotIOEmpty()
+            }
+        )
+    val elevatorSystem =
+        ElevatorSystem(
+            when (RobotConfiguration.robotType) {
+                RobotType.Real -> ElevatorIOPID()
+//                RobotType.Real -> ElevatorIOEmpty()
+                RobotType.Simulated -> ElevatorIOSim()
+                RobotType.Empty -> ElevatorIOEmpty()
+            }
+        )
+    val intakeSystem =
+        IntakeSystem(
+            when (RobotConfiguration.robotType) {
+                RobotType.Real -> IntakeIOReal()
+//                RobotType.Real -> IntakeIOEmpty()
+                RobotType.Simulated -> IntakeIOEmpty()
+                RobotType.Empty -> IntakeIOEmpty()
+            }
+        )
 
     // Requests system
     private var activeRequest: Optional<Request> = Optional.empty()
@@ -76,143 +81,202 @@ object Superstructure : SubsystemBase() {
 
     // Should be called when robot is enabled (teleop and auto)
     fun initialize() {
-        clearRequestQueue();
+        clearRequestQueue()
     }
 
     override fun periodic() {
         if (hasNewRequest && activeRequest.isPresent) {
             activeRequest.get().execute()
-            hasNewRequest = false;
+            hasNewRequest = false
         }
 
         if (activeRequest.isEmpty) {
             if (queuedRequests.isEmpty()) {
-                allRequestsComplete = true;
+                allRequestsComplete = true
             } else {
-                request(queuedRequests.removeAt(0));
+                request(queuedRequests.removeAt(0))
             }
         } else if (activeRequest.get().isFinished()) {
-            activeRequest = Optional.empty();
+            activeRequest = Optional.empty()
         }
 
         SmartDashboard.putBoolean("Has new request", hasNewRequest)
         SmartDashboard.putBoolean("All Requests Complete", allRequestsComplete)
     }
 
-    private fun awaitAtDesiredPosition() =
+    fun requestSuperstructureAction(action: Request) {
+        if (!RobotState.superstructureActionRunning) {
+            request(action)
+        } else {
+            queuedRequests.clear()
+            queuedRequests.add(action)
+        }
+    }
+
+    fun awaitAtDesiredPosition() =
         ParallelRequest(elevatorSystem.awaitDesiredPosition(), pivotSystem.awaitDesiredAngle())
 
-    private fun stowRequest() = ParallelRequest(
-        elevatorSystem.stowPosition(),
-        pivotSystem.stowAngle()
-    )
+    fun safeToRetract(): Boolean {
+        val swervePose = RobotContainer.drivetrain.getSwervePose()
+        val blueReefDistance = FieldConstants.Reef.center.getDistance(swervePose.translation) > 1.7
+        val redReefDistance =
+            AllianceFlipUtil.apply(FieldConstants.Reef.center).getDistance(swervePose.translation) > 1.7
+        val clearOfBarge = swervePose.x < 7.0 || swervePose.x > 10.5
 
+        return blueReefDistance && redReefDistance && clearOfBarge
+    }
 
-    private fun safeRetractRequest() = SequentialRequest(
-        ParallelRequest(
-            pivotSystem.travelAngle(),
-            elevatorSystem.safeDownPosition()
-        ),
-        elevatorSystem.stowPosition().withPrerequisite(pivotSystem.safeTravelDown()),
-        pivotSystem.stowAngle().withPrerequisite(elevatorSystem.belowSafeUpPosition())
-    )
+    private fun stowRequest() =
+        ParallelRequest(elevatorSystem.stowPosition(), pivotSystem.stowAngle())
 
-    fun stow() = request(
-        stowRequest()
-    )
-
-    fun intakeFeeder() = request(
-        SuperstructureAction.create(
+    private fun safeRetractRequest() =
+        SequentialRequest(
+            ParallelRequest(pivotSystem.travelAngle(), elevatorSystem.safeDownPosition()),
+            WaitRequest(0.1),
             ParallelRequest(
-                elevatorSystem.feederPosition(),
-                pivotSystem.feederAngle(),
-                intakeSystem.coralIntake()
-            ),
-            EmptyRequest(),
-            ParallelRequest(
-                stowRequest()
-            ),
-            confirmed = { RobotState.gamePieceState == GamePieceState.Coral }
+                elevatorSystem.stowPosition().withPrerequisite(pivotSystem.safeTravelDown()),
+                pivotSystem.stowAngle().withPrerequisite(elevatorSystem.belowSafeUpPosition())
+            )
         )
-    )
 
-    fun scoreL2() = request(
-        SuperstructureAction.create(
-            ParallelRequest(
-                pivotSystem.l2Angle(),
-                elevatorSystem.stowPosition()
-            ),
-            intakeSystem.coralScore(),
-            stowRequest()
-        )
-    )
+    fun stow() = requestSuperstructureAction(stowRequest())
 
-    fun scoreL3() = request(
-        SuperstructureAction.create(
-            ParallelRequest(
-                pivotSystem.l3Angle(),
-                elevatorSystem.l3Position()
-            ),
-            intakeSystem.coralScore(),
-            stowRequest()
-        )
-    )
-
-    fun scoreL4() = request(
-        SuperstructureAction.create(
-            SequentialRequest(
+    fun intakeFeeder() =
+        requestSuperstructureAction(
+            SuperstructureAction.create(
                 ParallelRequest(
-                    pivotSystem.l4Angle(),
-                    elevatorSystem.safeUpPosition()
+                    elevatorSystem.feederPosition(),
+                    pivotSystem.feederAngle(),
+                    intakeSystem.coralIntake()
                 ),
-                elevatorSystem.l4Position().withPrerequisite(pivotSystem.safeTravelUp()),
-            ), intakeSystem.coralScore(), safeRetractRequest()
+                EmptyRequest(),
+                ParallelRequest(stowRequest(), intakeSystem.idle()),
+                confirmed = { RobotState.gamePieceState == GamePieceState.Coral }
+            )
         )
+
+    fun scoreL2() =
+        requestSuperstructureAction(
+            SuperstructureAction.create(
+                ParallelRequest(pivotSystem.l2Angle(), elevatorSystem.l2Position()),
+                intakeSystem.coralScore(),
+                stowRequest(),
+                safeRetract = true
+            )
+        )
+
+    fun scoreL3() =
+        requestSuperstructureAction(
+            SuperstructureAction.create(
+                ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position()),
+                intakeSystem.coralScore(),
+                stowRequest(),
+                safeRetract = true
+            )
+        )
+
+    private fun l4PrepRequest() = SequentialRequest(
+        ParallelRequest(
+            pivotSystem.l4Angle(),
+            elevatorSystem.safeUpPosition(),
+            intakeSystem.coralHalfSpit()
+        ),
+        elevatorSystem
+            .l4Position()
+            .withPrerequisite(pivotSystem.safeTravelUp()),
     )
 
-    fun removeAlgaeLow() = request(
-        SuperstructureAction.create(
-            ParallelRequest(
-                pivotSystem.algaeRemoveAngle(),
-                elevatorSystem.algaeRemoveLowPosition(),
-                intakeSystem.algaeIntake()
-            ),
-            EmptyRequest(),
-            ParallelRequest(
-                pivotSystem.stowAngle(),
-                elevatorSystem.stowPosition()
-            ),
-            { RobotState.gamePieceState == GamePieceState.Algae },
+    fun scoreL4() =
+        requestSuperstructureAction(
+            SuperstructureAction.create(
+                l4PrepRequest(),
+                intakeSystem.coralScore(),
+                safeRetractRequest(),
+                safeRetract = true
+            )
         )
-    )
 
-    fun removeAlgaeHigh() = request(
-        SuperstructureAction.create(
-            SequentialRequest(
+//    fun pivotTest() = requestSuperstructureAction(SuperstructureAction.create())
+
+    fun removeAlgaeLow() =
+        requestSuperstructureAction(
+            SuperstructureAction.create(
                 ParallelRequest(
                     pivotSystem.algaeRemoveAngle(),
-                    elevatorSystem.safeUpPosition(),
+                    elevatorSystem.algaeRemoveLowPosition(),
+                    intakeSystem.algaeIntake()
                 ),
-                elevatorSystem.algaeRemoveHighPosition().withPrerequisite(pivotSystem.safeTravelUp()),
-                intakeSystem.algaeIntake()
-            ),
-            EmptyRequest(),
-            safeRetractRequest(),
-            { RobotState.gamePieceState == GamePieceState.Algae }
+                EmptyRequest(),
+                SequentialRequest(
+                    ParallelRequest(pivotSystem.stowAngle(), elevatorSystem.stowPosition()),
+                    intakeSystem.idle()
+                ),
+                { RobotState.gamePieceState == GamePieceState.Algae },
+                safeRetract = true
+            )
+        )
+
+    fun removeAlgaeHigh() =
+        requestSuperstructureAction(
+            SuperstructureAction.create(
+                SequentialRequest(
+                    ParallelRequest(
+                        pivotSystem.algaeRemoveAngle(),
+                        elevatorSystem.safeUpPosition(),
+                    ),
+                    elevatorSystem
+                        .algaeRemoveHighPosition()
+                        .withPrerequisite(pivotSystem.safeTravelUp()),
+                    intakeSystem.algaeIntake()
+                ),
+                EmptyRequest(),
+                SequentialRequest(
+                    safeRetractRequest(),
+                    intakeSystem.idle()
+                ),
+                { RobotState.gamePieceState == GamePieceState.Algae },
+                safeRetract = true
+            )
+        )
+
+    fun scoreProcessor() = requestSuperstructureAction(
+        SuperstructureAction.create(
+            ParallelRequest(elevatorSystem.processorPosition(), pivotSystem.processorAngle()),
+            intakeSystem.algaeScore(),
+            stowRequest()
         )
     )
 
-    fun scoreBarge() = request(
-        SuperstructureAction.create(
-            SequentialRequest(
-                ParallelRequest(
-                    pivotSystem.bargeAngle(),
-                    elevatorSystem.safeUpPosition(),
+    fun scoreBarge() =
+        requestSuperstructureAction(
+            SuperstructureAction.create(
+                SequentialRequest(
+                    ParallelRequest(
+                        pivotSystem.bargeAngle(),
+                        elevatorSystem.safeUpPosition(),
+                    ),
+                    elevatorSystem
+                        .bargePosition()
+                        .withPrerequisite(pivotSystem.safeTravelUp()),
                 ),
-                elevatorSystem.bargePosition().withPrerequisite(pivotSystem.safeTravelUp()),
-            ),
-            intakeSystem.algaeScore(),
-            safeRetractRequest()
+                intakeSystem.algaeScore(),
+                safeRetractRequest(),
+                safeRetract = true
+            )
         )
-    )
+
+    object Auto {
+        fun prepL4() = requestSuperstructureAction(
+            l4PrepRequest()
+        )
+
+        fun justScoreL4() = requestSuperstructureAction(
+            SuperstructureAction.create(
+                EmptyRequest(),
+                intakeSystem.coralScore(),
+                safeRetractRequest(),
+                safeRetract = true
+            )
+        )
+    }
 }

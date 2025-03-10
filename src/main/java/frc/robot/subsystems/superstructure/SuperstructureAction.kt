@@ -9,17 +9,26 @@ object SuperstructureAction {
         confirmAction: Request,
         returnAction: Request,
         confirmed: () -> Boolean = { RobotState.actionConfirmed },
-        cancelled: () -> Boolean = { RobotState.actionCancelled }
+        cancelled: () -> Boolean = { RobotState.actionCancelled },
+        safeRetract: Boolean = false
     ): Request = SequentialRequest(
         Request.withAction {
             RobotState.actionCancelled = false
             RobotState.actionConfirmed = false
+            RobotState.superstructureActionRunning = true
         },
         prepAction,
         AwaitRequest {
             confirmed() || cancelled()
         },
         IfRequest(confirmed, confirmAction),
-        returnAction
+        IfRequest({ safeRetract }, AwaitRequest {
+            Superstructure.safeToRetract()
+        }),
+        returnAction,
+//        Superstructure.awaitAtDesiredPosition(),
+        Request.withAction {
+            RobotState.superstructureActionRunning = false
+        }
     )
 }

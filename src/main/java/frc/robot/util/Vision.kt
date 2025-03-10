@@ -1,16 +1,12 @@
 package frc.robot.util
 
+import com.ctre.phoenix6.Utils
 import edu.wpi.first.math.VecBuilder
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
-import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import frc.robot.LimelightHelpers
-import frc.robot.RobotConfiguration
-import frc.robot.RobotContainer
-import frc.robot.RobotType
-import kotlin.math.max
+import frc.robot.*
 
 //import frc.robot.constants.FieldConstants
 //import frc.robot.constants.LimelightConstants
@@ -18,37 +14,63 @@ import kotlin.math.max
 //import frc.robot.util.visualiztion.Field2d
 
 class VisionSystem {
-    val max_distance_m = 6.0
+    val max_distance_m = 4.0
 
     val limelightNames: Array<String> = when (RobotConfiguration.robotType) {
-        RobotType.Real -> arrayOf("limelight-fleft", "limelight-tright", "limelight-bfront")
+//        RobotType.Real -> arrayOf("limelight-tright", "limelight-btfront")
+        RobotType.Real -> arrayOf("limelight-tleft", "limelight-tright", "limelight-btfront")
         else -> emptyArray()
     }
 
     fun updateOdometryFromDisabled() {
         var namesToSearch: Array<String>;
 
+        var fullReset = SmartDashboard.getBoolean("full reset with vision", false)
 
         namesToSearch = limelightNames
 
+         val headingDeg: Double = RobotContainer.drivetrain.getSwervePose().rotation.degrees
 
         for (llName in namesToSearch) {
-
             if (DriverStation.getAlliance().isEmpty) {
-//                println("DS alliance is empty; skipping vision")
+                println("DS alliance is empty; skipping vision")
                 return
             }
 
+//            LimelightHelpers.SetRobotOrientation(llName, headingDeg, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+            if (LimelightHelpers.getBotPoseEstimate_wpiBlue(llName) == null) {
+//                println(llName + " is null")
+                SmartDashboard.putBoolean("ll " + llName + " is valid", false)
+                return;
+            }
+
+            SmartDashboard.putBoolean("ll " + llName + " is valid", true)
 
             var llMeasure: LimelightHelpers.PoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
 
+//            println("ll measure x: " + llMeasure.pose.x)
+//            println("ll measure y: " + llMeasure.pose.y)
+
             if (llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {
+
                 val poseDifference =
                     llMeasure.pose.translation.getDistance(RobotContainer.drivetrain.getSwervePose().translation)
 
                 val distanceToTag = llMeasure.avgTagDist
+//                SmartDashboard.putNumber("distance to tag", distanceToTag)
+
+//                SmartDashboard.putNumber("ll update pose x: ", llMeasure.pose.x)
+//                SmartDashboard.putNumber("ll update pose y: ", llMeasure.pose.y)
+//                SmartDashboard.putNumber("ll timestampt: ", llMeasure.timestampSeconds)
+
+                if (fullReset) {
+                    RobotContainer.drivetrain.resetPose(llMeasure.pose)
+                    return;
+                }
 
                 if (distanceToTag < max_distance_m) {
+//                    println("doing the thingy")
                     var xyStds: Double
                     var degStds: Double
 
@@ -66,14 +88,13 @@ class VisionSystem {
                         degStds = 25.0
                     }
 
-
                     RobotContainer.drivetrain.setVisionMeasurementStdDevs(
                         VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds))
                     )
 
                     RobotContainer.drivetrain.addVisionMeasurement(
                         llMeasure.pose,
-                        llMeasure.timestampSeconds
+                        Utils.fpgaToCurrentTime(llMeasure.timestampSeconds)
                     )
                 }
             }
@@ -84,7 +105,10 @@ class VisionSystem {
 
         var namesToSearch: Array<String>;
 
+
         namesToSearch = limelightNames
+
+        val headingDeg: Double = RobotContainer.drivetrain.getSwervePose().rotation.degrees
 
         for (llName in namesToSearch) {
             if (DriverStation.getAlliance().isEmpty) {
@@ -92,8 +116,20 @@ class VisionSystem {
                 return
             }
 
+//            LimelightHelpers.SetRobotOrientation(llName, headingDeg, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+
+            if (LimelightHelpers.getBotPoseEstimate_wpiBlue(llName) == null) {
+//                println(llName + " is null")
+                SmartDashboard.putBoolean("ll " + llName + " is valid", false)
+                return;
+            }
+
+            SmartDashboard.putBoolean("ll " + llName + " is valid", true)
+
             var llMeasure: LimelightHelpers.PoseEstimate =
                 LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
+
 
             if (llMeasure.tagCount >= tagCount && llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {
                 val poseDifference =
@@ -105,46 +141,37 @@ class VisionSystem {
                         var xyStds: Double
                         var degStds: Double
 
-                        if (llName == "limelight-rightsi") {
-                            if (llMeasure.tagCount >= 2) {
-                                xyStds = 1.0
-                                degStds = 12.0
-                            } else if (llMeasure.avgTagArea > 0.8 && poseDifference < 0.5) {
-                                xyStds = 2.0
-                                degStds = 30.0
-                            } else if (llMeasure.avgTagArea > 0.1 && poseDifference < 0.3) {
-                                xyStds = 4.0
-                                degStds = 50.0
-                            } else {
-                                xyStds = 6.0
-                                degStds = 80.0
-                            }
-                        } else {
                             if (llMeasure.tagCount >= 2) {
                                 xyStds = 0.5
-                                degStds = 6.0
+                                degStds = 250.0
                             } else if (llMeasure.avgTagArea > 0.8 && poseDifference < 0.5) {
                                 xyStds = 1.0
-                                degStds = 12.0
+                                degStds = 800.0
                             } else if (llMeasure.avgTagArea > 0.1 && poseDifference < 0.3) {
                                 xyStds = 2.0
-                                degStds = 30.0
+                                degStds = 1300.0
                             } else {
                                 xyStds = 4.0
-                                degStds = 50.0
+                                degStds = 25000.0
                             }
-                        }
+
+
+//                        var headingDeg = RobotContainer.drivetrain.getSwervePose().rotation
 
                         RobotContainer.drivetrain.setVisionMeasurementStdDevs(
                             VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds))
                         )
+
 //                        println("updating odometry with ll")
 //                        println("Updating with LL ${llName}: X = " + llMeasure.pose.x + " Y = " + llMeasure.pose.y)
 
+//                        val finalPose = Pose2d(llMeasure.pose.x, llMeasure.pose.y, Rotation2d.fromDegrees(headingDeg))
+
                         RobotContainer.drivetrain.addVisionMeasurement(
                             llMeasure.pose,
-                            llMeasure.timestampSeconds
+                            Utils.fpgaToCurrentTime(llMeasure.timestampSeconds)
                         )
+
                     }
                 }
             }
