@@ -2,6 +2,7 @@ package frc.robot
 
 import au.grapplerobotics.CanBridge
 import com.pathplanner.lib.auto.AutoBuilder
+import com.pathplanner.lib.commands.PathPlannerAuto
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
@@ -27,7 +28,6 @@ import frc.robot.util.input.OperatorControls
  * object or package, it will get changed everywhere.)
  */
 object Robot : TimedRobot() {
-    private var autonomousCommand = Commands.runOnce({}) //RobotContainer.drivetrain.getAutoPath("3 L4 Left")
 
 //    private var autonomousCommand: Command = Commands.sequence(
 //        Commands.run({ RobotContainer.drivetrain.applyDriveRequest(-1.0, 0.0, 0.0) }).raceWith(Commands.waitSeconds(1.0)),
@@ -63,6 +63,7 @@ object Robot : TimedRobot() {
         SmartDashboard.putBoolean("full reset with vision", false)
 
         RobotContainer
+
 
         AutoScoringConstants.initialize()
         OperatorControls
@@ -107,10 +108,12 @@ object Robot : TimedRobot() {
 
 //        autonomousCommand = RobotContainer.autonomousCommand
 //        autonomousCommand = RobotContainer.drivetrain.getAutoPath("3 L4 Left")
-        autonomousCommand = RobotContainer.drivetrain.getAutoPath("Test")
-        autonomousCommand.execute()
+//        autonomousCommand = RobotContainer.drivetrain.getAutoPath("Test")
+//        autonomousCommand.execute()
 
         Superstructure.initialize()
+
+        RobotContainer.autoCommand.schedule()
     }
 
     /** This method is called periodically during autonomous.  */
@@ -120,7 +123,7 @@ object Robot : TimedRobot() {
     override fun teleopInit() {
         // This makes sure that the autonomous stops running when teleop starts running. If you want the
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
-        autonomousCommand.cancel()
+        RobotContainer.autoCommand.cancel()
 
 //        TeleopDriveCommand().schedule()
         Superstructure.initialize()

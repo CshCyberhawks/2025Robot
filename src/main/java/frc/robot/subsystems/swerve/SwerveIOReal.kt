@@ -66,11 +66,6 @@ class SwerveIOReal() : SwerveIOBase() {
 
     override fun getSpeeds() = drivetrain.state.Speeds
 
-    override fun getAutoPath(name: String): Command {
-        return PathPlannerAuto(name)
-    }
-
-
     override fun seedFieldCentric() {
         drivetrain.seedFieldCentric()
     }
