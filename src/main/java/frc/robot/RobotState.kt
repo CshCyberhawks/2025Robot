@@ -8,6 +8,7 @@ object RobotState {
 
     var actionCancelled = false
     var actionConfirmed = false
+    var superstructureActionRunning = false
 
     var autoDriving = false
 }

@@ -1,20 +1,20 @@
 package frc.robot
 
 import au.grapplerobotics.CanBridge
+import com.pathplanner.lib.auto.AutoBuilder
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
-import frc.robot.commands.TeleopDriveCommand
+import frc.robot.constants.AutoScoringConstants
 import frc.robot.subsystems.superstructure.Superstructure
 import frc.robot.util.Visualizer
-import frc.robot.util.input.DriverAction
+import frc.robot.util.input.OperatorControls
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -27,12 +27,8 @@ import frc.robot.util.input.DriverAction
  * object or package, it will get changed everywhere.)
  */
 object Robot : TimedRobot() {
-    /**
-     * The autonomous command to run. While a default value is set here,
-     * the [autonomousInit] method will set it to the value selected in
-     *the  AutoChooser on the dashboard.
-     */
-    private var autonomousCommand: Command = Commands.runOnce({})
+    private var autonomousCommand = Commands.runOnce({}) //RobotContainer.drivetrain.getAutoPath("3 L4 Left")
+
 //    private var autonomousCommand: Command = Commands.sequence(
 //        Commands.run({ RobotContainer.drivetrain.applyDriveRequest(-1.0, 0.0, 0.0) }).raceWith(Commands.waitSeconds(1.0)),
 //        Commands.runOnce({ RobotContainer.drivetrain.applyDriveRequest(0.0, 0.0, 0.0) }),
@@ -44,7 +40,6 @@ object Robot : TimedRobot() {
 //    val pivotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Pivot Pose", Pose3d.struct).publish();
 //    val wristPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Wrist Pose", Pose3d.struct).publish();
 //
-
 
     init {
 
@@ -68,6 +63,9 @@ object Robot : TimedRobot() {
         SmartDashboard.putBoolean("full reset with vision", false)
 
         RobotContainer
+
+        AutoScoringConstants.initialize()
+        OperatorControls
     }
 
     /**
@@ -87,6 +85,10 @@ object Robot : TimedRobot() {
 //        SmartDashboard.putNumber("robot pose x: ", RobotContainer.drivetrain.getSwervePose().x)
 
         Visualizer.periodic()
+
+        SmartDashboard.putString("Driver Action", OperatorControls.action.name)
+        SmartDashboard.putString("Reef Position", OperatorControls.reefPosition.name)
+        SmartDashboard.putString("Reef Side", OperatorControls.coralSide.name)
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */
@@ -95,17 +97,17 @@ object Robot : TimedRobot() {
     }
 
     override fun disabledPeriodic() {
-//        RobotContainer.vision.updateOdometryFromDisabled()
+        RobotContainer.vision.updateOdometryFromDisabled()
     }
 
     /** This autonomous runs the autonomous command selected by your [RobotContainer] class.  */
     override fun autonomousInit() {
         // We store the command as a Robot property in the rare event that the selector on the dashboard
         // is modified while the command is running since we need to access it again in teleopInit()
-        autonomousCommand.schedule()
 
-
-
+//        autonomousCommand = RobotContainer.autonomousCommand
+        autonomousCommand = RobotContainer.drivetrain.getAutoPath("3 L4 Left")
+        autonomousCommand.execute()
 
         Superstructure.initialize()
     }
@@ -121,11 +123,13 @@ object Robot : TimedRobot() {
 
 //        TeleopDriveCommand().schedule()
         Superstructure.initialize()
+
+        RobotState.autoDriving = false
     }
 
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
-//        RobotContainer.vision.updateOdometry(1, false)
+        RobotContainer.vision.updateOdometry(1, true)
     }
 
     override fun testInit() {

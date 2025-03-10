@@ -1,0 +1,214 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.25,
+        "y": 3.82
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.25,
+        "y": 3.82
+      },
+      "isLocked": false,
+      "linkedName": "Reef A Right"
+    },
+    {
+      "anchor": {
+        "x": 3.25,
+        "y": 4.23
+      },
+      "prevControl": {
+        "x": 2.25,
+        "y": 4.23
+      },
+      "nextControl": {
+        "x": 4.25,
+        "y": 4.23
+      },
+      "isLocked": false,
+      "linkedName": "Reef A Left"
+    },
+    {
+      "anchor": {
+        "x": 3.69,
+        "y": 5.0
+      },
+      "prevControl": {
+        "x": 3.487560623401486,
+        "y": 5.350635285721196
+      },
+      "nextControl": {
+        "x": 3.8924393765985137,
+        "y": 4.649364714278804
+      },
+      "isLocked": false,
+      "linkedName": "Reef B Right"
+    },
+    {
+      "anchor": {
+        "x": 4.05,
+        "y": 5.2
+      },
+      "prevControl": {
+        "x": 3.8157313155445705,
+        "y": 5.605765264099125
+      },
+      "nextControl": {
+        "x": 4.284268684455429,
+        "y": 4.794234735900876
+      },
+      "isLocked": false,
+      "linkedName": "Reef B Left"
+    },
+    {
+      "anchor": {
+        "x": 4.93,
+        "y": 5.2
+      },
+      "prevControl": {
+        "x": 5.055,
+        "y": 5.41650635094611
+      },
+      "nextControl": {
+        "x": 4.805,
+        "y": 4.98349364905389
+      },
+      "isLocked": false,
+      "linkedName": "Reef C Right"
+    },
+    {
+      "anchor": {
+        "x": 5.28,
+        "y": 5.0
+      },
+      "prevControl": {
+        "x": 5.405,
+        "y": 5.216506350946109
+      },
+      "nextControl": {
+        "x": 5.155,
+        "y": 4.783493649053891
+      },
+      "isLocked": false,
+      "linkedName": "Reef C Left"
+    },
+    {
+      "anchor": {
+        "x": 5.73,
+        "y": 4.23
+      },
+      "prevControl": {
+        "x": 5.989212352466542,
+        "y": 4.23
+      },
+      "nextControl": {
+        "x": 5.4707876475334585,
+        "y": 4.23
+      },
+      "isLocked": false,
+      "linkedName": "Reef D Right"
+    },
+    {
+      "anchor": {
+        "x": 5.73,
+        "y": 3.82
+      },
+      "prevControl": {
+        "x": 5.98,
+        "y": 3.82
+      },
+      "nextControl": {
+        "x": 5.48,
+        "y": 3.82
+      },
+      "isLocked": false,
+      "linkedName": "Reef D Left"
+    },
+    {
+      "anchor": {
+        "x": 5.28,
+        "y": 3.05
+      },
+      "prevControl": {
+        "x": 5.4062810797986645,
+        "y": 2.8312747537540535
+      },
+      "nextControl": {
+        "x": 5.153718920201336,
+        "y": 3.268725246245946
+      },
+      "isLocked": false,
+      "linkedName": "Reef E Right"
+    },
+    {
+      "anchor": {
+        "x": 4.93,
+        "y": 2.85
+      },
+      "prevControl": {
+        "x": 5.128431824466996,
+        "y": 2.5063059981845734
+      },
+      "nextControl": {
+        "x": 4.805,
+        "y": 3.0665063509461095
+      },
+      "isLocked": false,
+      "linkedName": "Reef E Left"
+    },
+    {
+      "anchor": {
+        "x": 4.05,
+        "y": 2.85
+      },
+      "prevControl": {
+        "x": 3.923596455085396,
+        "y": 2.631062637951092
+      },
+      "nextControl": {
+        "x": 4.176403544914604,
+        "y": 3.068937362048908
+      },
+      "isLocked": false,
+      "linkedName": "Reef F Right"
+    },
+    {
+      "anchor": {
+        "x": 3.69,
+        "y": 3.05
+      },
+      "prevControl": {
+        "x": 3.565,
+        "y": 2.83349364905389
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

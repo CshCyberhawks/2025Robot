@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer
 import frc.robot.RobotState
 import frc.robot.subsystems.superstructure.Superstructure
+import frc.robot.subsystems.superstructure.pivot.PivotSystem
 
 object ManualOperatorInput {
     fun configureBindings() {
@@ -39,10 +40,13 @@ object ManualOperatorInput {
             Superstructure.scoreL4()
         }))
         RobotContainer.xbox.b().onTrue(Commands.runOnce({
+//            Superstructure.request(Superstructure.pivotSystem.algaeRemoveAngle())
             Superstructure.scoreL3()
         }))
         RobotContainer.xbox.x().onTrue(Commands.runOnce({
             Superstructure.intakeFeeder()
+//            Superstructure.pivotTest()
+//            Superstructure.request(Superstructure.pivotSystem.l3Angle())
         }))
         RobotContainer.xbox.leftBumper().onTrue(Commands.runOnce({
             Superstructure.removeAlgaeLow()
@@ -52,6 +56,7 @@ object ManualOperatorInput {
         }))
         RobotContainer.xbox.a().onTrue(Commands.runOnce({
             Superstructure.scoreBarge()
+//            Superstructure.request(Superstructure.pivotSystem.stowAngle())
         }))
         RobotContainer.xbox.povUp().onTrue(Commands.runOnce({
             Superstructure.scoreProcessor()

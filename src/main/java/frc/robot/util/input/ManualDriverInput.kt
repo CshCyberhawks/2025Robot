@@ -3,7 +3,6 @@ package frc.robot.util.input
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer
 import frc.robot.RobotState
-import frc.robot.commands.TeleopAutoScore
 import java.util.*
 
 object ManualDriverInput {
@@ -15,9 +14,19 @@ object ManualDriverInput {
 
         RobotContainer.rightJoystick.button(cancel).onTrue(Commands.runOnce({
             if (!RobotContainer.currentDriveCommand.isEmpty) {
+                println("cancelling auto drive")
                 RobotContainer.currentDriveCommand.get().cancel()
                 RobotContainer.currentDriveCommand = Optional.empty()
+                RobotState.autoDriving = false
             }
+        }))
+
+        RobotContainer.rightJoystick.button(3).onTrue(Commands.runOnce({
+            OperatorControls.action.alignCommand.schedule()
+        }))
+
+        RobotContainer.rightJoystick.button(3).onFalse(Commands.runOnce({
+            OperatorControls.action.alignCommand.cancel()
         }))
 
         RobotContainer.leftJoystick.button(3).onTrue(Commands.runOnce({
@@ -26,12 +35,16 @@ object ManualDriverInput {
         }))
 
         RobotContainer.leftJoystick.button(4).onTrue(Commands.runOnce({
-            println("action confirmed")
             RobotState.actionConfirmed = true
-//            if (RobotContainer.currentDriveCommand.isEmpty) {
-//                TeleopAutoScore.score()
+            println("action confirmed")
+//            if (RobotContainer.currentDriveCommand.isEmpty && ) {
 //            } else {
 //            }
+        }))
+
+        RobotContainer.leftJoystick.button(2).onTrue(Commands.runOnce({
+            OperatorControls.action.superStructureCommand.schedule()
+            println("running superstructure command")
         }))
     }
 

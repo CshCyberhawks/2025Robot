@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Sit At Reef"
+            "pathName": "1.1"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1.2"
           }
         }
       ]

@@ -4,6 +4,8 @@ package frc.robot.subsystems.superstructure.intake
 enum class IntakeState(val current: Double) {
     Idle(0.0),
     CoralIntake(-40.0),
+    CoralHalfSpit(15.0),
+    CoralHolding(-1.0),
     CoralScore(200.0),
     AlgaeIntake(40.0),
     AlgaeScore(-40.0),
