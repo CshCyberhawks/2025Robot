@@ -14,7 +14,7 @@ import frc.robot.*
 //import frc.robot.util.visualiztion.Field2d
 
 class VisionSystem {
-    val max_distance_m = 6.0
+    val max_distance_m = 4.0
 
     val limelightNames: Array<String> = when (RobotConfiguration.robotType) {
 //        RobotType.Real -> arrayOf("limelight-tright", "limelight-btfront")

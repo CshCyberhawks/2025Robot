@@ -21,54 +21,6 @@
           "data": {
             "pathName": "1.2"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AwaitIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "1.3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ScoreL4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "1.4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AwaitIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "1.5"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ScoreL4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "1.6"
-          }
         }
       ]
     }

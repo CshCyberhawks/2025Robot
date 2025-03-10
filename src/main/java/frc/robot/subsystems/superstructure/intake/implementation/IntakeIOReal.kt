@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.controls.TorqueCurrentFOC
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
+import cshcyberhawks.lib.math.Timer
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.CANConstants
@@ -52,7 +53,7 @@ class IntakeIOReal() : IntakeIO {
         SmartDashboard.putNumber("Algae Measurement", measurement.distance_mm.toDouble())
         @Suppress("SENSELESS_COMPARISON")
         return (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < Units.inchesToMeters(
-                10.0 // Other side is ~15.5in from sensor
+                12.0 // Other side is ~15.5in from sensor
             ) * 1000.0
         )
     }
@@ -64,10 +65,12 @@ class IntakeIOReal() : IntakeIO {
         return (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 40.0)
     }
 
+    private val coralIntakeTimer = Timer()
+
     override fun periodic() {
         if (watchingForIntake) {
             if (hasCoral()) {
-                intakeMotor.set(IntakeState.Idle.current)
+                intakeMotor.set(IntakeState.CoralHolding.current)
                 watchingForIntake = false
             } else if (hasAlgae()) {
                 intakeMotor.set(IntakeState.AlgaeHolding.current)

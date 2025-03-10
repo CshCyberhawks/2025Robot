@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 4.95092213114754,
-        "y": 5.38560450819672
+        "x": 4.93,
+        "y": 5.2
       },
       "prevControl": {
-        "x": 5.41125,
-        "y": 5.92625
+        "x": 5.390327868852459,
+        "y": 5.74064549180328
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef E Right"
+      "linkedName": "Reef C Right"
     }
   ],
   "rotationTargets": [
@@ -59,7 +59,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
   "folder": "1 - 3 L4 Left",

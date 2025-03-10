@@ -30,15 +30,24 @@ class PivotIOPID() : PivotIO {
     private val encoder = CANcoder(CANConstants.Pivot.encoderId)
 
     val pivotPIDController =
-            ProfiledPIDController(
-                    1.5,
-                    0.0,
-                    0.06,
-                    TrapezoidProfile.Constraints(
-                            PivotConstants.velocityDegrees,
-                            PivotConstants.accelerationDegrees
-                    )
+//            ProfiledPIDController(
+//                    1.5,
+//                    0.0,
+//                    0.06,
+//                    TrapezoidProfile.Constraints(
+//                            PivotConstants.velocityDegrees,
+//                            PivotConstants.accelerationDegrees
+//                    )
+//            )
+        ProfiledPIDController(
+            1.0,
+            0.0,
+            0.06,
+            TrapezoidProfile.Constraints(
+                PivotConstants.velocityDegrees,
+                PivotConstants.accelerationDegrees
             )
+        )
 
 //    val correctivePID = PIDController(0.3, 0.0, 0.0)
 
@@ -129,7 +138,8 @@ class PivotIOPID() : PivotIO {
         SmartDashboard.putNumber("Pivot Raw TB Angle", MiscCalculations.wrapAroundAngles(encoder.absolutePosition.valueAsDouble * 360.0))
         SmartDashboard.putNumber("Pivot Desired Angle", desiredAngle)
 
-        val kG = if (getAngle() > 270) 8.25 else 10.5
+//        val kG = if (getAngle() > 270) 8.25 else 10.5
+        val kG = if (getAngle() > 270) 7.25 else 7.5
         val gravityFF = kG * sin(Math.toRadians(getAngle() + 90))
         val positionPIDOut = pivotPIDController.calculate(getAngle())
 //        val correctivePIDOut = correctivePID.calculate(getAngle(), desiredAngle)

@@ -27,7 +27,7 @@ import frc.robot.util.input.OperatorControls
  * object or package, it will get changed everywhere.)
  */
 object Robot : TimedRobot() {
-    private var autonomousCommand = RobotContainer.drivetrain.getAutoPath("3 L4 Left")
+    private var autonomousCommand = Commands.runOnce({}) //RobotContainer.drivetrain.getAutoPath("3 L4 Left")
 
 //    private var autonomousCommand: Command = Commands.sequence(
 //        Commands.run({ RobotContainer.drivetrain.applyDriveRequest(-1.0, 0.0, 0.0) }).raceWith(Commands.waitSeconds(1.0)),
@@ -106,6 +106,7 @@ object Robot : TimedRobot() {
         // is modified while the command is running since we need to access it again in teleopInit()
 
 //        autonomousCommand = RobotContainer.autonomousCommand
+        autonomousCommand = RobotContainer.drivetrain.getAutoPath("3 L4 Left")
         autonomousCommand.execute()
 
         Superstructure.initialize()
@@ -128,7 +129,7 @@ object Robot : TimedRobot() {
 
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
-        RobotContainer.vision.updateOdometry(1, false)
+        RobotContainer.vision.updateOdometry(1, true)
     }
 
     override fun testInit() {

@@ -72,6 +72,7 @@ object AutoScoringConstants {
             ReefPositions.entries[face].right = rightPose
             ReefPositions.entries[face].left = leftPose
             ReefPositions.entries[face].center = centerPose
+
 //            println("$face Right: $rightPose, Left: $leftPose")
         }
     }

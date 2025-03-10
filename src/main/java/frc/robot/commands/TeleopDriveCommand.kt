@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.RobotContainer
 import cshcyberhawks.lib.math.MiscCalculations
+import edu.wpi.first.wpilibj.DriverStation
 import frc.robot.RobotState
 import frc.robot.subsystems.swerve.SwerveConstants
 
@@ -44,6 +45,8 @@ class TeleopDriveCommand : Command() {
 
         val fieldOriented = !RobotContainer.rightJoystick.button(1).asBoolean
 
+        val inputFlipRed = if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) 1.0 else -1.0
+
         if (fieldOriented) {
             SmartDashboard.putNumber("drive x req", -MiscCalculations.calculateDeadzone(
                 RobotContainer.rightJoystick.y,
@@ -52,13 +55,13 @@ class TeleopDriveCommand : Command() {
 
 
             RobotContainer.drivetrain.applyDriveRequest(
-                -MiscCalculations.calculateDeadzone(
+                inputFlipRed * MiscCalculations.calculateDeadzone(
                     RobotContainer.rightJoystick.y,
                     .1
-                ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
+                ) * SwerveConstants.ControlledSpeed, inputFlipRed * MiscCalculations.calculateDeadzone(
                     RobotContainer.rightJoystick.x,
                     .1
-                ) * SwerveConstants.ControlledSpeed, -MiscCalculations.calculateDeadzone(
+                ) * SwerveConstants.ControlledSpeed,  -MiscCalculations.calculateDeadzone(
                     RobotContainer.leftJoystick.x,
                     .1
                 ) * SwerveConstants.ControlledAngularRate

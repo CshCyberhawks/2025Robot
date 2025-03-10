@@ -13,8 +13,8 @@ enum class DriverAction(val superStructureCommand: Command, val alignCommand: Co
     ScoreL2(Commands.runOnce({ Superstructure.scoreL2() }), AutoAlign.coralReefAlign()),
     ScoreL3(Commands.runOnce({ Superstructure.scoreL3() }), AutoAlign.coralReefAlign()),
     ScoreL4(Commands.runOnce({ Superstructure.scoreL4() }), AutoAlign.coralReefAlign()),
-    RemoveAlgaeLow(Commands.runOnce({ Superstructure.removeAlgaeLow() }), AutoAlign.coralReefAlign()),
-    RemoveAlgaeHigh(Commands.runOnce({ Superstructure.removeAlgaeHigh() }), AutoAlign.coralReefAlign()),
+    RemoveAlgaeLow(Commands.runOnce({ Superstructure.removeAlgaeLow() }), AutoAlign.algaeReefAlign()),
+    RemoveAlgaeHigh(Commands.runOnce({ Superstructure.removeAlgaeHigh() }), AutoAlign.algaeReefAlign()),
     ScoreBarge(Commands.runOnce({ Superstructure.scoreBarge() })),
     ScoreProcessor(Commands.runOnce({ Superstructure.scoreProcessor() })),
     None(Commands.runOnce({}))
@@ -29,6 +29,7 @@ object OperatorControls {
     val action
         get() = when (SmartDashboard.getString("ConsoleDriverAction", "")) {
             "Feeder" -> DriverAction.IntakeFeeder
+            "L2" -> DriverAction.ScoreL2
             "L3" -> DriverAction.ScoreL3
             "L4" -> DriverAction.ScoreL4
             "Barge" -> DriverAction.ScoreBarge

@@ -212,6 +212,7 @@ object Superstructure : SubsystemBase() {
                     intakeSystem.idle()
                 ),
                 { RobotState.gamePieceState == GamePieceState.Algae },
+                safeRetract = true
             )
         )
 
@@ -233,7 +234,8 @@ object Superstructure : SubsystemBase() {
                     safeRetractRequest(),
                     intakeSystem.idle()
                 ),
-                { RobotState.gamePieceState == GamePieceState.Algae }
+                { RobotState.gamePieceState == GamePieceState.Algae },
+                safeRetract = true
             )
         )
 
