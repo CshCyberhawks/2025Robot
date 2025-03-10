@@ -106,7 +106,8 @@ object Robot : TimedRobot() {
         // is modified while the command is running since we need to access it again in teleopInit()
 
 //        autonomousCommand = RobotContainer.autonomousCommand
-        autonomousCommand = RobotContainer.drivetrain.getAutoPath("3 L4 Left")
+//        autonomousCommand = RobotContainer.drivetrain.getAutoPath("3 L4 Left")
+        autonomousCommand = RobotContainer.drivetrain.getAutoPath("Test")
         autonomousCommand.execute()
 
         Superstructure.initialize()

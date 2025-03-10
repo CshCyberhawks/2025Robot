@@ -18,7 +18,7 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
 
     fun coralHalfSpit() = SequentialRequest(
         setIntakeState(IntakeState.CoralHalfSpit),
-        WaitRequest(IntakeConstants.coralScoreTimeoutSeconds),
+        WaitRequest(IntakeConstants.coralHalfSpitTimeSeconds),
         setIntakeState(IntakeState.Idle)
     )
 
