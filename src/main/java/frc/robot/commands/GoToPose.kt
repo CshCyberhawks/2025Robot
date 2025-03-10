@@ -7,29 +7,45 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile
 import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
-import frc.robot.Robot
-import frc.robot.RobotConfiguration
 import frc.robot.RobotContainer
 import frc.robot.RobotState
 import frc.robot.subsystems.swerve.SwerveConstants
 import java.util.*
 import kotlin.math.abs
 
-class GoToPose(val targetPoseGetter: () -> Pose2d, val endCondition: () -> Boolean = {
-    val currentPose = RobotContainer.drivetrain.getSwervePose()
-    val targetPose = targetPoseGetter()
+class GoToPose(
+    val targetPoseGetter: () -> Pose2d, val endCondition: () -> Boolean = {
+        val currentPose = RobotContainer.drivetrain.getSwervePose()
+        val targetPose = targetPoseGetter()
 
-    (abs(currentPose.x - targetPose.x) < SwerveConstants.positionDeadzone && abs(currentPose.y - targetPose.y) < SwerveConstants.positionDeadzone && abs(currentPose.rotation.degrees - targetPose.rotation.degrees) < SwerveConstants.rotationDeadzone)
-}): Command() {
-    val xController = ProfiledPIDController(SwerveConstants.translationPIDConstants.kP, SwerveConstants.translationPIDConstants.kI, SwerveConstants.translationPIDConstants.kD, TrapezoidProfile.Constraints(1.0, 1.0))
-    val yController = ProfiledPIDController(SwerveConstants.translationPIDConstants.kP, SwerveConstants.translationPIDConstants.kI, SwerveConstants.translationPIDConstants.kD, TrapezoidProfile.Constraints(1.0, 1.0))
-    val rotationController = ProfiledPIDController(SwerveConstants.rotationPIDConstants.kP, SwerveConstants.rotationPIDConstants.kI, SwerveConstants.rotationPIDConstants.kD, TrapezoidProfile.Constraints(Units.degreesToRadians(180.0), Units.degreesToRadians(180.0)))
+        (abs(currentPose.x - targetPose.x) < SwerveConstants.positionDeadzone && abs(currentPose.y - targetPose.y) < SwerveConstants.positionDeadzone && abs(
+            currentPose.rotation.degrees - targetPose.rotation.degrees
+        ) < SwerveConstants.rotationDeadzone)
+    }
+) : Command() {
+    val xController = ProfiledPIDController(
+        SwerveConstants.translationPIDConstants.kP,
+        SwerveConstants.translationPIDConstants.kI,
+        SwerveConstants.translationPIDConstants.kD,
+        TrapezoidProfile.Constraints(1.0, 1.0)
+    )
+    val yController = ProfiledPIDController(
+        SwerveConstants.translationPIDConstants.kP,
+        SwerveConstants.translationPIDConstants.kI,
+        SwerveConstants.translationPIDConstants.kD,
+        TrapezoidProfile.Constraints(1.0, 1.0)
+    )
+    val rotationController = ProfiledPIDController(
+        SwerveConstants.rotationPIDConstants.kP,
+        SwerveConstants.rotationPIDConstants.kI,
+        SwerveConstants.rotationPIDConstants.kD,
+        TrapezoidProfile.Constraints(Units.degreesToRadians(180.0), Units.degreesToRadians(180.0))
+    )
     var targetPose = targetPoseGetter()
 
 
-
     init {
-        rotationController.enableContinuousInput(-180.0, 180.0)
+        rotationController.enableContinuousInput(-Math.PI, Math.PI)
     }
 
     override fun initialize() {
