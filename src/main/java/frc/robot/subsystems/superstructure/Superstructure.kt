@@ -3,7 +3,10 @@ package frc.robot.subsystems.superstructure
 import cshcyberhawks.lib.requests.*
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.SubsystemBase
-import frc.robot.*
+import frc.robot.RobotConfiguration
+import frc.robot.RobotContainer
+import frc.robot.RobotState
+import frc.robot.RobotType
 import frc.robot.constants.FieldConstants
 import frc.robot.subsystems.superstructure.elevator.ElevatorSystem
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOEmpty
@@ -18,7 +21,7 @@ import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOEmpty
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOPID
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOSim
 import frc.robot.util.AllianceFlipUtil
-import java.util.Optional
+import java.util.*
 
 object Superstructure : SubsystemBase() {
     val pivotSystem =
@@ -175,7 +178,8 @@ object Superstructure : SubsystemBase() {
     private fun l4PrepRequest() = SequentialRequest(
         ParallelRequest(
             pivotSystem.l4Angle(),
-            elevatorSystem.safeUpPosition()
+            elevatorSystem.safeUpPosition(),
+            intakeSystem.coralHalfSpit()
         ),
         elevatorSystem
             .l4Position()
