@@ -113,6 +113,7 @@ object Robot : TimedRobot() {
 
         Superstructure.initialize()
 
+
         RobotContainer.autoCommand.schedule()
     }
 

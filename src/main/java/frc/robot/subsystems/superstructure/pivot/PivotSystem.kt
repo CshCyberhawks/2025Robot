@@ -54,7 +54,7 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
     fun algaeRemoveAngle() = setAngle(225.0)
     fun bargeAngle() = setAngle(130.0)
 
-    fun processorAngle() = setAngle(295.0)
+    fun processorAngle() = setAngle(288.0)
 
     override fun periodic() {
         io.periodic()

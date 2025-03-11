@@ -14,7 +14,7 @@ enum class AutoCommands(val cmd: Command) {
             .andThen(Commands.waitSeconds(0.2))
     ),
     IntakeFeeder(
-        Commands.runOnce({ Superstructure.Auto.prepL4() })
+        Commands.runOnce({ Superstructure.intakeFeeder() })
             .andThen(Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral })
     ),
     AwaitIntake(Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral })

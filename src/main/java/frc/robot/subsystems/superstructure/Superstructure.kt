@@ -146,7 +146,7 @@ object Superstructure : SubsystemBase() {
             SuperstructureAction.create(
                 ParallelRequest(
                     elevatorSystem.feederPosition(),
-                    pivotSystem.feederAngle(),
+                    pivotSystem.feederAngle().withPrerequisite(elevatorSystem.safeIntakePosition()),
                     intakeSystem.coralIntake()
                 ),
                 EmptyRequest(),
@@ -267,7 +267,13 @@ object Superstructure : SubsystemBase() {
 
     object Auto {
         fun prepL4() = requestSuperstructureAction(
-            l4PrepRequest()
+            SuperstructureAction.create(
+                l4PrepRequest(),
+                EmptyRequest(),
+                EmptyRequest(),
+                { true },
+                { true }
+            )
         )
 
         fun justScoreL4() = requestSuperstructureAction(
@@ -275,6 +281,7 @@ object Superstructure : SubsystemBase() {
                 EmptyRequest(),
                 intakeSystem.coralScore(),
                 safeRetractRequest(),
+                { true },
                 safeRetract = true
             )
         )

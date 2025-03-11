@@ -49,7 +49,7 @@ object RobotContainer {
 
     var currentDriveCommand: Optional<Command> = Optional.empty();
 
-    var autoCommand: Command = getAutonomousCommand();
+    val autoCommand: Command
 
 //    val autoChooser = AutoBuilder.buildAutoChooser()
 
@@ -60,6 +60,7 @@ object RobotContainer {
             NamedCommands.registerCommand(pathplannerCommand.name, pathplannerCommand.cmd)
         }
 
+        autoCommand = getAutonomousCommand()
 //        SmartDashboard.putData("Auto Chooser", autoChooser)
     }
 

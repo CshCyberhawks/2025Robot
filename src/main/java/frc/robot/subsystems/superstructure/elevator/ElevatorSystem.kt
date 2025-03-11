@@ -25,6 +25,7 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun awaitDesiredPosition() = AwaitRequest { atDesiredPosition() }
 
     fun belowSafeUpPosition() = Prerequisite.withCondition { getPosition() < safeUpPosition }
+    fun safeIntakePosition() = Prerequisite.withCondition { getPosition() < 7.0 }
 
     private fun setPosition(positionInches: Double) = Request.withAction {
         io.setPosition(positionInches)
