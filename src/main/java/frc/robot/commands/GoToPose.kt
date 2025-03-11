@@ -50,10 +50,6 @@ open class GoToPose(
     }
 
     override fun initialize() {
-        targetPose = targetPoseGetter()
-
-        Visualizer.targetPosePublisher.set(targetPose)
-
         val robotPose = RobotContainer.drivetrain.getSwervePose()
         val robotVel = ChassisSpeeds.fromRobotRelativeSpeeds(RobotContainer.drivetrain.getSpeeds(), robotPose.rotation)
 
@@ -61,13 +57,16 @@ open class GoToPose(
         yController.reset(robotPose.y, robotVel.vyMetersPerSecond)
         rotationController.reset(robotPose.rotation.radians, robotVel.omegaRadiansPerSecond)
 
-        SmartDashboard.putString("Goal Position", targetPose.toString())
-
         RobotContainer.currentDriveCommand = Optional.of(this);
         RobotState.autoDriving = true
     }
 
     override fun execute() {
+        targetPose = targetPoseGetter()
+
+        Visualizer.targetPosePublisher.set(targetPose)
+        SmartDashboard.putString("Goal Position", targetPose.toString())
+
         val currentPose = RobotContainer.drivetrain.getSwervePose()
 
         val xFeedback = xController.calculate(currentPose.x, targetPose.x)
