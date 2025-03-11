@@ -3,18 +3,18 @@ package frc.robot.util.input
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
-import frc.robot.commands.AutoAlign
+import frc.robot.commands.TeleopAutoAlign
 import frc.robot.constants.AutoScoringConstants
 import frc.robot.subsystems.superstructure.Superstructure
 
 enum class DriverAction(val superStructureCommand: Command, val alignCommand: Command = Commands.runOnce({})) {
 //    Stow(Commands.runOnce({ Superstructure.stow() })),
     IntakeFeeder(Commands.runOnce({ Superstructure.intakeFeeder() })),
-    ScoreL2(Commands.runOnce({ Superstructure.scoreL2() }), AutoAlign.coralReefAlign()),
-    ScoreL3(Commands.runOnce({ Superstructure.scoreL3() }), AutoAlign.coralReefAlign()),
-    ScoreL4(Commands.runOnce({ Superstructure.scoreL4() }), AutoAlign.coralReefAlign()),
-    RemoveAlgaeLow(Commands.runOnce({ Superstructure.removeAlgaeLow() }), AutoAlign.algaeReefAlign()),
-    RemoveAlgaeHigh(Commands.runOnce({ Superstructure.removeAlgaeHigh() }), AutoAlign.algaeReefAlign()),
+    ScoreL2(Commands.runOnce({ Superstructure.scoreL2() }), TeleopAutoAlign.coralReefAlign()),
+    ScoreL3(Commands.runOnce({ Superstructure.scoreL3() }), TeleopAutoAlign.coralReefAlign()),
+    ScoreL4(Commands.runOnce({ Superstructure.scoreL4() }), TeleopAutoAlign.coralReefAlign()),
+    RemoveAlgaeLow(Commands.runOnce({ Superstructure.removeAlgaeLow() }), TeleopAutoAlign.algaeReefAlign()),
+    RemoveAlgaeHigh(Commands.runOnce({ Superstructure.removeAlgaeHigh() }), TeleopAutoAlign.algaeReefAlign()),
     ScoreBarge(Commands.runOnce({ Superstructure.scoreBarge() })),
     ScoreProcessor(Commands.runOnce({ Superstructure.scoreProcessor() })),
     None(Commands.runOnce({}))

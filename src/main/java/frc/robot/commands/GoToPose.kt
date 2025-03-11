@@ -10,10 +10,11 @@ import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.RobotContainer
 import frc.robot.RobotState
 import frc.robot.subsystems.swerve.SwerveConstants
+import frc.robot.util.Visualizer
 import java.util.*
 import kotlin.math.abs
 
-class GoToPose(
+open class GoToPose(
     val targetPoseGetter: () -> Pose2d, val endCondition: () -> Boolean = {
         val currentPose = RobotContainer.drivetrain.getSwervePose()
         val targetPose = targetPoseGetter()
@@ -50,6 +51,8 @@ class GoToPose(
 
     override fun initialize() {
         targetPose = targetPoseGetter()
+
+        Visualizer.targetPosePublisher.set(targetPose)
 
         val robotPose = RobotContainer.drivetrain.getSwervePose()
         val robotVel = ChassisSpeeds.fromRobotRelativeSpeeds(RobotContainer.drivetrain.getSpeeds(), robotPose.rotation)

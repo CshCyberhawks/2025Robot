@@ -5,7 +5,7 @@ import frc.robot.util.AllianceFlipUtil
 import frc.robot.util.input.CoralSide
 import frc.robot.util.input.OperatorControls
 
-object AutoAlign {
+object TeleopAutoAlign {
     fun coralReefAlign(): Command {
         return GoToPose({
             val reefSide = OperatorControls.reefPosition

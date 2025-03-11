@@ -11,6 +11,7 @@ import frc.robot.subsystems.superstructure.Superstructure
 
 object Visualizer {
     val robotPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose", Pose2d.struct).publish();
+    val targetPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Target Pose", Pose2d.struct).publish();
 
     val componentPosePublisher =
         NetworkTableInstance.getDefault().getStructArrayTopic("Component Poses", Pose3d.struct).publish()
