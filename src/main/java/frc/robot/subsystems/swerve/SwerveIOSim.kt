@@ -26,12 +26,7 @@ import frc.robot.subsystems.swerve.SwerveIOBase
 class SwerveIOSim() : SwerveIOBase() {
     //    private var robotPose = Pose2d()
     private var robotPose =
-        FieldConstants.Reef.centerFaces[0]!!.plus(
-            Transform2d(
-                Translation2d(Units.inchesToMeters(33.5 / 2 + 10.0), 0.0),
-                Rotation2d.fromDegrees(180.0)
-            )
-        )
+        Pose2d(Translation2d(7.6, 6.3), Rotation2d())
 
     private var currentSpeed = ChassisSpeeds()
 

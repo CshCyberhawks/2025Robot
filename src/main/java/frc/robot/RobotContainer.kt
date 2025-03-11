@@ -60,7 +60,8 @@ object RobotContainer {
             NamedCommands.registerCommand(pathplannerCommand.name, pathplannerCommand.cmd)
         }
 
-        autoCommand = getAutonomousCommand()
+        autoCommand = frc.robot.commands.auto.AutoBuilder.twoL4Left()
+//        autoCommand = getAutonomousCommand()
 //        SmartDashboard.putData("Auto Chooser", autoChooser)
     }
 
