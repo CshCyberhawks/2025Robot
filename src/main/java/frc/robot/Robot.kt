@@ -42,6 +42,7 @@ object Robot : TimedRobot() {
 //
 
     init {
+        AutoScoringConstants.initialize()
 
         SmartDashboard.putBoolean("Action", false)
         SmartDashboard.putBoolean("Confirm", false)
@@ -63,9 +64,6 @@ object Robot : TimedRobot() {
         SmartDashboard.putBoolean("full reset with vision", false)
 
         RobotContainer
-
-
-        AutoScoringConstants.initialize()
         OperatorControls
     }
 

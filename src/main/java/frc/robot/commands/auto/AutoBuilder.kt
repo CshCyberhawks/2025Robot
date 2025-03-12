@@ -16,6 +16,13 @@ import frc.robot.util.input.CoralSide
 data class CoralTarget(val position: AutoScoringConstants.ReefPositions, val side: CoralSide)
 
 object AutoBuilder {
+    fun justDriveOneL4Left(): Command {
+        return SequentialCommandGroup(
+            AutoCommands.coralReefAlign(AutoScoringConstants.ReefPositions.B, CoralSide.Left),
+            AutoCommands.feederAlign()
+        )
+    }
+
     fun oneL4Left(): Command {
         val autoTimer = Timer()
 
@@ -32,8 +39,10 @@ object AutoBuilder {
             Commands.runOnce({Superstructure.Auto.justScoreL4()}),
             Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Empty },
             Commands.waitSeconds(0.1),
-            AutoCommands.feederAlign(),
-            Commands.runOnce({Superstructure.intakeFeeder()}),
+            SequentialCommandGroup(
+                AutoCommands.feederAlign(),
+                Commands.runOnce({Superstructure.intakeFeeder()})
+            ),
             Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral }
         )
     }
@@ -60,8 +69,10 @@ object AutoBuilder {
                     Commands.runOnce({Superstructure.Auto.justScoreL4()}),
                     Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Empty },
                     Commands.waitSeconds(0.1),
-                    AutoCommands.feederAlign(),
-                    Commands.runOnce({Superstructure.intakeFeeder()}),
+                    SequentialCommandGroup(
+                        AutoCommands.feederAlign(),
+                        Commands.runOnce({Superstructure.intakeFeeder()})
+                    ),
                     Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral }
                 )
             })

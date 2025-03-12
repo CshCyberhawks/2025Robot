@@ -13,11 +13,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import frc.robot.commands.AutoCommands
 import frc.robot.commands.SimTeleopDriveCommand
 import frc.robot.commands.TeleopDriveCommand
+import frc.robot.constants.AutoScoringConstants
 import frc.robot.subsystems.swerve.SwerveIOBase
 import frc.robot.subsystems.swerve.SwerveIOReal
 import frc.robot.subsystems.swerve.SwerveIOSim
 import frc.robot.util.IO.ManualOperatorInput
 import frc.robot.util.VisionSystem
+import frc.robot.util.input.CoralSide
 import frc.robot.util.input.ManualDriverInput
 import frc.robot.util.input.TestingOperatorInput
 import java.util.*
@@ -60,7 +62,7 @@ object RobotContainer {
             NamedCommands.registerCommand(pathplannerCommand.name, pathplannerCommand.cmd)
         }
 
-        autoCommand = frc.robot.commands.auto.AutoBuilder.twoL4Left()
+        autoCommand = frc.robot.commands.auto.AutoBuilder.justDriveOneL4Left()
 //        autoCommand = getAutonomousCommand()
 //        SmartDashboard.putData("Auto Chooser", autoChooser)
     }

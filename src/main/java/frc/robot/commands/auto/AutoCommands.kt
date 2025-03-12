@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Transform2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.RobotContainer
 import frc.robot.commands.GoToPose
@@ -16,39 +17,25 @@ import kotlin.math.min
 
 object AutoCommands {
     fun coralReefAlign(position: AutoScoringConstants.ReefPositions, side: CoralSide): Command {
-        val directionVector = Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * position.ordinal)).toDouble()))
-
-        val goalPose = when (side) {
-            CoralSide.Left -> position.left
-            CoralSide.Right -> position.right
-        }
+        val goalPose = AutoScoringConstants.getReefPoseAtOffset(position.ordinal, side, 0.0)
 
         return GoToPose({
             // Make the position get closer as it gets closer to the final goal
 //            val adjustX: Double = 0.3
-            val adjustX: Double = min(0.3, RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) / 4.0)
+            var adjustX: Double = min(1.0, RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * 0.75)
+//            val adjustX = 1.0
 
-            val offsetPose =
-                Pose2d(
-                    Translation2d(
-                        directionVector
-                            .transformBy(Transform2d(adjustX, 0.0, Rotation2d()))
-                            .x,
-                        directionVector
-                            .transformBy(Transform2d(adjustX, 0.0, Rotation2d()))
-                            .y
-                    ),
-                    Rotation2d(
-                        directionVector.rotation.radians
-                    ).rotateBy(Rotation2d.k180deg)
-                )
+            // Once we're close enough we can just jump to the goal
+            if (adjustX < 0.1) {
+                adjustX = 0.0
+            }
 
-            AllianceFlipUtil.apply(goalPose.plus(Transform2d(offsetPose.x, offsetPose.y, offsetPose.rotation)))
+            AutoScoringConstants.getReefPoseAtOffset(position.ordinal, side, adjustX)
         })
     }
 
     fun feederAlign() = GoToPose({
-        // TODO: Put real position in (might want to have multiple per side that are auto selected
-        Pose2d()
+        // TODO: Probably want to generate these positions from the field constants
+        Pose2d(1.546, 7.352, Rotation2d.fromDegrees(-55.0))
     })
 }

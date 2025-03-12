@@ -5,9 +5,35 @@ import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Transform2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.util.Units
+import frc.robot.util.input.CoralSide
 
 object AutoScoringConstants {
     private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(4.0)
+    private val branchOffset = Units.inchesToMeters(6.469)
+
+    fun getReefPoseAtOffset(face: Int, side: CoralSide, x: Double): Pose2d {
+        val poseDirection =
+            Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * face)).toDouble()))
+        val adjustX: Double = reefFaceOffset + x
+        val adjustY: Double = when (side) {
+            CoralSide.Left -> -branchOffset
+            CoralSide.Right -> branchOffset
+        }
+
+        return Pose2d(
+                Translation2d(
+                    poseDirection
+                        .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
+                        .x,
+                    poseDirection
+                        .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
+                        .y
+                ),
+                Rotation2d(
+                    poseDirection.rotation.radians
+                ).rotateBy(Rotation2d.k180deg)
+            )
+    }
 
     enum class ReefPositions(var left: Pose2d, var right: Pose2d, var center: Pose2d) {
         A(Pose2d(), Pose2d(), Pose2d()),
@@ -23,7 +49,7 @@ object AutoScoringConstants {
             val poseDirection =
                 Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * face)).toDouble()))
             val adjustX: Double = reefFaceOffset
-            val adjustY: Double = Units.inchesToMeters(6.469)// + 1.5)
+            val adjustY: Double = branchOffset
 
             val rightPose =
                 Pose2d(
