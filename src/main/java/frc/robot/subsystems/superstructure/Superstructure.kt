@@ -207,10 +207,7 @@ object Superstructure : SubsystemBase() {
                     intakeSystem.algaeIntake()
                 ),
                 EmptyRequest(),
-                SequentialRequest(
-                    ParallelRequest(pivotSystem.stowAngle(), elevatorSystem.stowPosition()),
-                    intakeSystem.idle()
-                ),
+                ParallelRequest(pivotSystem.stowAngle(), elevatorSystem.stowPosition()),
                 { RobotState.gamePieceState == GamePieceState.Algae },
                 safeRetract = true
             )
@@ -230,10 +227,7 @@ object Superstructure : SubsystemBase() {
                     intakeSystem.algaeIntake()
                 ),
                 EmptyRequest(),
-                SequentialRequest(
-                    safeRetractRequest(),
-                    intakeSystem.idle()
-                ),
+                safeRetractRequest(),
                 { RobotState.gamePieceState == GamePieceState.Algae },
                 safeRetract = true
             )

@@ -93,6 +93,8 @@ object Robot : TimedRobot() {
     /** This method is called once each time the robot enters Disabled mode.  */
     override fun disabledInit() {
 
+        RobotContainer.autoCommand.cancel()
+//        Superstructure.
     }
 
     override fun disabledPeriodic() {

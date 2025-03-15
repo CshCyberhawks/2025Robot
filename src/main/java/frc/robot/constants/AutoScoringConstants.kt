@@ -8,7 +8,8 @@ import edu.wpi.first.math.util.Units
 import frc.robot.util.input.CoralSide
 
 object AutoScoringConstants {
-    private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(4.0)
+//    private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(4.0)
+        private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(4.0)
     private val branchOffset = Units.inchesToMeters(6.469)
 
     fun getReefPoseAtOffset(face: Int, side: CoralSide, x: Double): Pose2d {

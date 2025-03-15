@@ -51,7 +51,7 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
     //    fun l4Angle() = setAngle(SmartDashboard.getNumber("L4 Angle", 133.0))
     fun l4Angle() = setAngle(131.0)
 
-    fun algaeRemoveAngle() = setAngle(225.0)
+    fun algaeRemoveAngle() = setAngle(228.0)
     fun bargeAngle() = setAngle(130.0)
 
     fun processorAngle() = setAngle(288.0)

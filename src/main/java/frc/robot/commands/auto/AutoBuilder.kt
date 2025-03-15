@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.WaitCommand
+import frc.robot.Robot
 import frc.robot.RobotState
 import frc.robot.constants.AutoScoringConstants
 import frc.robot.subsystems.superstructure.Superstructure
@@ -32,16 +33,17 @@ object AutoBuilder {
                 autoTimer.start()
             }),
             ParallelCommandGroup(
-                Commands.runOnce({ Superstructure.Auto.prepL4() }),
-                AutoCommands.coralReefAlign(AutoScoringConstants.ReefPositions.C, CoralSide.Right)
+                Commands.runOnce({ Superstructure.scoreL4() }),
+                AutoCommands.coralReefAlign(AutoScoringConstants.ReefPositions.B, CoralSide.Left)
             ),
             WaitCommand(0.5),
-            Commands.runOnce({Superstructure.Auto.justScoreL4()}),
+//            Commands.runOnce({Superstructure.Auto.justScoreL4()}),
+            Commands.runOnce({RobotState.actionConfirmed = true}),
             Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Empty },
             Commands.waitSeconds(0.1),
-            SequentialCommandGroup(
+            ParallelCommandGroup(
                 AutoCommands.feederAlign(),
-                Commands.runOnce({Superstructure.intakeFeeder()})
+                Commands.runOnce({ Superstructure.intakeFeeder()})
             ),
             Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral }
         )
@@ -69,7 +71,7 @@ object AutoBuilder {
                     Commands.runOnce({Superstructure.Auto.justScoreL4()}),
                     Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Empty },
                     Commands.waitSeconds(0.1),
-                    SequentialCommandGroup(
+                    ParallelCommandGroup(
                         AutoCommands.feederAlign(),
                         Commands.runOnce({Superstructure.intakeFeeder()})
                     ),
