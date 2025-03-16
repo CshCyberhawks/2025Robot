@@ -105,6 +105,7 @@ class PivotIOPID() : PivotIO {
         //        motor.setPosition((currentPosition - 45.0))
 
         pivotPIDController.goal = TrapezoidProfile.State(290.0, 0.0)
+        pivotPIDController.reset(getAngle())
 
         SmartDashboard.putBoolean("Pivot coast", false)
 

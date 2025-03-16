@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
-import frc.robot.commands.AutoCommands
 import frc.robot.commands.SimTeleopDriveCommand
 import frc.robot.commands.TeleopDriveCommand
 import frc.robot.constants.AutoScoringConstants
@@ -58,9 +57,9 @@ object RobotContainer {
     init {
         configureBindings()
 
-        for (pathplannerCommand in AutoCommands.entries) {
-            NamedCommands.registerCommand(pathplannerCommand.name, pathplannerCommand.cmd)
-        }
+//        for (pathplannerCommand in AutoCommands.entries) {
+//            NamedCommands.registerCommand(pathplannerCommand.name, pathplannerCommand.cmd)
+//        }
 
         autoCommand = frc.robot.commands.auto.AutoBuilder.twoL4Left()
 //        autoCommand = getAutonomousCommand()

@@ -1,6 +1,7 @@
 package frc.robot
 
 import au.grapplerobotics.CanBridge
+import com.ctre.phoenix6.hardware.TalonFX
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.commands.PathPlannerAuto
 import edu.wpi.first.hal.FRCNetComm.tInstances
@@ -146,6 +147,8 @@ object Robot : TimedRobot() {
         RobotContainer.vision.updateOdometry(1, true)
     }
 
+    val climbMotor = TalonFX(45)
+
     override fun testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll()
@@ -153,7 +156,7 @@ object Robot : TimedRobot() {
 
     /** This method is called periodically during test mode.  */
     override fun testPeriodic() {
-
+        climbMotor.set(RobotContainer.xbox.leftY)
     }
 
 //    var lastLoopTime = 0.0

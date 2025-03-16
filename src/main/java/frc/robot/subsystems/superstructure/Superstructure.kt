@@ -8,10 +8,16 @@ import frc.robot.RobotContainer
 import frc.robot.RobotState
 import frc.robot.RobotType
 import frc.robot.constants.FieldConstants
+import frc.robot.subsystems.superstructure.climb.ClimbSystem
+import frc.robot.subsystems.superstructure.climb.implementation.ClimbIOEmpty
+import frc.robot.subsystems.superstructure.climb.implementation.ClimbIOReal
 import frc.robot.subsystems.superstructure.elevator.ElevatorSystem
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOEmpty
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOPID
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOSim
+import frc.robot.subsystems.superstructure.funnel.FunnelSystem
+import frc.robot.subsystems.superstructure.funnel.implementation.FunnelIOEmpty
+import frc.robot.subsystems.superstructure.funnel.implementation.FunnelIOReal
 import frc.robot.subsystems.superstructure.intake.GamePieceState
 import frc.robot.subsystems.superstructure.intake.IntakeSystem
 import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOEmpty
@@ -51,6 +57,20 @@ object Superstructure : SubsystemBase() {
                 RobotType.Empty -> IntakeIOEmpty()
             }
         )
+    val climbSystem = ClimbSystem(
+        when (RobotConfiguration.robotType) {
+            RobotType.Real -> ClimbIOReal()
+            RobotType.Simulated -> ClimbIOEmpty()
+            RobotType.Empty -> ClimbIOEmpty()
+        }
+    )
+    val funnelSystem = FunnelSystem(
+        when (RobotConfiguration.robotType) {
+            RobotType.Real -> FunnelIOReal()
+            RobotType.Simulated -> FunnelIOEmpty()
+            RobotType.Empty -> FunnelIOEmpty()
+        }
+    )
 
     // Requests system
     private var activeRequest: Optional<Request> = Optional.empty()
@@ -271,25 +291,36 @@ object Superstructure : SubsystemBase() {
             )
         )
 
-    object Auto {
-        fun prepL4() = requestSuperstructureAction(
-            SuperstructureAction.create(
-                l4PrepRequest(),
-                EmptyRequest(),
-                EmptyRequest(),
-                { true },
-                { true }
-            )
+    fun deployClimb() = requestSuperstructureAction(
+        SuperstructureAction.create(
+            ParallelRequest(
+                climbSystem.deploy(),
+                funnelSystem.deploy()
+            ),
+            climbSystem.climb(),
+            IfRequest({RobotState.actionCancelled}, funnelSystem.stow())
         )
+    )
 
-        fun justScoreL4() = requestSuperstructureAction(
-            SuperstructureAction.create(
-                EmptyRequest(),
-                intakeSystem.coralScore(),
-                safeRetractRequest(),
-                { true },
-                safeRetract = true
-            )
-        )
-    }
+//    object Auto {
+//        fun prepL4() = requestSuperstructureAction(
+//            SuperstructureAction.create(
+//                l4PrepRequest(),
+//                EmptyRequest(),
+//                EmptyRequest(),
+//                { true },
+//                { true }
+//            )
+//        )
+//
+//        fun justScoreL4() = requestSuperstructureAction(
+//            SuperstructureAction.create(
+//                EmptyRequest(),
+//                intakeSystem.coralScore(),
+//                safeRetractRequest(),
+//                { true },
+//                safeRetract = true
+//            )
+//        )
+//    }
 }
