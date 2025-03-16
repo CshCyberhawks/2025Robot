@@ -1,5 +1,6 @@
 package cshcyberhawks.lib.commands
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 
@@ -14,6 +15,8 @@ class ForCommand(private val max: Int, private val callback: (i: Int) -> Command
     }
 
     override fun execute() {
+        SmartDashboard.putNumber("For Command i", i.toDouble())
+        SmartDashboard.putBoolean("For Command current finished", currentCommand.isFinished)
         if (currentCommand.isFinished && i < max) {
             i++
             currentCommand = callback(i)
@@ -21,5 +24,8 @@ class ForCommand(private val max: Int, private val callback: (i: Int) -> Command
         }
     }
 
-    override fun isFinished() = i >= max && currentCommand.isFinished
+    override fun isFinished(): Boolean {
+        SmartDashboard.putBoolean("For command finished", i >= max && currentCommand.isFinished)
+        return i >= max && currentCommand.isFinished
+    }
 }

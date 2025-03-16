@@ -26,7 +26,7 @@ object AutoCommands {
 //            val adjustX = 1.0
 
             // Once we're close enough we can just jump to the goal
-            if (adjustX < 0.1) {
+            if (adjustX < 0.25) {
                 adjustX = 0.0
             }
 

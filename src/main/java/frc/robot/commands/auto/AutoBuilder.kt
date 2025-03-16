@@ -5,6 +5,8 @@ import cshcyberhawks.lib.math.Timer
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Commands
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 import edu.wpi.first.wpilibj2.command.WaitCommand
 import frc.robot.Robot
@@ -51,8 +53,8 @@ object AutoBuilder {
 
     fun twoL4Left(): Command {
         val targets = arrayOf(
-            CoralTarget(AutoScoringConstants.ReefPositions.C, CoralSide.Right),
-            CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Left)
+            CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Left),
+            CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Right)
         )
         val autoTimer = Timer()
 
@@ -61,23 +63,24 @@ object AutoBuilder {
                 autoTimer.reset()
                 autoTimer.start()
             }),
-            ForCommand(targets.size, { i ->
+            ForCommand(targets.size) { i ->
                 SequentialCommandGroup(
                     ParallelCommandGroup(
-                        Commands.runOnce({ Superstructure.Auto.prepL4() }),
+                        Commands.runOnce({ Superstructure.scoreL4() }),
                         AutoCommands.coralReefAlign(targets[i].position, targets[i].side)
                     ),
                     WaitCommand(0.5),
-                    Commands.runOnce({Superstructure.Auto.justScoreL4()}),
+                    Commands.runOnce({RobotState.actionConfirmed = true}),
                     Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Empty },
                     Commands.waitSeconds(0.1),
-                    ParallelCommandGroup(
+                    ParallelDeadlineGroup(
+                        Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral }.andThen(Commands.runOnce({println("Has coral")})),
                         AutoCommands.feederAlign(),
-                        Commands.runOnce({Superstructure.intakeFeeder()})
+                        Commands.runOnce({ Superstructure.intakeFeeder() })
                     ),
-                    Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral }
+                    Commands.runOnce({ println("Done") })
                 )
-            })
+            }
         )
     }
 }

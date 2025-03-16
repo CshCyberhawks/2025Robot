@@ -14,7 +14,9 @@ import frc.robot.*
 //import frc.robot.util.visualiztion.Field2d
 
 class VisionSystem {
-    val max_distance_m = 4.0
+    val max_distance_m = 5.5
+
+    val max_pose_diff = 1.0
 
     val limelightNames: Array<String> = when (RobotConfiguration.robotType) {
 //        RobotType.Real -> arrayOf("limelight-tright", "limelight-btfront")
@@ -75,17 +77,17 @@ class VisionSystem {
                     var degStds: Double
 
                     if (llMeasure.tagCount >= 2) {
-                        xyStds = 0.1
-                        degStds = 6.0
-                    } else if (llMeasure.avgTagArea > 0.8 && poseDifference < 0.5) {
-                        xyStds = .3
-                        degStds = 8.0
-                    } else if (llMeasure.avgTagArea > 0.1 && poseDifference < 0.3) {
-                        xyStds = .5
-                        degStds = 13.0
+                        xyStds = 0.05
+                        degStds = 10.0
+                    } else if (llMeasure.avgTagArea > .8) {
+                        xyStds = 1.0
+                        degStds = 30.0
+                    } else if (llMeasure.avgTagArea > 0.2) {
+                        xyStds = 2.5
+                        degStds = 40.0
                     } else {
-                        xyStds = .8
-                        degStds = 25.0
+                        xyStds = 4.0
+                        degStds = 60.0
                     }
 
                     RobotContainer.drivetrain.setVisionMeasurementStdDevs(
@@ -116,7 +118,7 @@ class VisionSystem {
                 return
             }
 
-//            LimelightHelpers.SetRobotOrientation(llName, headingDeg, 0.0, 0.0, 0.0, 0.0, 0.0);
+            LimelightHelpers.SetRobotOrientation(llName, headingDeg, 0.0, 0.0, 0.0, 0.0, 0.0);
 
 
             if (LimelightHelpers.getBotPoseEstimate_wpiBlue(llName) == null) {
@@ -127,31 +129,51 @@ class VisionSystem {
 
             SmartDashboard.putBoolean("ll " + llName + " is valid", true)
 
-            var llMeasure: LimelightHelpers.PoseEstimate =
-                LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
+            var llMeasureRead: LimelightHelpers.PoseEstimate? =
+//                LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
+                LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(llName)
+
+
+            var llMeasure = LimelightHelpers.PoseEstimate()
+            if (llMeasureRead != null) {
+                llMeasure = llMeasureRead
+            } else {
+                return
+            }
 
 
             if (llMeasure.tagCount >= tagCount && llMeasure.pose.x != 0.0 && llMeasure.pose.y != 0.0) {
                 val poseDifference =
                     llMeasure.pose.translation.getDistance(RobotContainer.drivetrain.getSwervePose().translation)
-                if (!poseDifferenceCheck || poseDifference < max_distance_m) {
+                if (!poseDifferenceCheck || poseDifference < max_pose_diff) {
                     val distanceToTag = llMeasure.avgTagDist
 
                     if (distanceToTag < max_distance_m) {
                         var xyStds: Double
                         var degStds: Double
 
+//                        if (llName == "limelight-btfront") {
+//                            println(llMeasure.avgTagArea)
+//                        }
+
                             if (llMeasure.tagCount >= 2) {
+                                xyStds = 0.05
+                                degStds = 1250.0
+//                            } else if (llMeasure.avgTagArea > 0.55 && poseDifference < 0.6) {
+                            } else if (llMeasure.avgTagArea > 1.75 && llName == "limelight-btfront") {
+                                xyStds = if (llMeasure.avgTagArea > 3.0) .1 else .2
+                                degStds = 1800.0
+
+                            } else if (llMeasure.avgTagArea > 0.4 && poseDifference < 0.3) {
                                 xyStds = 0.5
-                                degStds = 250.0
-                            } else if (llMeasure.avgTagArea > 0.8 && poseDifference < 0.5) {
-                                xyStds = 1.0
-                                degStds = 800.0
-                            } else if (llMeasure.avgTagArea > 0.1 && poseDifference < 0.3) {
-                                xyStds = 2.0
-                                degStds = 1300.0
-                            } else {
-                                xyStds = 4.0
+                                degStds = 1600.0
+                            }
+                            else if (llMeasure.avgTagArea > .8) {
+                                xyStds = 1.05
+                                degStds = 1900.0
+                            }
+                            else {
+                                xyStds = 1.25
                                 degStds = 25000.0
                             }
 

@@ -114,11 +114,15 @@ object Robot : TimedRobot() {
         Superstructure.initialize()
 
 
+        RobotContainer.vision.updateOdometry(1, true)
+
         RobotContainer.autoCommand.schedule()
     }
 
     /** This method is called periodically during autonomous.  */
     override fun autonomousPeriodic() {
+        RobotContainer.vision.updateOdometry(1, true)
+
     }
 
     override fun teleopInit() {
@@ -128,6 +132,8 @@ object Robot : TimedRobot() {
 
 //        TeleopDriveCommand().schedule()
         Superstructure.initialize()
+
+        RobotContainer.vision.updateOdometry(1, true)
 
         RobotState.autoDriving = false
     }

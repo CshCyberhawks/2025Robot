@@ -9,8 +9,10 @@ import frc.robot.util.input.CoralSide
 
 object AutoScoringConstants {
 //    private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(4.0)
-        private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(4.0)
+        private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(2.65)
     private val branchOffset = Units.inchesToMeters(6.469)
+//    private val branchOffset = Units.inchesToMeters(7.5)
+
 
     fun getReefPoseAtOffset(face: Int, side: CoralSide, x: Double): Pose2d {
         val poseDirection =
@@ -34,6 +36,27 @@ object AutoScoringConstants {
                     poseDirection.rotation.radians
                 ).rotateBy(Rotation2d.k180deg)
             )
+    }
+
+    fun getAlgaePoseAtOffset(face: Int, x: Double): Pose2d {
+        val poseDirection =
+            Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * face)).toDouble()))
+        val adjustX: Double = reefFaceOffset + x
+        val adjustY: Double = 0.0
+
+        return Pose2d(
+            Translation2d(
+                poseDirection
+                    .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
+                    .x,
+                poseDirection
+                    .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
+                    .y
+            ),
+            Rotation2d(
+                poseDirection.rotation.radians
+            ).rotateBy(Rotation2d.k180deg)
+        )
     }
 
     enum class ReefPositions(var left: Pose2d, var right: Pose2d, var center: Pose2d) {

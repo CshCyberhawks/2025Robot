@@ -28,19 +28,19 @@ open class GoToPose(
         SwerveConstants.translationPIDConstants.kP,
         SwerveConstants.translationPIDConstants.kI,
         SwerveConstants.translationPIDConstants.kD,
-        TrapezoidProfile.Constraints(1.0, 1.0)
+        TrapezoidProfile.Constraints(SwerveConstants.maxAutoSpeed, SwerveConstants.maxAutoAccel)
     )
     val yController = ProfiledPIDController(
         SwerveConstants.translationPIDConstants.kP,
         SwerveConstants.translationPIDConstants.kI,
         SwerveConstants.translationPIDConstants.kD,
-        TrapezoidProfile.Constraints(1.0, 1.0)
+        TrapezoidProfile.Constraints(SwerveConstants.maxAutoSpeed, SwerveConstants.maxAutoAccel)
     )
     val rotationController = ProfiledPIDController(
         SwerveConstants.rotationPIDConstants.kP,
         SwerveConstants.rotationPIDConstants.kI,
         SwerveConstants.rotationPIDConstants.kD,
-        TrapezoidProfile.Constraints(Units.degreesToRadians(180.0), Units.degreesToRadians(180.0))
+        TrapezoidProfile.Constraints(Units.degreesToRadians(SwerveConstants.maxAutoTwistDegrees), Units.degreesToRadians(SwerveConstants.maxAutoTwistAccelDegrees))
     )
     var targetPose = targetPoseGetter()
 

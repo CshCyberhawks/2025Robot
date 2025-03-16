@@ -53,6 +53,7 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
 
         SmartDashboard.putBoolean("Has coral", io.hasCoral())
         SmartDashboard.putBoolean("Has algae", io.hasAlgae())
+        SmartDashboard.putString("Game Piece State", RobotState.gamePieceState.name)
     }
 
     override fun simulationPeriodic() {}

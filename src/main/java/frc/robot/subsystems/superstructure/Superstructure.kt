@@ -168,9 +168,9 @@ object Superstructure : SubsystemBase() {
     fun scoreL3() =
         requestSuperstructureAction(
             SuperstructureAction.create(
-                ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position()),
+                ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position(), intakeSystem.coralHalfSpit()),
                 intakeSystem.coralScore(),
-                stowRequest(),
+                ParallelRequest(stowRequest(), SequentialRequest(WaitRequest(.25), IfRequest({ !RobotState.actionConfirmed }, intakeSystem.coralIntake()))),
                 safeRetract = true
             )
         )
@@ -191,7 +191,8 @@ object Superstructure : SubsystemBase() {
             SuperstructureAction.create(
                 l4PrepRequest(),
                 intakeSystem.coralScore(),
-                safeRetractRequest(),
+//                safeRetractRequest(),
+                ParallelRequest(safeRetractRequest(), SequentialRequest(WaitRequest(.25), IfRequest({ !RobotState.actionConfirmed }, intakeSystem.coralIntake()))),
                 safeRetract = true
             )
         )
@@ -207,7 +208,7 @@ object Superstructure : SubsystemBase() {
                     intakeSystem.algaeIntake()
                 ),
                 EmptyRequest(),
-                ParallelRequest(pivotSystem.stowAngle(), elevatorSystem.stowPosition()),
+                ParallelRequest(pivotSystem.stowAngle(), elevatorSystem.stowPosition(), IfRequest({ RobotState.gamePieceState == GamePieceState.Empty }, intakeSystem.idle())),
                 { RobotState.gamePieceState == GamePieceState.Algae },
                 safeRetract = true
             )
@@ -227,7 +228,7 @@ object Superstructure : SubsystemBase() {
                     intakeSystem.algaeIntake()
                 ),
                 EmptyRequest(),
-                safeRetractRequest(),
+                ParallelRequest(safeRetractRequest(), IfRequest({ RobotState.gamePieceState == GamePieceState.Empty }, intakeSystem.idle())),
                 { RobotState.gamePieceState == GamePieceState.Algae },
                 safeRetract = true
             )

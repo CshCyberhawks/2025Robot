@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve
 
 import com.pathplanner.lib.config.PIDConstants
 import edu.wpi.first.units.Units.*
-import frc.robot.subsystems.swerve.TunerConstants
 
 object SwerveConstants {
     val MaxSpeedConst = TunerConstants.kSpeedAt12Volts.`in`(MetersPerSecond) // kSpeedAt12Volts desired top
@@ -15,15 +14,17 @@ object SwerveConstants {
     var ControlledAngularRate = MaxAngularRateConst
 
 
-    val maxAutoSpeed = 2.0
-    val maxAutoAccel = 3.0
+    val maxAutoSpeed = 1.0
+    val maxAutoAccel = 1.0
 
-    val maxAutoTwist = 350.0
-    val maxAutoTwistAccel = 450.0
+    val maxAutoTwistDegrees = 180.0
+    val maxAutoTwistAccelDegrees = 180.0
 
-    val translationPIDConstants = PIDConstants(16.0, 0.0, 0.0)
-    val rotationPIDConstants = PIDConstants(1.5, 0.0, 0.15)
+//    val translationPIDConstants = PIDConstants(16.0, 0.0, 0.0)
+    val translationPIDConstants = PIDConstants(13.0, 0.0, 0.01)
 
-    val positionDeadzone = 0.01
-    val rotationDeadzone = 1.5
+    val rotationPIDConstants = PIDConstants(1.05, 0.0, 0.05)
+
+    val positionDeadzone = 0.015
+    val rotationDeadzone = 2.0
 }

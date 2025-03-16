@@ -46,10 +46,8 @@ class IntakeIOReal() : IntakeIO {
     }
 
     override fun setIntakeState(state: IntakeState) {
-        println("intake current: " + state.current)
         if (state == IntakeState.AlgaeHolding) {
             intakeMotor.set(-0.02)
-            println("Set voltage")
         } else {
             intakeMotor.setControl(torqueRequest.withOutput(state.current))
         }
