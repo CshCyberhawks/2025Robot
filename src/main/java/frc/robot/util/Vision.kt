@@ -16,7 +16,7 @@ import frc.robot.*
 class VisionSystem {
     val max_distance_m = 5.5
 
-    val max_pose_diff = 1.0
+    val max_pose_diff = 2.0
 
     val limelightNames: Array<String> = when (RobotConfiguration.robotType) {
 //        RobotType.Real -> arrayOf("limelight-tright", "limelight-btfront")
@@ -78,16 +78,16 @@ class VisionSystem {
 
                     if (llMeasure.tagCount >= 2) {
                         xyStds = 0.05
-                        degStds = 10.0
+                        degStds = 20.0
                     } else if (llMeasure.avgTagArea > .8) {
                         xyStds = 1.0
-                        degStds = 30.0
+                        degStds = 40.0
                     } else if (llMeasure.avgTagArea > 0.2) {
                         xyStds = 2.5
-                        degStds = 40.0
+                        degStds = 60.0
                     } else {
                         xyStds = 4.0
-                        degStds = 60.0
+                        degStds = 80.0
                     }
 
                     RobotContainer.drivetrain.setVisionMeasurementStdDevs(
@@ -152,30 +152,37 @@ class VisionSystem {
                         var xyStds: Double
                         var degStds: Double
 
-//                        if (llName == "limelight-btfront") {
+                        if (llName == "limelight-btfront") {
 //                            println(llMeasure.avgTagArea)
-//                        }
+                        }
 
-                            if (llMeasure.tagCount >= 2) {
-                                xyStds = 0.05
-                                degStds = 1250.0
-//                            } else if (llMeasure.avgTagArea > 0.55 && poseDifference < 0.6) {
-                            } else if (llMeasure.avgTagArea > 1.75 && llName == "limelight-btfront") {
-                                xyStds = if (llMeasure.avgTagArea > 3.0) .1 else .2
-                                degStds = 1800.0
+                        degStds = 1800.0;
+                        xyStds = Math.sqrt((1.0/(2.0 * (llMeasure.avgTagArea + .25)))) - .15;
 
-                            } else if (llMeasure.avgTagArea > 0.4 && poseDifference < 0.3) {
-                                xyStds = 0.5
-                                degStds = 1600.0
-                            }
-                            else if (llMeasure.avgTagArea > .8) {
-                                xyStds = 1.05
-                                degStds = 1900.0
-                            }
-                            else {
-                                xyStds = 1.25
-                                degStds = 25000.0
-                            }
+                        if (llMeasure.tagCount >= 2) {
+                            xyStds *= .4;
+                        }
+
+//                            if (llMeasure.tagCount >= 2) {
+//                                xyStds = 0.05
+//                                degStds = 1250.0
+////                            } else if (llMeasure.avgTagArea > 0.55 && poseDifference < 0.6) {
+//                            } else if (llMeasure.avgTagArea > 1.75 && llName == "limelight-btfront") {
+//                                xyStds = if (llMeasure.avgTagArea > 3.0) .1 else .2
+//                                degStds = 1800.0
+//
+//                            } else if (llMeasure.avgTagArea > 0.4 && poseDifference < 0.3) {
+//                                xyStds = 0.5
+//                                degStds = 1600.0
+//                            }
+//                            else if (llMeasure.avgTagArea > .8) {
+//                                xyStds = 1.05
+//                                degStds = 1900.0
+//                            }
+//                            else {
+//                                xyStds = 1.25
+//                                degStds = 25000.0
+//                            }
 
 
 //                        var headingDeg = RobotContainer.drivetrain.getSwervePose().rotation
@@ -186,8 +193,6 @@ class VisionSystem {
 
 //                        println("updating odometry with ll")
 //                        println("Updating with LL ${llName}: X = " + llMeasure.pose.x + " Y = " + llMeasure.pose.y)
-
-//                        val finalPose = Pose2d(llMeasure.pose.x, llMeasure.pose.y, Rotation2d.fromDegrees(headingDeg))
 
                         RobotContainer.drivetrain.addVisionMeasurement(
                             llMeasure.pose,

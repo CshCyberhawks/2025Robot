@@ -12,7 +12,6 @@ import frc.robot.RobotState
 // It also reduces the need to have reference variables for the subsystems to be passed around.
 class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
     private fun setIntakeState(state: IntakeState) = Request.withAction { io.setIntakeState(state) }
-    private fun watchForIntake() = Request.withAction { io.watchForIntake() }
 
     fun idle() = setIntakeState(IntakeState.Idle)
 
@@ -24,7 +23,6 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
 
     fun coralIntake() = SequentialRequest(
         setIntakeState(IntakeState.CoralIntake),
-        watchForIntake()
     )
 
     fun coralScore() = SequentialRequest(
@@ -35,7 +33,6 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
 
     fun algaeIntake() = SequentialRequest(
         setIntakeState(IntakeState.AlgaeIntake),
-        watchForIntake()
     )
 
     fun algaeScore() = SequentialRequest(
@@ -44,6 +41,9 @@ class IntakeSystem(private val io: IntakeIO) : SubsystemBase() {
         setIntakeState(IntakeState.Idle)
     )
 
+    fun coralHolding() = setIntakeState(IntakeState.CoralHolding)
+
+    fun algaeHolding() = setIntakeState(IntakeState.AlgaeHolding)
 
     override fun periodic() {
         io.periodic()

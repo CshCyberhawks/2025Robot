@@ -70,15 +70,16 @@ object AutoBuilder {
                         AutoCommands.coralReefAlign(targets[i].position, targets[i].side)
                     ),
                     WaitCommand(0.5),
-                    Commands.runOnce({RobotState.actionConfirmed = true}),
+                    Commands.runOnce({RobotState.actionConfirmed = true
+                    println("Score $i: ${autoTimer.get()}")}),
                     Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Empty },
                     Commands.waitSeconds(0.1),
                     ParallelDeadlineGroup(
-                        Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral }.andThen(Commands.runOnce({println("Has coral")})),
+                        Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral },
                         AutoCommands.feederAlign(),
                         Commands.runOnce({ Superstructure.intakeFeeder() })
                     ),
-                    Commands.runOnce({ println("Done") })
+                    Commands.runOnce({println("Intake $i: ${autoTimer.get()}")})
                 )
             }
         )

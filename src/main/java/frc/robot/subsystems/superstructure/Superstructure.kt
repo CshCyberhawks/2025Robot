@@ -116,11 +116,13 @@ object Superstructure : SubsystemBase() {
     fun awaitAtDesiredPosition() =
         ParallelRequest(elevatorSystem.awaitDesiredPosition(), pivotSystem.awaitDesiredAngle())
 
+    const val safeRetractReefDistance = 1.6
+
     fun safeToRetract(): Boolean {
         val swervePose = RobotContainer.drivetrain.getSwervePose()
-        val blueReefDistance = FieldConstants.Reef.center.getDistance(swervePose.translation) > 1.7
+        val blueReefDistance = FieldConstants.Reef.center.getDistance(swervePose.translation) > safeRetractReefDistance
         val redReefDistance =
-            AllianceFlipUtil.apply(FieldConstants.Reef.center).getDistance(swervePose.translation) > 1.7
+            AllianceFlipUtil.apply(FieldConstants.Reef.center).getDistance(swervePose.translation) > safeRetractReefDistance
         val clearOfBarge = swervePose.x < 7.0 || swervePose.x > 10.5
 
         return blueReefDistance && redReefDistance && clearOfBarge
@@ -139,6 +141,8 @@ object Superstructure : SubsystemBase() {
             )
         )
 
+    private fun unHalfSpitRequest() = IfRequest({ !RobotState.actionConfirmed }, SequentialRequest(WaitRequest(.25), intakeSystem.coralIntake(), WaitRequest(0.25), intakeSystem.idle()))
+
     fun stow() = requestSuperstructureAction(stowRequest())
 
     fun intakeFeeder() =
@@ -150,7 +154,7 @@ object Superstructure : SubsystemBase() {
                     intakeSystem.coralIntake()
                 ),
                 EmptyRequest(),
-                ParallelRequest(stowRequest(), intakeSystem.idle()),
+                ParallelRequest(stowRequest(), IfRequest({ RobotState.gamePieceState == GamePieceState.Coral }, intakeSystem.coralHolding(), intakeSystem.idle())),
                 confirmed = { RobotState.gamePieceState == GamePieceState.Coral }
             )
         )
@@ -170,7 +174,7 @@ object Superstructure : SubsystemBase() {
             SuperstructureAction.create(
                 ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position(), intakeSystem.coralHalfSpit()),
                 intakeSystem.coralScore(),
-                ParallelRequest(stowRequest(), SequentialRequest(WaitRequest(.25), IfRequest({ !RobotState.actionConfirmed }, intakeSystem.coralIntake()))),
+                stowRequest(),
                 safeRetract = true
             )
         )
@@ -192,7 +196,14 @@ object Superstructure : SubsystemBase() {
                 l4PrepRequest(),
                 intakeSystem.coralScore(),
 //                safeRetractRequest(),
-                ParallelRequest(safeRetractRequest(), SequentialRequest(WaitRequest(.25), IfRequest({ !RobotState.actionConfirmed }, intakeSystem.coralIntake()))),
+                SequentialRequest(
+                    ParallelRequest(pivotSystem.travelAngle(), elevatorSystem.safeDownPosition()),
+//                    WaitRequest(0.1),
+                    ParallelRequest(
+                        elevatorSystem.stowPosition().withPrerequisite(pivotSystem.safeTravelDown()),
+                        pivotSystem.stowAngle().withPrerequisite(elevatorSystem.belowSafeUpPosition())
+                    )
+                ),
                 safeRetract = true
             )
         )
@@ -208,7 +219,7 @@ object Superstructure : SubsystemBase() {
                     intakeSystem.algaeIntake()
                 ),
                 EmptyRequest(),
-                ParallelRequest(pivotSystem.stowAngle(), elevatorSystem.stowPosition(), IfRequest({ RobotState.gamePieceState == GamePieceState.Empty }, intakeSystem.idle())),
+                ParallelRequest(pivotSystem.stowAngle(), elevatorSystem.stowPosition(), IfRequest({ RobotState.gamePieceState == GamePieceState.Empty }, intakeSystem.idle(), intakeSystem.algaeHolding())),
                 { RobotState.gamePieceState == GamePieceState.Algae },
                 safeRetract = true
             )
@@ -228,7 +239,7 @@ object Superstructure : SubsystemBase() {
                     intakeSystem.algaeIntake()
                 ),
                 EmptyRequest(),
-                ParallelRequest(safeRetractRequest(), IfRequest({ RobotState.gamePieceState == GamePieceState.Empty }, intakeSystem.idle())),
+                ParallelRequest(safeRetractRequest(), IfRequest({ RobotState.gamePieceState == GamePieceState.Empty }, intakeSystem.idle(), intakeSystem.algaeHolding())),
                 { RobotState.gamePieceState == GamePieceState.Algae },
                 safeRetract = true
             )

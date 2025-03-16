@@ -20,9 +20,8 @@ class IntakeIOReal() : IntakeIO {
     private val algaeLaserCAN = LaserCan(CANConstants.Intake.algaeLaserCANId)
 
     private val torqueRequest = TorqueCurrentFOC(0.0)
-    private val positionRequest = PositionTorqueCurrentFOC(0.0)
 
-    private var watchingForIntake = false
+    private var currentIntakeState = IntakeState.Idle
 
     init {
         val coralIntakeMotorConfiguration = TalonFXConfiguration()
@@ -46,15 +45,14 @@ class IntakeIOReal() : IntakeIO {
     }
 
     override fun setIntakeState(state: IntakeState) {
+        println("Intake State: ${state.name}")
+        println("Intake state current: ${state.current}")
         if (state == IntakeState.AlgaeHolding) {
             intakeMotor.set(-0.02)
         } else {
             intakeMotor.setControl(torqueRequest.withOutput(state.current))
         }
-    }
-
-    override fun watchForIntake() {
-        watchingForIntake = true
+        currentIntakeState = state
     }
 
     override fun hasAlgae(): Boolean {
@@ -74,21 +72,10 @@ class IntakeIOReal() : IntakeIO {
         return (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 40.0)
     }
 
-    private val coralIntakeTimer = Timer()
 
     override fun periodic() {
-        if (watchingForIntake) {
-            if (hasCoral()) {
-                intakeMotor.set(IntakeState.CoralHolding.current)
-                watchingForIntake = false
-            } else if (hasAlgae()) {
-                intakeMotor.set(IntakeState.AlgaeHolding.current)
-                watchingForIntake = false
-            }
-        }
-
-        SmartDashboard.putNumber("Intake position", intakeMotor.position.valueAsDouble)
-        SmartDashboard.putNumber("Intake velocity", intakeMotor.velocity.valueAsDouble)
-        SmartDashboard.putNumber("Intake acceleration", intakeMotor.acceleration.valueAsDouble)
+//        SmartDashboard.putNumber("Intake position", intakeMotor.position.valueAsDouble)
+//        SmartDashboard.putNumber("Intake velocity", intakeMotor.velocity.valueAsDouble)
+//        SmartDashboard.putNumber("Intake acceleration", intakeMotor.acceleration.valueAsDouble)
     }
 }

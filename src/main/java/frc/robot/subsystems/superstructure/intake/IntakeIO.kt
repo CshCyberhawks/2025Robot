@@ -6,7 +6,5 @@ interface IntakeIO {
     fun hasCoral():Boolean
     fun hasAlgae():Boolean
 
-    fun watchForIntake()
-
     fun periodic()
 }

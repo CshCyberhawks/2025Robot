@@ -11,8 +11,10 @@ import frc.robot.RobotContainer
 import frc.robot.commands.GoToPose
 import frc.robot.constants.AutoScoringConstants
 import frc.robot.constants.FieldConstants
+import frc.robot.subsystems.swerve.SwerveConstants
 import frc.robot.util.AllianceFlipUtil
 import frc.robot.util.input.CoralSide
+import kotlin.math.abs
 import kotlin.math.min
 
 object AutoCommands {
@@ -26,11 +28,17 @@ object AutoCommands {
 //            val adjustX = 1.0
 
             // Once we're close enough we can just jump to the goal
-            if (adjustX < 0.25) {
+            if (adjustX < 0.3) {
                 adjustX = 0.0
             }
 
             AutoScoringConstants.getReefPoseAtOffset(position.ordinal, side, adjustX)
+        }, {
+            val currentPose = RobotContainer.drivetrain.getSwervePose()
+
+            (abs(currentPose.x - goalPose.x) < SwerveConstants.positionDeadzone && abs(currentPose.y - goalPose.y) < SwerveConstants.positionDeadzone && abs(
+                currentPose.rotation.degrees - goalPose.rotation.degrees
+            ) < SwerveConstants.rotationDeadzone)
         })
     }
 

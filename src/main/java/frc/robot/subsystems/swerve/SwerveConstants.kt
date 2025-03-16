@@ -14,17 +14,17 @@ object SwerveConstants {
     var ControlledAngularRate = MaxAngularRateConst
 
 
-    val maxAutoSpeed = 1.0
-    val maxAutoAccel = 1.0
+    val maxAutoSpeed = 2.8
+    val maxAutoAccel = 2.5
 
     val maxAutoTwistDegrees = 180.0
     val maxAutoTwistAccelDegrees = 180.0
 
 //    val translationPIDConstants = PIDConstants(16.0, 0.0, 0.0)
-    val translationPIDConstants = PIDConstants(13.0, 0.0, 0.01)
+    val translationPIDConstants = PIDConstants(7.0, 0.0, 0.005)
 
-    val rotationPIDConstants = PIDConstants(1.05, 0.0, 0.05)
+    val rotationPIDConstants = PIDConstants(1.6, 0.0, 0.05)
 
-    val positionDeadzone = 0.015
-    val rotationDeadzone = 2.0
+    val positionDeadzone = 0.025
+    val rotationDeadzone = 2.5
 }

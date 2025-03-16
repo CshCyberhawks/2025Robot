@@ -41,6 +41,7 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
     fun stowAngle() = setAngle(290.0)
 
     fun travelAngle() = setAngle(220.0)
+    fun travelDownAngle() = setAngle(180.0)
 
     fun feederAngle() = setAngle(310.0)
 
