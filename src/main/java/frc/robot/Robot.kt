@@ -2,6 +2,7 @@ package frc.robot
 
 import au.grapplerobotics.CanBridge
 import com.ctre.phoenix6.hardware.TalonFX
+import com.ctre.phoenix6.signals.NeutralModeValue
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.commands.PathPlannerAuto
 import edu.wpi.first.hal.FRCNetComm.tInstances
@@ -49,6 +50,8 @@ object Robot : TimedRobot() {
         SmartDashboard.putBoolean("Action", false)
         SmartDashboard.putBoolean("Confirm", false)
         SmartDashboard.putBoolean("Cancel", false)
+
+        SmartDashboard.putBoolean("Start by unclimbing?", false)
 
         CanBridge.runTCP()
     }
@@ -102,6 +105,11 @@ object Robot : TimedRobot() {
     }
 
     override fun disabledPeriodic() {
+
+        RobotContainer.startByUnclimbing = SmartDashboard.getBoolean("Start by unclimbing?", false)
+//        println(RobotContainer.startByUnclimbing)
+
+
         RobotContainer.vision.updateOdometryFromDisabled()
     }
 
@@ -130,6 +138,8 @@ object Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
+
+
         // This makes sure that the autonomous stops running when teleop starts running. If you want the
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
         RobotContainer.autoCommand.cancel()
@@ -140,6 +150,15 @@ object Robot : TimedRobot() {
         RobotContainer.vision.updateOdometry(1, true)
 
         RobotState.autoDriving = false
+
+        println("teleop initing")
+
+        if (RobotContainer.startByUnclimbing == true) {
+            println("unclilmbing")
+            Superstructure.unclimb()
+        } else if (!Superstructure.climbSystem.isStow() || !Superstructure.funnelSystem.isStow()) {
+            Superstructure.climbStowThenStow()
+        }
     }
 
     /** This method is called periodically during operator control.  */
@@ -147,7 +166,6 @@ object Robot : TimedRobot() {
         RobotContainer.vision.updateOdometry(1, true)
     }
 
-    val climbMotor = TalonFX(45)
 
     override fun testInit() {
         // Cancels all running commands at the start of test mode.
@@ -156,7 +174,6 @@ object Robot : TimedRobot() {
 
     /** This method is called periodically during test mode.  */
     override fun testPeriodic() {
-        climbMotor.set(RobotContainer.xbox.leftY)
     }
 
 //    var lastLoopTime = 0.0

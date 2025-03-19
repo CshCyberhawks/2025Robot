@@ -33,8 +33,8 @@ object Superstructure : SubsystemBase() {
     val pivotSystem =
         PivotSystem(
             when (RobotConfiguration.robotType) {
-                RobotType.Real -> PivotIOPID()
 //                RobotType.Real -> PivotIOEmpty()
+                RobotType.Real -> PivotIOPID()
                 RobotType.Simulated -> PivotIOSim()
                 RobotType.Empty -> PivotIOEmpty()
             }
@@ -42,8 +42,7 @@ object Superstructure : SubsystemBase() {
     val elevatorSystem =
         ElevatorSystem(
             when (RobotConfiguration.robotType) {
-                RobotType.Real -> ElevatorIOPID()
-//                RobotType.Real -> ElevatorIOEmpty()
+                RobotType.Real -> ElevatorIOEmpty()
                 RobotType.Simulated -> ElevatorIOSim()
                 RobotType.Empty -> ElevatorIOEmpty()
             }
@@ -51,7 +50,7 @@ object Superstructure : SubsystemBase() {
     val intakeSystem =
         IntakeSystem(
             when (RobotConfiguration.robotType) {
-                RobotType.Real -> IntakeIOReal()
+                RobotType.Real -> IntakeIOEmpty()
 //                RobotType.Real -> IntakeIOEmpty()
                 RobotType.Simulated -> IntakeIOEmpty()
                 RobotType.Empty -> IntakeIOEmpty()
@@ -294,13 +293,28 @@ object Superstructure : SubsystemBase() {
     fun deployClimb() = requestSuperstructureAction(
         SuperstructureAction.create(
             ParallelRequest(
+                pivotSystem.climbAngle(),
                 climbSystem.deploy(),
                 funnelSystem.deploy()
             ),
             climbSystem.climb(),
-            IfRequest({RobotState.actionCancelled}, funnelSystem.stow())
+            EmptyRequest()//IfRequest({RobotState.actionCancelled}, SequentialRequest(ParallelRequest(funnelSystem.stow(), climbSystem.stow())), pivotSystem.stowAngle())
+        ))
+
+
+        fun unclimb() = requestSuperstructureAction(
+            SequentialRequest(ParallelRequest(
+                climbSystem.deploy(),
+                funnelSystem.deploy(),
+                pivotSystem.climbAngle()
+            ), stowRequest().withPrerequisite(Prerequisite.withCondition { climbSystem.isStow() && funnelSystem.isStow() })))
+
+    fun climbStowThenStow() = requestSuperstructureAction(
+        SequentialRequest(ParallelRequest(climbSystem.stow(), funnelSystem.stow(), pivotSystem.climbAngle()),
+            stowRequest().withPrerequisite(Prerequisite.withCondition { climbSystem.isStow() && funnelSystem.isStow() })
         )
     )
+
 
 //    object Auto {
 //        fun prepL4() = requestSuperstructureAction(

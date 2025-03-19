@@ -28,6 +28,9 @@ object RobotContainer {
     val leftJoystick: CommandJoystick = CommandJoystick(0)
     val rightJoystick: CommandJoystick = CommandJoystick(1)
 
+    var startByUnclimbing = false
+
+
     val xbox = CommandXboxController(2)
 
     // Just for testing

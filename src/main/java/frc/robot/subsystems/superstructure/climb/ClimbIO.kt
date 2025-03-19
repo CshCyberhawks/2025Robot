@@ -2,6 +2,8 @@ package frc.robot.subsystems.superstructure.climb
 
 interface ClimbIO {
     fun getAngle(): Double
-    fun setAngle(angleDegrees: Double)
+    fun angleDegrees(angleDegrees: Double)
     fun periodic()
+
+    var climbing: Boolean
 }

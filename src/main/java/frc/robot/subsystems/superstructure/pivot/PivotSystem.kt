@@ -38,12 +38,14 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
     fun safeTravelUp() = Prerequisite.withCondition { getAngle() < 245.0 }
     fun safeTravelDown() = Prerequisite.withCondition { getAngle() > 180.0 }
 
-    fun stowAngle() = setAngle(290.0)
+    fun stowAngle() = setAngle(295.0)
 
     fun travelAngle() = setAngle(220.0)
     fun travelDownAngle() = setAngle(180.0)
 
     fun feederAngle() = setAngle(310.0)
+
+    fun climbAngle() = setAngle(340.0)
 
     fun l2Angle() = setAngle(150.0)
 //    fun l3Angle() = setAngle(SmartDashboard.getNumber("L3 Angle", 125.0))

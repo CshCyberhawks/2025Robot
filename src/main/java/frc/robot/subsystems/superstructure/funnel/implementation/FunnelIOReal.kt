@@ -16,15 +16,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import frc.robot.constants.CANConstants
 import frc.robot.subsystems.superstructure.funnel.FunnelConstants
 import frc.robot.subsystems.superstructure.funnel.FunnelIO
+import kotlin.math.sin
 
 class FunnelIOReal(): FunnelIO {
     private val motor = TalonFX(CANConstants.Funnel.motorId)
     private val encoder = CANcoder(CANConstants.Funnel.encoderId)
 
     private val pidController = ProfiledPIDController(
-        1.0,
+        0.1315,
         0.0,
-        0.06,
+        0.0315,
         TrapezoidProfile.Constraints(
             FunnelConstants.velocityDegrees,
             FunnelConstants.accelerationDegrees
@@ -38,9 +39,9 @@ class FunnelIOReal(): FunnelIO {
 
     private val torqueRequest = TorqueCurrentFOC(0.0)
 
-    private var desiredAngle = 200.0
+    private var desiredAngle = FunnelConstants.stowAngle
 
-    private val tbOffset = 0.0
+    private val tbOffset = 29.0
 
     init {
         val slot0Configs = motorConfig.Slot0
@@ -49,7 +50,7 @@ class FunnelIOReal(): FunnelIO {
         slot0Configs.kI = 0.0
         slot0Configs.kD = 0.0
 
-        motorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive
+        motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive
 
         val currentConfigs = motorConfig.CurrentLimits
         currentConfigs.StatorCurrentLimitEnable = true
@@ -57,7 +58,7 @@ class FunnelIOReal(): FunnelIO {
 
         motor.configurator.apply(motorConfig)
 
-        encoderMagnetSensorConfig.SensorDirection = SensorDirectionValue.CounterClockwise_Positive
+        encoderMagnetSensorConfig.SensorDirection = SensorDirectionValue.Clockwise_Positive
 
         encoderConfig.withMagnetSensor(encoderMagnetSensorConfig)
         encoder.configurator.apply(encoderConfig)
@@ -80,7 +81,11 @@ class FunnelIOReal(): FunnelIO {
     override fun periodic() {
         val positionPIDOut = pidController.calculate(getAngle())
 
-        motor.setControl(torqueRequest.withOutput(positionPIDOut))
+//        println("position pid out: " + positionPIDOut)
+
+        val gravityFF = 3.15 * sin(Math.toRadians(getAngle()))
+
+        motor.setControl(torqueRequest.withOutput(positionPIDOut + gravityFF))
 
         SmartDashboard.putNumber("Funnel Raw TB Angle", MiscCalculations.wrapAroundAngles(encoder.absolutePosition.valueAsDouble * 360.0))
     }

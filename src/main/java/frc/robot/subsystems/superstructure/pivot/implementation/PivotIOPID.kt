@@ -62,7 +62,7 @@ class PivotIOPID() : PivotIO {
 
     //138.6 = 180
 
-    private val tbOffset = -43.2
+    private val tbOffset = -23.2//-43.2
 //    private fun getTBDegrees() =
 
     private var neutralCoast = false
@@ -116,7 +116,7 @@ class PivotIOPID() : PivotIO {
 
     override fun getAngle(): Double {
         return MiscCalculations.wrapAroundAngles((MiscCalculations.wrapAroundAngles(encoder
-            .absolutePosition.valueAsDouble * 360.0) - tbOffset))
+            .absolutePosition.valueAsDouble * 360.0) - tbOffset)) + 20.0
     }
 
     override fun getDesiredAngle(): Double {

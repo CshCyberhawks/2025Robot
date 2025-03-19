@@ -20,7 +20,7 @@ class VisionSystem {
 
     val limelightNames: Array<String> = when (RobotConfiguration.robotType) {
 //        RobotType.Real -> arrayOf("limelight-tright", "limelight-btfront")
-        RobotType.Real -> arrayOf("limelight-tleft", "limelight-tright", "limelight-btfront")
+        RobotType.Real -> arrayOf("limelight-tleft", "limelight-tright", "limelight-bright")
         else -> emptyArray()
     }
 
