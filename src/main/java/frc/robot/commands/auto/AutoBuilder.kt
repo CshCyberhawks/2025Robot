@@ -2,14 +2,7 @@ package frc.robot.commands.auto
 
 import cshcyberhawks.lib.commands.ForCommand
 import cshcyberhawks.lib.math.Timer
-import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.Commands
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
-import edu.wpi.first.wpilibj2.command.WaitCommand
-import frc.robot.Robot
+import edu.wpi.first.wpilibj2.command.*
 import frc.robot.RobotState
 import frc.robot.constants.AutoScoringConstants
 import frc.robot.subsystems.superstructure.Superstructure
@@ -22,7 +15,7 @@ object AutoBuilder {
     fun justDriveOneL4Left(): Command {
         return SequentialCommandGroup(
             AutoCommands.coralReefAlign(AutoScoringConstants.ReefPositions.B, CoralSide.Left),
-            AutoCommands.feederAlign()
+            AutoCommands.leftFeederAlign()
         )
     }
 
@@ -40,22 +33,20 @@ object AutoBuilder {
             ),
             WaitCommand(0.5),
 //            Commands.runOnce({Superstructure.Auto.justScoreL4()}),
-            Commands.runOnce({RobotState.actionConfirmed = true}),
+            Commands.runOnce({ RobotState.actionConfirmed = true }),
             Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Empty },
             Commands.waitSeconds(0.1),
             ParallelCommandGroup(
-                AutoCommands.feederAlign(),
-                Commands.runOnce({ Superstructure.intakeFeeder()})
+                AutoCommands.leftFeederAlign(),
+                Commands.runOnce({ Superstructure.intakeFeeder() })
             ),
             Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral }
         )
     }
 
-    fun twoL4Left(): Command {
-        val targets = arrayOf(
-            CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Left),
-            CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Right)
-        )
+    private fun createGenericAuto(
+        targets: Array<CoralTarget>
+    ): Command {
         val autoTimer = Timer()
 
         return SequentialCommandGroup(
@@ -70,18 +61,37 @@ object AutoBuilder {
                         AutoCommands.coralReefAlign(targets[i].position, targets[i].side)
                     ),
                     WaitCommand(0.5),
-                    Commands.runOnce({RobotState.actionConfirmed = true
-                    println("Score $i: ${autoTimer.get()}")}),
+                    Commands.runOnce({
+                        RobotState.actionConfirmed = true
+                        println("Score $i: ${autoTimer.get()}")
+                    }),
                     Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Empty },
                     Commands.waitSeconds(0.1),
+                    AutoCommands.safeReefExit(targets[i].position), // Backs up to exit the reef safely if necessary
                     ParallelDeadlineGroup(
                         Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral },
-                        AutoCommands.feederAlign(),
+                        AutoCommands.leftFeederAlign(),
                         Commands.runOnce({ Superstructure.intakeFeeder() })
                     ),
-                    Commands.runOnce({println("Intake $i: ${autoTimer.get()}")})
+                    Commands.runOnce({ println("Intake $i: ${autoTimer.get()}") })
                 )
             }
         )
     }
+
+    fun threeL4Left() = createGenericAuto(
+        arrayOf(
+            CoralTarget(AutoScoringConstants.ReefPositions.C, CoralSide.Right),
+            CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Left),
+            CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Right)
+        )
+    )
+
+    fun threeL4Right() = createGenericAuto(
+        arrayOf(
+            CoralTarget(AutoScoringConstants.ReefPositions.E, CoralSide.Left),
+            CoralTarget(AutoScoringConstants.ReefPositions.F, CoralSide.Right),
+            CoralTarget(AutoScoringConstants.ReefPositions.F, CoralSide.Left)
+        )
+    )
 }

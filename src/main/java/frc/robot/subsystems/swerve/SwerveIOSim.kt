@@ -1,11 +1,11 @@
 package frc.robot.subsystems.swerve
 
-import com.ctre.phoenix6.swerve.SwerveDrivetrain
 import com.pathplanner.lib.auto.AutoBuilder
-import com.pathplanner.lib.config.RobotConfig
-import com.pathplanner.lib.config.PIDConstants
-import com.pathplanner.lib.controllers.PPHolonomicDriveController
 import com.pathplanner.lib.commands.PathPlannerAuto
+import com.pathplanner.lib.config.PIDConstants
+import com.pathplanner.lib.config.RobotConfig
+import com.pathplanner.lib.controllers.PPHolonomicDriveController
+import edu.wpi.first.math.MathUtil
 import edu.wpi.first.math.Matrix
 import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
@@ -14,14 +14,9 @@ import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.math.numbers.N1
 import edu.wpi.first.math.numbers.N3
-import edu.wpi.first.math.util.Units
 import edu.wpi.first.wpilibj.DriverStation
-import edu.wpi.first.wpilibj.Timer
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.SubsystemBase
-import frc.robot.constants.FieldConstants
-import frc.robot.subsystems.swerve.SwerveIOBase
 
 class SwerveIOSim() : SwerveIOBase() {
     //    private var robotPose = Pose2d()
@@ -66,7 +61,7 @@ class SwerveIOSim() : SwerveIOBase() {
     }
 
     init {
-        configurePathPlanner()
+//        configurePathPlanner()
     }
 
     override fun seedFieldCentric() {
@@ -85,6 +80,8 @@ class SwerveIOSim() : SwerveIOBase() {
 
     override fun applyDriveRequest(x: Double, y: Double, twistRadians: Double) {
         // TODO Actually implement this
+//        val x = MathUtil.clamp(x, -SwerveConstants.MaxSpeedConst, SwerveConstants.MaxSpeedConst)
+//        val y = MathUtil.clamp(x, -SwerveConstants.MaxSpeedConst, SwerveConstants.MaxSpeedConst)
         currentSpeed =
             ChassisSpeeds(x, y, twistRadians)
     }
@@ -94,18 +91,31 @@ class SwerveIOSim() : SwerveIOBase() {
         y: Double,
         twistRadians: Double
     ) {
+//        val x = MathUtil.clamp(x, -SwerveConstants.MaxSpeedConst, SwerveConstants.MaxSpeedConst)
+//        val y = MathUtil.clamp(x, -SwerveConstants.MaxSpeedConst, SwerveConstants.MaxSpeedConst)
         currentSpeed =
             ChassisSpeeds(x, y, twistRadians)
     }
 
     override fun periodic() {
-        val currentTime = Timer.getFPGATimestamp()
+        val currentTime = cshcyberhawks.lib.math.Timer.getFPGATimestamp()
         val dtSeconds = currentTime - lastLoopTime
+
+        val vx = MathUtil.clamp(
+            currentSpeed.vxMetersPerSecond,
+            -SwerveConstants.MaxSpeedConst,
+            SwerveConstants.MaxSpeedConst
+        )
+        val vy = MathUtil.clamp(
+            currentSpeed.vyMetersPerSecond,
+            -SwerveConstants.MaxSpeedConst,
+            SwerveConstants.MaxSpeedConst
+        )
 
         robotPose = robotPose.plus(
             Transform2d(
-                currentSpeed.vxMetersPerSecond * dtSeconds,
-                currentSpeed.vyMetersPerSecond * dtSeconds,
+                vx * dtSeconds,
+                vy * dtSeconds,
                 Rotation2d(currentSpeed.omegaRadiansPerSecond * dtSeconds)
             )
         )

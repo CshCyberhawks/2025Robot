@@ -8,7 +8,7 @@ import frc.robot.constants.AutoScoringConstants
 import frc.robot.subsystems.superstructure.Superstructure
 
 enum class DriverAction(val superStructureCommand: Command, val alignCommand: Command = Commands.runOnce({})) {
-//    Stow(Commands.runOnce({ Superstructure.stow() })),
+    //    Stow(Commands.runOnce({ Superstructure.stow() })),
     IntakeFeeder(Commands.runOnce({ Superstructure.intakeFeeder() })),
     ScoreL2(Commands.runOnce({ Superstructure.scoreL2() }), TeleopAutoAlign.coralReefAlign()),
     ScoreL3(Commands.runOnce({ Superstructure.scoreL3() }), TeleopAutoAlign.coralReefAlign()),
@@ -17,6 +17,7 @@ enum class DriverAction(val superStructureCommand: Command, val alignCommand: Co
     RemoveAlgaeHigh(Commands.runOnce({ Superstructure.removeAlgaeHigh() }), TeleopAutoAlign.algaeReefAlign()),
     ScoreBarge(Commands.runOnce({ Superstructure.scoreBarge() })),
     ScoreProcessor(Commands.runOnce({ Superstructure.scoreProcessor() })),
+    Climb(Commands.runOnce({ Superstructure.climb() })),
     None(Commands.runOnce({}))
 }
 
@@ -36,8 +37,9 @@ object OperatorControls {
             "Processor" -> DriverAction.ScoreProcessor
             "Algae High" -> DriverAction.RemoveAlgaeHigh
             "Algae Low" -> DriverAction.RemoveAlgaeLow
+            "Cage" -> DriverAction.Climb
             else -> DriverAction.None
-    }
+        }
 
     val coralSide
         get() = when (SmartDashboard.getString("ConsoleCoralSide", "")) {

@@ -1,11 +1,9 @@
 package frc.robot.util.IO
 
-import cshcyberhawks.lib.requests.Request
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer
 import frc.robot.RobotState
 import frc.robot.subsystems.superstructure.Superstructure
-import frc.robot.subsystems.superstructure.pivot.PivotSystem
 
 object ManualOperatorInput {
     fun configureBindings() {
@@ -63,7 +61,7 @@ object ManualOperatorInput {
 //            Superstructure.removeAlgaeHigh()
         }))
         RobotContainer.xbox.a().onTrue(Commands.runOnce({
-            Superstructure.deployClimb()
+            Superstructure.climb()
 //            Superstructure.scoreBarge()
 //            Superstructure.request(Superstructure.pivotSystem.stowAngle())
         }))
