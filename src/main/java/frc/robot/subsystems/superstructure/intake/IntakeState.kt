@@ -16,7 +16,7 @@ enum class IntakeState(val current: Double) {
 
     Idle(0.0),
     CoralIntake(40.0),
-    CoralHalfSpit(-8.0),
+    CoralHalfSpit(-14.0),
     CoralHolding(1.0),
 //    CoralScore(200.0),
     CoralScore(-200.0),

@@ -62,10 +62,17 @@ class PivotIOPID() : PivotIO {
 
     //138.6 = 180
 
-    private val tbOffset = -23.2//-43.2
+    private val tbOffset = -43.2
+//    private val tbOffset = -23.2//-43.2
 //    private fun getTBDegrees() =
 
     private var neutralCoast = false
+
+    private var pidDistabled = false
+
+    override fun killPID() {
+        pidDistabled = true
+    }
 
     init {
         val feedBackConfigs = motorConfig.Feedback
@@ -116,7 +123,7 @@ class PivotIOPID() : PivotIO {
 
     override fun getAngle(): Double {
         return MiscCalculations.wrapAroundAngles((MiscCalculations.wrapAroundAngles(encoder
-            .absolutePosition.valueAsDouble * 360.0) - tbOffset)) + 20.0
+            .absolutePosition.valueAsDouble * 360.0) - tbOffset))
     }
 
     override fun getDesiredAngle(): Double {
@@ -139,6 +146,19 @@ class PivotIOPID() : PivotIO {
         SmartDashboard.putNumber("Pivot Raw TB Angle", MiscCalculations.wrapAroundAngles(encoder.absolutePosition.valueAsDouble * 360.0))
         SmartDashboard.putNumber("Pivot Desired Angle", desiredAngle)
 
+        val sdCoast = SmartDashboard.getBoolean("Pivot coast", false)
+        if (sdCoast != neutralCoast) {
+            neutralCoast = sdCoast
+            motor.setNeutralMode(
+                if (neutralCoast) NeutralModeValue.Coast else NeutralModeValue.Brake
+            )
+        }
+
+        if (pidDistabled) {
+            motor.set(0.0)
+            return
+        }
+
 //        val kG = if (getAngle() > 270) 8.25 else 10.5
         val kG = if (getAngle() > 270) 7.25 else 7.5
         val gravityFF = kG * sin(Math.toRadians(getAngle() + 90))
@@ -156,13 +176,5 @@ class PivotIOPID() : PivotIO {
         SmartDashboard.putNumber("Pivot Output", motorSet)
 
         motor.setControl(torqueRequest.withOutput(motorSet))
-
-        val sdCoast = SmartDashboard.getBoolean("Pivot coast", false)
-        if (sdCoast != neutralCoast) {
-            neutralCoast = sdCoast
-            motor.setNeutralMode(
-                if (neutralCoast) NeutralModeValue.Coast else NeutralModeValue.Brake
-            )
-        }
     }
 }

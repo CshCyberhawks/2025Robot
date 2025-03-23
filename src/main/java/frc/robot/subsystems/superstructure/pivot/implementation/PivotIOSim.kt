@@ -27,6 +27,10 @@ class PivotIOSim : PivotIO {
         desiredState = TrapezoidProfile.State(angleDegrees, 0.0)
     }
 
+    override fun killPID() {
+
+    }
+
     override fun periodic() {
         val currentTime = Timer.getFPGATimestamp()
         val dt = currentTime - lastTime

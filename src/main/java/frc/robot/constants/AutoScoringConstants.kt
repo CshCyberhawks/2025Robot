@@ -9,7 +9,10 @@ import frc.robot.util.input.CoralSide
 
 object AutoScoringConstants {
 //    private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(4.0)
-        private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(2.65)
+//        private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(2.05)
+    private val reefFaceOffset = .6 + .74 - Units.inchesToMeters(1.5)
+
+
     private val branchOffset = Units.inchesToMeters(6.469)
 //    private val branchOffset = Units.inchesToMeters(7.5)
 

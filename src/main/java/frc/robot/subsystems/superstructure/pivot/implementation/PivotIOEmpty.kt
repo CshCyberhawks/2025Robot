@@ -9,6 +9,8 @@ class PivotIOEmpty() : PivotIO {
     override fun atDesiredAngle(): Boolean = false
 
     override fun setAngle(angleDegrees: Double) {}
+    override fun killPID() {
+    }
 
     override fun periodic() {}
 }

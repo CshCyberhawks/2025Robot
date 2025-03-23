@@ -4,6 +4,7 @@ import frc.robot.subsystems.superstructure.climb.ClimbIO
 
 class ClimbIOEmpty(): ClimbIO {
 
+    override var disable = false;
     override var climbing = false;
     override fun getAngle(): Double {
         return 0.0

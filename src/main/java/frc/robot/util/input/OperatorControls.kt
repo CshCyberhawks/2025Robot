@@ -9,14 +9,14 @@ import frc.robot.subsystems.superstructure.Superstructure
 
 enum class DriverAction(val superStructureCommand: Command, val alignCommand: Command = Commands.runOnce({})) {
     //    Stow(Commands.runOnce({ Superstructure.stow() })),
-    IntakeFeeder(Commands.runOnce({ Superstructure.intakeFeeder() })),
+    IntakeFeeder(Commands.runOnce({ Superstructure.intakeFeeder() }), TeleopAutoAlign.feederAlign()),
     ScoreL2(Commands.runOnce({ Superstructure.scoreL2() }), TeleopAutoAlign.coralReefAlign()),
     ScoreL3(Commands.runOnce({ Superstructure.scoreL3() }), TeleopAutoAlign.coralReefAlign()),
     ScoreL4(Commands.runOnce({ Superstructure.scoreL4() }), TeleopAutoAlign.coralReefAlign()),
     RemoveAlgaeLow(Commands.runOnce({ Superstructure.removeAlgaeLow() }), TeleopAutoAlign.algaeReefAlign()),
     RemoveAlgaeHigh(Commands.runOnce({ Superstructure.removeAlgaeHigh() }), TeleopAutoAlign.algaeReefAlign()),
     ScoreBarge(Commands.runOnce({ Superstructure.scoreBarge() })),
-    ScoreProcessor(Commands.runOnce({ Superstructure.scoreProcessor() })),
+    ScoreProcessor(Commands.runOnce({ Superstructure.scoreProcessor() }), TeleopAutoAlign.processorAlign()),
     Climb(Commands.runOnce({ Superstructure.climb() })),
     None(Commands.runOnce({}))
 }
@@ -27,6 +27,8 @@ enum class CoralSide {
 }
 
 object OperatorControls {
+    var noWalk = false
+
     val action
         get() = when (SmartDashboard.getString("ConsoleDriverAction", "")) {
             "Feeder" -> DriverAction.IntakeFeeder

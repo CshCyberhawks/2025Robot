@@ -6,4 +6,5 @@ interface ClimbIO {
     fun periodic()
 
     var climbing: Boolean
+    var disable: Boolean
 }

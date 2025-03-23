@@ -13,6 +13,7 @@ import frc.robot.subsystems.superstructure.climb.implementation.ClimbIOEmpty
 import frc.robot.subsystems.superstructure.climb.implementation.ClimbIOReal
 import frc.robot.subsystems.superstructure.elevator.ElevatorSystem
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOEmpty
+import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOPID
 import frc.robot.subsystems.superstructure.elevator.implementation.ElevatorIOSim
 import frc.robot.subsystems.superstructure.funnel.FunnelSystem
 import frc.robot.subsystems.superstructure.funnel.implementation.FunnelIOEmpty
@@ -20,6 +21,7 @@ import frc.robot.subsystems.superstructure.funnel.implementation.FunnelIOReal
 import frc.robot.subsystems.superstructure.intake.GamePieceState
 import frc.robot.subsystems.superstructure.intake.IntakeSystem
 import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOEmpty
+import frc.robot.subsystems.superstructure.intake.implementation.IntakeIOReal
 import frc.robot.subsystems.superstructure.pivot.PivotSystem
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOEmpty
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOPID
@@ -40,7 +42,7 @@ object Superstructure : SubsystemBase() {
     val elevatorSystem =
         ElevatorSystem(
             when (RobotConfiguration.robotType) {
-                RobotType.Real -> ElevatorIOEmpty()
+                RobotType.Real -> ElevatorIOPID()
                 RobotType.Simulated -> ElevatorIOSim()
                 RobotType.Empty -> ElevatorIOEmpty()
             }
@@ -48,7 +50,7 @@ object Superstructure : SubsystemBase() {
     val intakeSystem =
         IntakeSystem(
             when (RobotConfiguration.robotType) {
-                RobotType.Real -> IntakeIOEmpty()
+                RobotType.Real -> IntakeIOReal()
 //                RobotType.Real -> IntakeIOEmpty()
                 RobotType.Simulated -> IntakeIOEmpty()
                 RobotType.Empty -> IntakeIOEmpty()
@@ -187,6 +189,18 @@ object Superstructure : SubsystemBase() {
             )
         )
 
+    fun correctIntake() = requestSuperstructureAction(
+        SuperstructureAction.create(
+            intakeSystem.coralIntake(),
+            EmptyRequest(),
+            SequentialRequest(
+                WaitRequest(0.1),
+                intakeSystem.idle()
+            ),
+            confirmed = { RobotState.gamePieceState == GamePieceState.Coral }
+        )
+    )
+
     fun scoreL2() =
         requestSuperstructureAction(
             SuperstructureAction.create(
@@ -290,9 +304,9 @@ object Superstructure : SubsystemBase() {
 
     fun scoreProcessor() = requestSuperstructureAction(
         SuperstructureAction.create(
-            ParallelRequest(elevatorSystem.processorPosition(), pivotSystem.processorAngle()),
+            ParallelRequest(elevatorSystem.processorPosition(), pivotSystem.processorAngle(), funnelSystem.deploy()),
             intakeSystem.algaeScore(),
-            stowRequest()
+            ParallelRequest(stowRequest(), funnelSystem.stow())
         )
     )
 
@@ -316,11 +330,11 @@ object Superstructure : SubsystemBase() {
 
     fun climb() = requestSuperstructureAction(
         SuperstructureAction.create(
-            ParallelRequest(
-                pivotSystem.climbAngle(),
+                ParallelRequest(
+                pivotSystem.oldClimbAngle(),
                 climbSystem.deploy(),
                 funnelSystem.deploy()
-            ),
+                ),
             climbSystem.climb(),
             EmptyRequest()//IfRequest({RobotState.actionCancelled}, SequentialRequest(ParallelRequest(funnelSystem.stow(), climbSystem.stow())), pivotSystem.stowAngle())
         )
@@ -332,15 +346,17 @@ object Superstructure : SubsystemBase() {
             ParallelRequest(
                 climbSystem.deploy(),
                 funnelSystem.deploy(),
-                pivotSystem.climbAngle()
+                pivotSystem.climbStowAngle()
             ),
-            stowRequest().withPrerequisite(Prerequisite.withCondition { climbSystem.isStow() && funnelSystem.isStow() })
+//            stowRequest().withPrerequisite(Prerequisite.withCondition { climbSystem.isStow() && funnelSystem.isStow() })
         )
     )
 
     fun climbStowThenStow() = requestSuperstructureAction(
         SequentialRequest(
-            ParallelRequest(climbSystem.stow(), funnelSystem.stow(), pivotSystem.climbAngle()),
+            ParallelRequest(climbSystem.stow(), pivotSystem.climbStowAngle()),
+            funnelSystem.stow().withPrerequisite(Prerequisite.withCondition{climbSystem.isStow()}),
+            WaitRequest(2.5),
             stowRequest().withPrerequisite(Prerequisite.withCondition { climbSystem.isStow() && funnelSystem.isStow() })
         )
     )

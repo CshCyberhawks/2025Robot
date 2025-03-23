@@ -30,14 +30,14 @@ class TeleopDriveCommand : Command() {
 
         val deadzonedLeftY = MiscCalculations.calculateDeadzone(RobotContainer.leftJoystick.y, .5)
 
-        SwerveConstants.ControlledSpeed = MathUtil.clamp(
-            SwerveConstants.ControlledSpeed + (-deadzonedLeftY * SwerveConstants.MaxSpeedConst * .02), 0.0,
-            SwerveConstants.MaxSpeedConst
-        );
-        SwerveConstants.ControlledAngularRate = MathUtil.clamp(
-            SwerveConstants.ControlledAngularRate + (-deadzonedLeftY * SwerveConstants.MaxAngularRateConst * .02),
-            0.0, SwerveConstants.MaxAngularRateConst
-        );
+//        SwerveConstants.ControlledSpeed = MathUtil.clamp(
+//            SwerveConstants.ControlledSpeed + (-deadzonedLeftY * SwerveConstants.MaxSpeedConst * .02), 0.0,
+//            SwerveConstants.MaxSpeedConst
+//        );
+//        SwerveConstants.ControlledAngularRate = MathUtil.clamp(
+//            SwerveConstants.ControlledAngularRate + (-deadzonedLeftY * SwerveConstants.MaxAngularRateConst * .02),
+//            0.0, SwerveConstants.MaxAngularRateConst
+//        );
 
         SmartDashboard.putNumber("ControlledSpeed", SwerveConstants.ControlledSpeed)
         SmartDashboard.putNumber("ControlledAngularRate", SwerveConstants.ControlledAngularRate)

@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import edu.wpi.first.apriltag.AprilTagFieldLayout
 import edu.wpi.first.math.geometry.*
 import edu.wpi.first.math.util.Units
+import edu.wpi.first.wpilibj.DriverStation.Alliance
 import edu.wpi.first.wpilibj.Filesystem
+import frc.robot.util.AllianceFlipUtil
 import java.io.IOException
 import java.nio.file.Path
 import java.util.*
@@ -193,4 +195,11 @@ object FieldConstants {
         ANDYMARK("andymark"),
         WELDED("welded")
     }
+
+    //red processor = 11.63, 7.35, 90
+    var processorPosition = Pose2d(6.02, .71, Rotation2d.fromDegrees(270.0))
+
+    var leftFeederPosition = Pose2d(1.546, 7.352, Rotation2d.fromDegrees(-55.0))
+    var rightFeederPosition = Pose2d(1.546, 8.052 - 7.352, Rotation2d.fromDegrees(55.0))
+
 }

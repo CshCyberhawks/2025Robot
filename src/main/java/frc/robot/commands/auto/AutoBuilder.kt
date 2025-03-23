@@ -45,7 +45,8 @@ object AutoBuilder {
     }
 
     private fun createGenericAuto(
-        targets: Array<CoralTarget>
+        targets: Array<CoralTarget>,
+        rightFeeder: Boolean,
     ): Command {
         val autoTimer = Timer()
 
@@ -60,31 +61,49 @@ object AutoBuilder {
                         Commands.runOnce({ Superstructure.scoreL4() }),
                         AutoCommands.coralReefAlign(targets[i].position, targets[i].side)
                     ),
-                    WaitCommand(0.5),
+                    WaitCommand(0.35),
                     Commands.runOnce({
                         RobotState.actionConfirmed = true
                         println("Score $i: ${autoTimer.get()}")
                     }),
                     Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Empty },
                     Commands.waitSeconds(0.1),
-                    AutoCommands.safeReefExit(targets[i].position), // Backs up to exit the reef safely if necessary
+//                    AutoCommands.safeReefExit(targets[i].position), // Backs up to exit the reef safely if necessary
                     ParallelDeadlineGroup(
                         Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Coral },
-                        AutoCommands.leftFeederAlign(),
+                        if (rightFeeder) AutoCommands.rightFeederAlign() else AutoCommands.leftFeederAlign(),
                         Commands.runOnce({ Superstructure.intakeFeeder() })
                     ),
+                    Commands.waitSeconds(0.2),
                     Commands.runOnce({ println("Intake $i: ${autoTimer.get()}") })
                 )
             }
         )
     }
 
+    fun twoL4Left() = createGenericAuto(
+        arrayOf(
+            CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Left),
+            CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Right)
+        ),
+        false
+    )
+
+    fun twoL4Right() = createGenericAuto(
+        arrayOf(
+            CoralTarget(AutoScoringConstants.ReefPositions.F, CoralSide.Right),
+            CoralTarget(AutoScoringConstants.ReefPositions.F, CoralSide.Left)
+        ),
+        true
+    )
+
     fun threeL4Left() = createGenericAuto(
         arrayOf(
             CoralTarget(AutoScoringConstants.ReefPositions.C, CoralSide.Right),
             CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Left),
             CoralTarget(AutoScoringConstants.ReefPositions.B, CoralSide.Right)
-        )
+        ),
+        false
     )
 
     fun threeL4Right() = createGenericAuto(
@@ -92,6 +111,27 @@ object AutoBuilder {
             CoralTarget(AutoScoringConstants.ReefPositions.E, CoralSide.Left),
             CoralTarget(AutoScoringConstants.ReefPositions.F, CoralSide.Right),
             CoralTarget(AutoScoringConstants.ReefPositions.F, CoralSide.Left)
-        )
+        ),
+        true
+    )
+
+    fun backL4Algae() = SequentialCommandGroup(
+        ParallelCommandGroup(
+            Commands.runOnce({ Superstructure.scoreL4() }),
+            AutoCommands.coralReefAlign(AutoScoringConstants.ReefPositions.D, CoralSide.Left)
+        ),
+        WaitCommand(0.35),
+        Commands.runOnce({
+            RobotState.actionConfirmed = true
+        }),
+        Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Empty },
+        Commands.waitSeconds(0.1),
+        AutoCommands.safeReefExit(AutoScoringConstants.ReefPositions.D),
+        ParallelDeadlineGroup(
+            Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Algae },
+            Commands.runOnce({ Superstructure.removeAlgaeLow() }),
+            AutoCommands.algaeReefAlign(AutoScoringConstants.ReefPositions.D)
+        ),
+        AutoCommands.safeReefExit(AutoScoringConstants.ReefPositions.D)
     )
 }

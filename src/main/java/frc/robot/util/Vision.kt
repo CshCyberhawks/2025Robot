@@ -14,24 +14,38 @@ import frc.robot.*
 //import frc.robot.util.visualiztion.Field2d
 
 class VisionSystem {
-    val max_distance_m = 5.5
+    val max_distance_m = 4.0
 
     val max_pose_diff = 2.0
 
     val limelightNames: Array<String> = when (RobotConfiguration.robotType) {
 //        RobotType.Real -> arrayOf("limelight-tright", "limelight-btfront")
-        RobotType.Real -> arrayOf("limelight-tleft", "limelight-tright", "limelight-bright")
+        RobotType.Real -> arrayOf("limelight-tleft", "limelight-tright", "limelight-bfrontl", "limelight-bfrontr")
         else -> emptyArray()
     }
+
+    var hasInitM2 = false;
 
     fun updateOdometryFromDisabled() {
         var namesToSearch: Array<String>;
 
-        var fullReset = SmartDashboard.getBoolean("full reset with vision", false)
+        var fullReset = SmartDashboard.getBoolean("Disabled vision mode", false)
+
+        if (!fullReset) {
+            return
+        }
 
         namesToSearch = limelightNames
 
          val headingDeg: Double = RobotContainer.drivetrain.getSwervePose().rotation.degrees
+
+        val bottomM2Reset = SmartDashboard.getBoolean("LL Bottom M2 Reset", false)
+
+        if (bottomM2Reset && !hasInitM2) {
+            hasInitM2 = true
+        }
+
+
 
         for (llName in namesToSearch) {
             if (DriverStation.getAlliance().isEmpty) {
@@ -39,17 +53,35 @@ class VisionSystem {
                 return
             }
 
+            if (!bottomM2Reset) {
+                if (llName == "limelight-tright" || llName == "limelight-tleft") {
+                    continue;
+                }
+            }
+
 //            LimelightHelpers.SetRobotOrientation(llName, headingDeg, 0.0, 0.0, 0.0, 0.0, 0.0);
 
             if (LimelightHelpers.getBotPoseEstimate_wpiBlue(llName) == null) {
 //                println(llName + " is null")
                 SmartDashboard.putBoolean("ll " + llName + " is valid", false)
-                return;
+                continue;
             }
 
             SmartDashboard.putBoolean("ll " + llName + " is valid", true)
 
-            var llMeasure: LimelightHelpers.PoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
+
+            if (hasInitM2 && bottomM2Reset) {
+                LimelightHelpers.SetRobotOrientation(llName, headingDeg, 0.0, 0.0, 0.0, 0.0, 0.0);
+            }
+
+            var llMeasureRead: LimelightHelpers.PoseEstimate? = if(hasInitM2 && bottomM2Reset) LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(llName) else LimelightHelpers.getBotPoseEstimate_wpiBlue(llName)
+
+            var llMeasure = LimelightHelpers.PoseEstimate()
+            if (llMeasureRead != null) {
+                llMeasure = llMeasureRead
+            } else {
+                continue
+            }
 
 //            println("ll measure x: " + llMeasure.pose.x)
 //            println("ll measure y: " + llMeasure.pose.y)
@@ -66,28 +98,28 @@ class VisionSystem {
 //                SmartDashboard.putNumber("ll update pose y: ", llMeasure.pose.y)
 //                SmartDashboard.putNumber("ll timestampt: ", llMeasure.timestampSeconds)
 
-                if (fullReset) {
-                    RobotContainer.drivetrain.resetPose(llMeasure.pose)
-                    return;
-                }
-
                 if (distanceToTag < max_distance_m) {
 //                    println("doing the thingy")
                     var xyStds: Double
                     var degStds: Double
 
                     if (llMeasure.tagCount >= 2) {
-                        xyStds = 0.05
-                        degStds = 20.0
+                        xyStds = .75
+                        degStds = 110.0
                     } else if (llMeasure.avgTagArea > .8) {
-                        xyStds = 1.0
-                        degStds = 40.0
+                        xyStds = 9.0
+                        degStds = 260.0
                     } else if (llMeasure.avgTagArea > 0.2) {
-                        xyStds = 2.5
-                        degStds = 60.0
+                        xyStds = 10.0
+                        degStds = 280.0
                     } else {
-                        xyStds = 4.0
-                        degStds = 80.0
+                        xyStds = 11.0
+                        degStds = 300.0
+                    }
+
+                    if (llName == "limelight-tright" || llName == "limelight-tleft") {
+                        xyStds *= 4.0
+                        degStds *= 4.0
                     }
 
                     RobotContainer.drivetrain.setVisionMeasurementStdDevs(
@@ -115,7 +147,7 @@ class VisionSystem {
         for (llName in namesToSearch) {
             if (DriverStation.getAlliance().isEmpty) {
 //                println("DS alliance is empty; skipping vision")
-                return
+                continue
             }
 
             LimelightHelpers.SetRobotOrientation(llName, headingDeg, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -124,7 +156,7 @@ class VisionSystem {
             if (LimelightHelpers.getBotPoseEstimate_wpiBlue(llName) == null) {
 //                println(llName + " is null")
                 SmartDashboard.putBoolean("ll " + llName + " is valid", false)
-                return;
+                continue;
             }
 
             SmartDashboard.putBoolean("ll " + llName + " is valid", true)
@@ -138,7 +170,7 @@ class VisionSystem {
             if (llMeasureRead != null) {
                 llMeasure = llMeasureRead
             } else {
-                return
+                continue
             }
 
 
@@ -152,9 +184,6 @@ class VisionSystem {
                         var xyStds: Double
                         var degStds: Double
 
-                        if (llName == "limelight-btfront") {
-//                            println(llMeasure.avgTagArea)
-                        }
 
                         degStds = 1800.0;
                         xyStds = Math.sqrt((1.0/(2.0 * (llMeasure.avgTagArea + .25)))) - .15;
@@ -183,6 +212,12 @@ class VisionSystem {
 //                                xyStds = 1.25
 //                                degStds = 25000.0
 //                            }
+
+
+                        if (llName == "limelight-tright" || llName == "limelight-tleft") {
+                            xyStds = 14.0
+                            degStds = 300.0
+                        }
 
 
 //                        var headingDeg = RobotContainer.drivetrain.getSwervePose().rotation

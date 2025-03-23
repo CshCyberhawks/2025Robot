@@ -23,7 +23,7 @@ class FunnelIOReal(): FunnelIO {
     private val encoder = CANcoder(CANConstants.Funnel.encoderId)
 
     private val pidController = ProfiledPIDController(
-        0.1315,
+        0.145,
         0.0,
         0.0315,
         TrapezoidProfile.Constraints(
@@ -81,9 +81,14 @@ class FunnelIOReal(): FunnelIO {
     override fun periodic() {
         val positionPIDOut = pidController.calculate(getAngle())
 
+
 //        println("position pid out: " + positionPIDOut)
 
-        val gravityFF = 3.15 * sin(Math.toRadians(getAngle()))
+        val pureGrav = 3.15 * sin(Math.toRadians(getAngle()))
+        val gravityFF = pureGrav
+//        val gravityFF: Double = if (pureGrav < 0) .85 else pureGrav
+
+//        println(positionPIDOut + gravityFF)
 
         motor.setControl(torqueRequest.withOutput(positionPIDOut + gravityFF))
 

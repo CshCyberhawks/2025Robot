@@ -60,8 +60,10 @@ class IntakeIOReal() : IntakeIO {
         SmartDashboard.putNumber("Algae Measurement", measurement.distance_mm.toDouble())
         @Suppress("SENSELESS_COMPARISON")
         return (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < Units.inchesToMeters(
-                12.0 // Other side is ~15.5in from sensor
-            ) * 1000.0
+//                12.0 // Other side is ~15.5in from sensor
+            8.0 // Other side is ~15.5in from sensor
+
+        ) * 1000.0
         )
     }
 

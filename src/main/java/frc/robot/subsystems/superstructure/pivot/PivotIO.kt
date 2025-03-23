@@ -8,5 +8,6 @@ interface PivotIO {
     fun getDesiredAngle(): Double
     fun atDesiredAngle(): Boolean
     fun setAngle(angleDegrees: Double)
+    fun killPID()
     fun periodic()
 }

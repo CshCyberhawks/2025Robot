@@ -34,6 +34,7 @@ object RobotContainer {
 
     val drivetrain = when (RobotConfiguration.robotType) {
         RobotType.Real -> SwerveIOReal()
+//        RobotType.Real -> SwerveIOSim()
         RobotType.Simulated -> SwerveIOSim()
         RobotType.Empty -> SwerveIOBase()
     }
@@ -58,7 +59,7 @@ object RobotContainer {
 //            NamedCommands.registerCommand(pathplannerCommand.name, pathplannerCommand.cmd)
 //        }
 
-        autoCommand = frc.robot.commands.auto.AutoBuilder.threeL4Left()
+        autoCommand = frc.robot.commands.auto.AutoBuilder.twoL4Left()
 //        autoCommand = getAutonomousCommand()
 //        SmartDashboard.putData("Auto Chooser", autoChooser)
     }
