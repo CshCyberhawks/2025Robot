@@ -35,6 +35,20 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup
 //    }
 //}
 
+/**
+ * A command that executes a sequence of commands based on a loop counter.
+ *
+ * @param max The maximum value for the loop counter (exclusive)
+ * @param callback A function that takes the loop counter as input and returns a Command to execute
+ *
+ * Example usage:
+ * ```
+ * ForCommand(5) { i ->
+ *   Commands.runOnce { println("Loop iteration $i") }
+ * }
+ * ```
+ * This would print the loop counter 5 times in sequence upon scheduling the ForCommand.
+ */
 class ForCommand(private val max: Int, private val callback: (i: Int) -> Command) : SequentialCommandGroup(
     *(0..<max).map { callback(it) }.toTypedArray()
 )
