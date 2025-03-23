@@ -10,10 +10,11 @@ import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.RobotContainer
 import frc.robot.RobotState
 import frc.robot.subsystems.swerve.SwerveConstants
+import frc.robot.util.Visualizer
 import java.util.*
 import kotlin.math.abs
 
-class GoToPose(
+open class GoToPose(
     val targetPoseGetter: () -> Pose2d, val endCondition: () -> Boolean = {
         val currentPose = RobotContainer.drivetrain.getSwervePose()
         val targetPose = targetPoseGetter()
@@ -27,19 +28,19 @@ class GoToPose(
         SwerveConstants.translationPIDConstants.kP,
         SwerveConstants.translationPIDConstants.kI,
         SwerveConstants.translationPIDConstants.kD,
-        TrapezoidProfile.Constraints(1.0, 1.0)
+        TrapezoidProfile.Constraints(SwerveConstants.maxAutoSpeed, SwerveConstants.maxAutoAccel)
     )
     val yController = ProfiledPIDController(
         SwerveConstants.translationPIDConstants.kP,
         SwerveConstants.translationPIDConstants.kI,
         SwerveConstants.translationPIDConstants.kD,
-        TrapezoidProfile.Constraints(1.0, 1.0)
+        TrapezoidProfile.Constraints(SwerveConstants.maxAutoSpeed, SwerveConstants.maxAutoAccel)
     )
     val rotationController = ProfiledPIDController(
         SwerveConstants.rotationPIDConstants.kP,
         SwerveConstants.rotationPIDConstants.kI,
         SwerveConstants.rotationPIDConstants.kD,
-        TrapezoidProfile.Constraints(Units.degreesToRadians(180.0), Units.degreesToRadians(180.0))
+        TrapezoidProfile.Constraints(Units.degreesToRadians(SwerveConstants.maxAutoTwistDegrees), Units.degreesToRadians(SwerveConstants.maxAutoTwistAccelDegrees))
     )
     var targetPose = targetPoseGetter()
 
@@ -49,8 +50,6 @@ class GoToPose(
     }
 
     override fun initialize() {
-        targetPose = targetPoseGetter()
-
         val robotPose = RobotContainer.drivetrain.getSwervePose()
         val robotVel = ChassisSpeeds.fromRobotRelativeSpeeds(RobotContainer.drivetrain.getSpeeds(), robotPose.rotation)
 
@@ -58,13 +57,16 @@ class GoToPose(
         yController.reset(robotPose.y, robotVel.vyMetersPerSecond)
         rotationController.reset(robotPose.rotation.radians, robotVel.omegaRadiansPerSecond)
 
-        SmartDashboard.putString("Goal Position", targetPose.toString())
-
         RobotContainer.currentDriveCommand = Optional.of(this);
         RobotState.autoDriving = true
     }
 
     override fun execute() {
+        targetPose = targetPoseGetter()
+
+        Visualizer.targetPosePublisher.set(targetPose)
+        SmartDashboard.putString("Goal Position", targetPose.toString())
+
         val currentPose = RobotContainer.drivetrain.getSwervePose()
 
         val xFeedback = xController.calculate(currentPose.x, targetPose.x)

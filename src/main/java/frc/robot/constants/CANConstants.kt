@@ -19,6 +19,13 @@ object CANConstants {
         const val algaeLaserCANId = 42
     }
 
-    // Climb
+    object Climb {
+        const val motorId = 45
+        const val encoderId = 46
+    }
 
+    object Funnel {
+        const val motorId = 47
+        const val encoderId = 48
+    }
 }

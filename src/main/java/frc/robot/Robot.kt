@@ -1,7 +1,10 @@
 package frc.robot
 
 import au.grapplerobotics.CanBridge
+import com.ctre.phoenix6.hardware.TalonFX
+import com.ctre.phoenix6.signals.NeutralModeValue
 import com.pathplanner.lib.auto.AutoBuilder
+import com.pathplanner.lib.commands.PathPlannerAuto
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
@@ -12,7 +15,10 @@ import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.constants.AutoScoringConstants
+import frc.robot.constants.CANConstants
+import frc.robot.constants.FieldConstants
 import frc.robot.subsystems.superstructure.Superstructure
+import frc.robot.subsystems.superstructure.climb.ClimbConstants
 import frc.robot.util.Visualizer
 import frc.robot.util.input.OperatorControls
 
@@ -27,7 +33,6 @@ import frc.robot.util.input.OperatorControls
  * object or package, it will get changed everywhere.)
  */
 object Robot : TimedRobot() {
-    private var autonomousCommand = Commands.runOnce({}) //RobotContainer.drivetrain.getAutoPath("3 L4 Left")
 
 //    private var autonomousCommand: Command = Commands.sequence(
 //        Commands.run({ RobotContainer.drivetrain.applyDriveRequest(-1.0, 0.0, 0.0) }).raceWith(Commands.waitSeconds(1.0)),
@@ -42,10 +47,13 @@ object Robot : TimedRobot() {
 //
 
     init {
+        AutoScoringConstants.initialize()
 
         SmartDashboard.putBoolean("Action", false)
         SmartDashboard.putBoolean("Confirm", false)
         SmartDashboard.putBoolean("Cancel", false)
+
+        SmartDashboard.putBoolean("Start by unclimbing?", false)
 
         CanBridge.runTCP()
     }
@@ -60,11 +68,14 @@ object Robot : TimedRobot() {
         // Access the RobotContainer object so that it is initialized. This will perform all our
         // button bindings, and put our autonomous chooser on the dashboard.
 
-        SmartDashboard.putBoolean("full reset with vision", false)
+        SmartDashboard.putBoolean("Disabled vision mode", false)
+
+        SmartDashboard.putBoolean("LL Bottom M2 Reset", false)
+
+        SmartDashboard.putBoolean("Teleop pose difference?", true)
+
 
         RobotContainer
-
-        AutoScoringConstants.initialize()
         OperatorControls
     }
 
@@ -89,14 +100,24 @@ object Robot : TimedRobot() {
         SmartDashboard.putString("Driver Action", OperatorControls.action.name)
         SmartDashboard.putString("Reef Position", OperatorControls.reefPosition.name)
         SmartDashboard.putString("Reef Side", OperatorControls.coralSide.name)
+        SmartDashboard.putNumber("Climb Target Climb Angle", ClimbConstants.climbAngle)
+
+        SmartDashboard.putNumber("Blue Reef Distance", FieldConstants.Reef.center.getDistance(RobotContainer.drivetrain.getSwervePose().translation))
     }
 
     /** This method is called once each time the robot enters Disabled mode.  */
     override fun disabledInit() {
 
+        RobotContainer.autoCommand.cancel()
+//        Superstructure.
     }
 
     override fun disabledPeriodic() {
+
+        RobotContainer.startByUnclimbing = SmartDashboard.getBoolean("Start by unclimbing?", false)
+//        println(RobotContainer.startByUnclimbing)
+
+
         RobotContainer.vision.updateOdometryFromDisabled()
     }
 
@@ -106,40 +127,70 @@ object Robot : TimedRobot() {
         // is modified while the command is running since we need to access it again in teleopInit()
 
 //        autonomousCommand = RobotContainer.autonomousCommand
-        autonomousCommand = RobotContainer.drivetrain.getAutoPath("3 L4 Left")
-        autonomousCommand.execute()
+//        autonomousCommand = RobotContainer.drivetrain.getAutoPath("3 L4 Left")
+//        autonomousCommand = RobotContainer.drivetrain.getAutoPath("Test")
+//        autonomousCommand.execute()
 
         Superstructure.initialize()
+
+
+        RobotContainer.vision.updateOdometry(1, true)
+
+        RobotContainer.autoCommand.schedule()
     }
 
     /** This method is called periodically during autonomous.  */
     override fun autonomousPeriodic() {
+        RobotContainer.vision.updateOdometry(1, true)
+
     }
 
     override fun teleopInit() {
+
+
         // This makes sure that the autonomous stops running when teleop starts running. If you want the
         // autonomous to continue until interrupted by another command, remove this line or comment it out.
-        autonomousCommand.cancel()
+        RobotContainer.autoCommand.cancel()
 
 //        TeleopDriveCommand().schedule()
         Superstructure.initialize()
 
+        RobotContainer.vision.updateOdometry(1, true)
+
         RobotState.autoDriving = false
+
+        println("teleop initing")
+
+        if (RobotContainer.startByUnclimbing == true) {
+            println("unclilmbing")
+            Superstructure.unclimb()
+        }
+//        } else if (!Superstructure.climbSystem.isStow() || !Superstructure.funnelSystem.isStow()) {
+//            Superstructure.climbStowThenStow()
+//        } else {
+//            Superstructure.stow()
+//        }
     }
 
     /** This method is called periodically during operator control.  */
     override fun teleopPeriodic() {
-        RobotContainer.vision.updateOdometry(1, true)
+
+        val poseDiff = SmartDashboard.getBoolean("Teleop pose difference?", true)
+
+        RobotContainer.vision.updateOdometry(1, poseDiff)
     }
+
 
     override fun testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll()
+
+        //Run through a climb store sequence
+//        Superstructure.climbStowThenStow()
     }
 
     /** This method is called periodically during test mode.  */
     override fun testPeriodic() {
-
     }
 
 //    var lastLoopTime = 0.0

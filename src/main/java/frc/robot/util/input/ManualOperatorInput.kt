@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Commands
 import frc.robot.RobotContainer
 import frc.robot.RobotState
 import frc.robot.subsystems.superstructure.Superstructure
-import frc.robot.subsystems.superstructure.pivot.PivotSystem
+import frc.robot.subsystems.superstructure.climb.ClimbConstants
 
 object ManualOperatorInput {
     fun configureBindings() {
@@ -41,7 +41,8 @@ object ManualOperatorInput {
         }))
         RobotContainer.xbox.b().onTrue(Commands.runOnce({
 //            Superstructure.request(Superstructure.pivotSystem.algaeRemoveAngle())
-            Superstructure.scoreL3()
+//            Superstructure.scoreL3()
+            Superstructure.climbStowThenStow()
         }))
         RobotContainer.xbox.x().onTrue(Commands.runOnce({
             Superstructure.intakeFeeder()
@@ -49,13 +50,26 @@ object ManualOperatorInput {
 //            Superstructure.request(Superstructure.pivotSystem.l3Angle())
         }))
         RobotContainer.xbox.leftBumper().onTrue(Commands.runOnce({
-            Superstructure.removeAlgaeLow()
+//            Superstructure.requestSuperstructureAction(Superstructure.climbSystem.stow())/\\
+
+            ClimbConstants.climbAngle -= 2.5;
+            Superstructure.requestSuperstructureAction(Superstructure.climbSystem.climb())
+//            Superstructure.requestSuperstructureAction(Superstructure.funnelSystem.stow())
+//            Superstructure.removeAlgaeLow()
         }))
         RobotContainer.xbox.rightBumper().onTrue(Commands.runOnce({
-            Superstructure.removeAlgaeHigh()
+
+            ClimbConstants.climbAngle += 2.5;
+            Superstructure.requestSuperstructureAction(Superstructure.climbSystem.climb())
+
+//            println("doing the dpl")
+//            Superstructure.requestSuperstructureAction(Superstructure.climbSystem.deploy())
+//            Superstructure.requestSuperstructureAction(Superstructure.funnelSystem.deploy())
+//            Superstructure.removeAlgaeHigh()
         }))
         RobotContainer.xbox.a().onTrue(Commands.runOnce({
-            Superstructure.scoreBarge()
+            Superstructure.climb()
+//            Superstructure.scoreBarge()
 //            Superstructure.request(Superstructure.pivotSystem.stowAngle())
         }))
         RobotContainer.xbox.povUp().onTrue(Commands.runOnce({

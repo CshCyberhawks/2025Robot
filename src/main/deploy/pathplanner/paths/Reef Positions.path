@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 4.05,
-        "y": 5.2
+        "x": 4.01,
+        "y": 5.18
       },
       "prevControl": {
-        "x": 3.8157313155445705,
-        "y": 5.605765264099125
+        "x": 3.7757313155445704,
+        "y": 5.585765264099124
       },
       "nextControl": {
-        "x": 4.284268684455429,
-        "y": 4.794234735900876
+        "x": 4.244268684455429,
+        "y": 4.774234735900875
       },
       "isLocked": false,
       "linkedName": "Reef B Left"
@@ -193,8 +193,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 1.5,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
