@@ -13,7 +13,8 @@ object ElevatorConstants {
     9.0 * 1.751 * Math.PI / 30.0
 
 
-    const val positionTolerance = 0.1
+    // Large tolerance, not used for high accuracy things
+    const val positionTolerance = 0.5
 
     // The torque to hold the elevator against gravity (Newton-Meters)
     val kGNM = Units.inchesToMeters(1.751 / 2.0) * (25.6 * 4.4482216153)

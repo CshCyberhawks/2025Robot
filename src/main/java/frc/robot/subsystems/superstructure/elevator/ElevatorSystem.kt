@@ -28,6 +28,8 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun belowSafeUpPosition() = Prerequisite.withCondition { getPosition() < safeUpPosition }
     fun safeIntakePosition() = Prerequisite.withCondition { getPosition() < 7.0 }
     fun safeToFlipPivot() = Prerequisite.withCondition { getPosition() > 4.5 }
+    fun closeL3() = Prerequisite.withCondition { getPosition() > 3.5 }
+    fun closeL4() = Prerequisite.withCondition { getPosition() > 29.5 }
 
     private fun setPosition(positionInches: Double) = Request.withAction {
         io.setPosition(positionInches)
@@ -47,6 +49,7 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun safeUpPosition() = setPosition(safeUpPosition)
     fun safeDownPosition() = setPosition(safeDownPosition)
 
+    fun l1Position() = setPosition(0.0)
     fun l2Position() = setPosition(0.0)
     fun l3Position() = setPosition(4.0)
     fun l4Position() = setPosition(29.95) // Should be 30 eventually but not safe right now

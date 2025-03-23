@@ -208,6 +208,14 @@ object Superstructure : SubsystemBase() {
         )
     )
 
+    fun scoreL1() = requestSuperstructureAction(
+        SuperstructureAction.create(
+            ParallelRequest(pivotSystem.l1Angle(), elevatorSystem.l1Position()),
+            intakeSystem.coralScore(),
+            stowRequest()
+        )
+    )
+
     fun scoreL2() =
         requestSuperstructureAction(
             SuperstructureAction.create(
@@ -221,8 +229,8 @@ object Superstructure : SubsystemBase() {
     fun scoreL3() =
         requestSuperstructureAction(
             SuperstructureAction.create(
-                ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position(), intakeSystem.coralHalfSpit().withPrerequisites(
-                    elevatorSystem.prereqAtDesiredPosition(), pivotSystem.prereqAtDesiredAngle())),
+                ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position(), intakeSystem.coralHalfSpit().withPrerequisite(
+                    elevatorSystem.closeL3())),
                 intakeSystem.coralScore(),
                 stowRequest(),
                 safeRetract = true
@@ -237,7 +245,7 @@ object Superstructure : SubsystemBase() {
         elevatorSystem
             .l4Position()
             .withPrerequisite(pivotSystem.safeTravelUp()),
-        intakeSystem.coralHalfSpit().withPrerequisite(elevatorSystem.prereqAtDesiredPosition())
+        intakeSystem.coralHalfSpit().withPrerequisite(elevatorSystem.closeL4())
     )
 
     fun scoreL4() =

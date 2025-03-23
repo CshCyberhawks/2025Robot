@@ -19,8 +19,8 @@ class ElevatorIOPID() : ElevatorIO {
 
     val elevatorPIDController =
             ProfiledPIDController(
-                    6.25,
-                    0.0,
+                    6.5,
+                    0.003,
                     0.616,
                     TrapezoidProfile.Constraints(
                             ElevatorConstants.velocityInches,
