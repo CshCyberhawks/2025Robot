@@ -19,9 +19,9 @@ class ElevatorIOPID() : ElevatorIO {
 
     val elevatorPIDController =
             ProfiledPIDController(
-                    11.5,
+                    6.25,
                     0.0,
-                    0.6,
+                    0.616,
                     TrapezoidProfile.Constraints(
                             ElevatorConstants.velocityInches,
                             ElevatorConstants.accelationInches
@@ -113,7 +113,9 @@ class ElevatorIOPID() : ElevatorIO {
     override fun periodic() {
         SmartDashboard.putNumber("Elevator Desired Position", desiredPosition)
 
-        val gravityFF = 3.85
+//        val gravityFF = 3.85
+        val gravityFF = 7.15
+
         val positionPIDOut = elevatorPIDController.calculate(getPosition())
 
         SmartDashboard.putNumber("Elevator Position Error", elevatorPIDController.positionError)
