@@ -27,6 +27,7 @@ import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOEmpty
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOPID
 import frc.robot.subsystems.superstructure.pivot.implementation.PivotIOSim
 import frc.robot.util.AllianceFlipUtil
+import frc.robot.util.input.OperatorControls
 import java.util.*
 
 object Superstructure : SubsystemBase() {
@@ -178,7 +179,13 @@ object Superstructure : SubsystemBase() {
                 ),
                 EmptyRequest(),
                 ParallelRequest(
-                    stowRequest(),
+                    IfRequest(
+                        {RobotState.gamePieceState == GamePieceState.Coral && OperatorControls.highStowPosition},
+                        ParallelRequest(
+                            elevatorSystem.stowPosition(), pivotSystem.highStowAngle()
+                        ),
+                        stowRequest()
+                    ),
                     IfRequest(
                         { RobotState.gamePieceState == GamePieceState.Coral },
                         intakeSystem.coralHolding(),
@@ -214,7 +221,8 @@ object Superstructure : SubsystemBase() {
     fun scoreL3() =
         requestSuperstructureAction(
             SuperstructureAction.create(
-                ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position(), intakeSystem.coralHalfSpit()),
+                ParallelRequest(pivotSystem.l3Angle(), elevatorSystem.l3Position(), intakeSystem.coralHalfSpit().withPrerequisites(
+                    elevatorSystem.prereqAtDesiredPosition(), pivotSystem.prereqAtDesiredAngle())),
                 intakeSystem.coralScore(),
                 stowRequest(),
                 safeRetract = true
@@ -225,11 +233,13 @@ object Superstructure : SubsystemBase() {
         ParallelRequest(
             pivotSystem.l4Angle(),
             elevatorSystem.safeUpPosition(),
-            intakeSystem.coralHalfSpit()
         ),
-        elevatorSystem
-            .l4Position()
-            .withPrerequisite(pivotSystem.safeTravelUp()),
+        ParallelRequest( // Sketchy fix to work around prereqs not working in Sequential Requests
+            elevatorSystem
+                .l4Position()
+                .withPrerequisite(pivotSystem.safeTravelUp()),
+            intakeSystem.coralHalfSpit().withPrerequisite(elevatorSystem.prereqAtDesiredPosition())
+        ),
     )
 
     fun scoreL4() =

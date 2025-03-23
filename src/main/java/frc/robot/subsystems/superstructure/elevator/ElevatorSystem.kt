@@ -23,6 +23,7 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
     fun atDesiredPosition() = io.atDesiredPosition()
 
     fun awaitDesiredPosition() = AwaitRequest { atDesiredPosition() }
+    fun prereqAtDesiredPosition() = Prerequisite.withCondition { io.atDesiredPosition() }
 
     fun belowSafeUpPosition() = Prerequisite.withCondition { getPosition() < safeUpPosition }
     fun safeIntakePosition() = Prerequisite.withCondition { getPosition() < 7.0 }

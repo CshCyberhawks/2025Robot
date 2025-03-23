@@ -60,6 +60,9 @@ object OperatorControls {
             else -> AutoScoringConstants.ReefPositions.A
         }
 
+    val highStowPosition
+        get() = SmartDashboard.getBoolean("ConsoleHighStowPosition", false)
+
 //    val actionChooser = SendableChooser<DriverAction>()
 
 //    val coralSideChooser = SendableChooser<AutoTargeting.CoralSide>()
