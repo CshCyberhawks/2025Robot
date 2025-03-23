@@ -234,12 +234,10 @@ object Superstructure : SubsystemBase() {
             pivotSystem.l4Angle(),
             elevatorSystem.safeUpPosition(),
         ),
-        ParallelRequest( // Sketchy fix to work around prereqs not working in Sequential Requests
-            elevatorSystem
-                .l4Position()
-                .withPrerequisite(pivotSystem.safeTravelUp()),
-            intakeSystem.coralHalfSpit().withPrerequisite(elevatorSystem.prereqAtDesiredPosition())
-        ),
+        elevatorSystem
+            .l4Position()
+            .withPrerequisite(pivotSystem.safeTravelUp()),
+        intakeSystem.coralHalfSpit().withPrerequisite(elevatorSystem.prereqAtDesiredPosition())
     )
 
     fun scoreL4() =
