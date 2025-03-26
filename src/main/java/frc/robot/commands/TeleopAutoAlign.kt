@@ -88,11 +88,10 @@ object TeleopAutoAlign {
                 val position = OperatorControls.reefPosition
 
                 if (OperatorControls.noWalk) {
-                    AllianceFlipUtil.apply(AutoScoringConstants.getAlgaePoseAtOffset(position.ordinal, 0.0)).rotateBy(
-                        Rotation2d.fromDegrees(180.0))
+                    AllianceFlipUtil.apply(AutoScoringConstants.getL1PoseAtOffset(position.ordinal, 0.0))
                 } else {
                     val goalPose =
-                        AllianceFlipUtil.apply(AutoScoringConstants.getAlgaePoseAtOffset(position.ordinal, 0.0))
+                        AllianceFlipUtil.apply(AutoScoringConstants.getL1PoseAtOffset(position.ordinal, 0.0))
                     // Make the position get closer as it gets closer to the final goal
 //            val adjustX: Double = 0.3
                     var adjustX: Double = min(
@@ -106,9 +105,7 @@ object TeleopAutoAlign {
                         adjustX = 0.0
                     }
 
-                    AllianceFlipUtil.apply(AutoScoringConstants.getAlgaePoseAtOffset(position.ordinal, adjustX)).rotateBy(
-                        Rotation2d.fromDegrees(180.0)
-                    )
+                    AllianceFlipUtil.apply(AutoScoringConstants.getL1PoseAtOffset(position.ordinal, adjustX))
                 }
             })
         }

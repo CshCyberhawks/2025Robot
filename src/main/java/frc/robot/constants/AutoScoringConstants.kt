@@ -62,6 +62,27 @@ object AutoScoringConstants {
         )
     }
 
+    fun getL1PoseAtOffset(face: Int, x: Double): Pose2d {
+        val poseDirection =
+            Pose2d(FieldConstants.Reef.center, Rotation2d.fromDegrees((180 - (60 * face)).toDouble()))
+        val adjustX: Double = reefFaceOffset + x - 0.425// + Units.inchesToMeters(3.0)
+        val adjustY: Double = 1.075
+
+        return Pose2d(
+            Translation2d(
+                poseDirection
+                    .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
+                    .x,
+                poseDirection
+                    .transformBy(Transform2d(adjustX, adjustY, Rotation2d()))
+                    .y
+            ),
+            Rotation2d(
+                poseDirection.rotation.radians
+            ).rotateBy(Rotation2d.fromDegrees(76.0))
+        )
+    }
+
     enum class ReefPositions(var left: Pose2d, var right: Pose2d, var center: Pose2d) {
         A(Pose2d(), Pose2d(), Pose2d()),
         B(Pose2d(), Pose2d(), Pose2d()),
