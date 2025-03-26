@@ -24,6 +24,8 @@ object RobotContainer {
 
     var startByUnclimbing = false
 
+    var startWithADisabledClimb = false
+
 
     val xbox = CommandXboxController(2)
 

@@ -35,6 +35,8 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
             }
         }
 
+    fun prereqAtDesiredAngle() = Prerequisite.withCondition { atDesiredAngle() }
+
     fun safeTravelUp() = Prerequisite.withCondition { getAngle() < 245.0 }
     fun safeTravelDown() = Prerequisite.withCondition { getAngle() > 180.0 }
     fun safeToClimbDisable() = Prerequisite.withCondition { getAngle() < 20.0 }
@@ -60,6 +62,9 @@ class PivotSystem(private val io: PivotIO) : SubsystemBase() {
 
     fun climbStowAngle() = setAngle(325.0)
 
+    fun highStowAngle() = setAngle(130.0)
+
+    fun l1Angle() = setAngle(300.0)
     fun l2Angle() = setAngle(150.0)
 //    fun l3Angle() = setAngle(SmartDashboard.getNumber("L3 Angle", 125.0))
     fun l3Angle() = setAngle(120.0)

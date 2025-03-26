@@ -26,12 +26,16 @@ class ClimbIOReal() : ClimbIO {
     override var climbing = false
 
     override var disable = false
+        set(value) {
+            motor.setControl(torqueRequest.withOutput(0.0))
+            field = value
+        }
 
     private var neutralCoast = false
 
 
     private val pidController = ProfiledPIDController(
-        0.2315,
+        1.2315,
         0.0,
         0.0315,
         TrapezoidProfile.Constraints(
@@ -88,21 +92,27 @@ class ClimbIOReal() : ClimbIO {
         pidController.goal = TrapezoidProfile.State(angleDegrees, 0.0)
     }
 
+    override fun setMotor(current: Double) {
+        motor.setControl(torqueRequest.withOutput(current))
+    }
+
     override fun periodic() {
+        if (disable) {
+//            println("climb io disabled")
+//            motor.setControl(torqueRequest.withOutput(0.0))
+            return
+        }
 
 
         val positionPIDOut = pidController.calculate(getAngle())
 
 //        val gravityFF = 3.15 * sin(Math.toRadians(getAngle()))
 
-        val motorOut = if (climbing && (ClimbConstants.climbAngle - getAngle()) > 10.0) {positionPIDOut + 30.0} else if (climbing) {positionPIDOut + 15.0} else positionPIDOut
+        val motorOut = if (climbing && (ClimbConstants.climbAngle - getAngle()) > 10.0) {positionPIDOut + 30.0} else if (climbing) {positionPIDOut + 8.5} else positionPIDOut
 
 
-        if (!disable) {
 //            println(motorOut)
             motor.setControl(torqueRequest.withOutput(motorOut))
-
-        }
 
 
         val sdCoast = SmartDashboard.getBoolean("Climb coast", false)

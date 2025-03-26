@@ -5,7 +5,7 @@ object FunnelConstants {
     const val accelerationDegrees = 250.0
 
 //    const val stowAngle = 215.0
-    const val stowAngle = 212.0
+    const val stowAngle = 218.0
 //    const val deployAngle = 50.5
     const val deployAngle = 65.5
 

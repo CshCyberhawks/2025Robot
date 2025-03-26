@@ -10,6 +10,7 @@ import frc.robot.subsystems.superstructure.Superstructure
 enum class DriverAction(val superStructureCommand: Command, val alignCommand: Command = Commands.runOnce({})) {
     //    Stow(Commands.runOnce({ Superstructure.stow() })),
     IntakeFeeder(Commands.runOnce({ Superstructure.intakeFeeder() }), TeleopAutoAlign.feederAlign()),
+    ScoreL1(Commands.runOnce({ Superstructure.scoreL1() }), TeleopAutoAlign.l1ReefAlign()),
     ScoreL2(Commands.runOnce({ Superstructure.scoreL2() }), TeleopAutoAlign.coralReefAlign()),
     ScoreL3(Commands.runOnce({ Superstructure.scoreL3() }), TeleopAutoAlign.coralReefAlign()),
     ScoreL4(Commands.runOnce({ Superstructure.scoreL4() }), TeleopAutoAlign.coralReefAlign()),
@@ -32,6 +33,7 @@ object OperatorControls {
     val action
         get() = when (SmartDashboard.getString("ConsoleDriverAction", "")) {
             "Feeder" -> DriverAction.IntakeFeeder
+            "L1" -> DriverAction.ScoreL1
             "L2" -> DriverAction.ScoreL2
             "L3" -> DriverAction.ScoreL3
             "L4" -> DriverAction.ScoreL4
@@ -59,6 +61,9 @@ object OperatorControls {
             "F" -> AutoScoringConstants.ReefPositions.F
             else -> AutoScoringConstants.ReefPositions.A
         }
+
+    val highStowPosition
+        get() = SmartDashboard.getBoolean("ConsoleHighStowPosition", false)
 
 //    val actionChooser = SendableChooser<DriverAction>()
 

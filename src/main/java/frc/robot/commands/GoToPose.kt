@@ -99,7 +99,7 @@ open class GoToPose(
     override fun isFinished(): Boolean = endCondition()
 
     override fun end(interrupted: Boolean) {
-        println("drive command and then ending")
+//        println("drive command and then ending")
         RobotState.autoDriving = false
         RobotContainer.currentDriveCommand = Optional.empty()
     }

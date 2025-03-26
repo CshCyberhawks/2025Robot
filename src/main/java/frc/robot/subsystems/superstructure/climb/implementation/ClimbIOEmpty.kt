@@ -10,6 +10,10 @@ class ClimbIOEmpty(): ClimbIO {
         return 0.0
     }
 
+    override fun setMotor(current: Double) {
+
+    }
+
     override fun angleDegrees(angleDegrees: Double) {
     }
 

@@ -40,9 +40,9 @@ class PivotIOPID() : PivotIO {
 //                    )
 //            )
         ProfiledPIDController(
-            1.0,
+            0.65,
             0.0,
-            0.06,
+            0.1,
             TrapezoidProfile.Constraints(
                 PivotConstants.velocityDegrees,
                 PivotConstants.accelerationDegrees
@@ -61,8 +61,7 @@ class PivotIOPID() : PivotIO {
     private var desiredAngle = 290.0
 
     //138.6 = 180
-
-    private val tbOffset = -43.2
+    private val tbOffset = -68
 //    private val tbOffset = -23.2//-43.2
 //    private fun getTBDegrees() =
 
@@ -145,6 +144,7 @@ class PivotIOPID() : PivotIO {
     override fun periodic() {
         SmartDashboard.putNumber("Pivot Raw TB Angle", MiscCalculations.wrapAroundAngles(encoder.absolutePosition.valueAsDouble * 360.0))
         SmartDashboard.putNumber("Pivot Desired Angle", desiredAngle)
+        SmartDashboard.putNumber("Pivot Velocity", encoder.velocity.valueAsDouble * 360.0)
 
         val sdCoast = SmartDashboard.getBoolean("Pivot coast", false)
         if (sdCoast != neutralCoast) {
@@ -154,14 +154,14 @@ class PivotIOPID() : PivotIO {
             )
         }
 
-        if (pidDistabled) {
+        if (pidDistabled || (desiredAngle == 295.0 && MiscCalculations.calculateDeadzone(desiredAngle, 4.0) == 0.0)) {
             motor.set(0.0)
             return
         }
 
 //        val kG = if (getAngle() > 270) 8.25 else 10.5
-        val kG = if (getAngle() > 270) 7.25 else 7.5
-        val gravityFF = kG * sin(Math.toRadians(getAngle() + 90))
+        val kG = if (getAngle() > 270 && getAngle() < 305.0) 0.0 else 7.5
+        val gravityFF = kG * -sin(Math.toRadians(getAngle() - 110.0))
         val positionPIDOut = pivotPIDController.calculate(getAngle())
 //        val correctivePIDOut = correctivePID.calculate(getAngle(), desiredAngle)
 

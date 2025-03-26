@@ -23,7 +23,7 @@ class FunnelIOReal(): FunnelIO {
     private val encoder = CANcoder(CANConstants.Funnel.encoderId)
 
     private val pidController = ProfiledPIDController(
-        0.145,
+        0.265,
         0.0,
         0.0315,
         TrapezoidProfile.Constraints(

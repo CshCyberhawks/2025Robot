@@ -14,13 +14,25 @@ object ManualDriverInput {
         RobotContainer.rightJoystick.button(2)
         .onTrue(Commands.runOnce({ RobotContainer.drivetrain.seedFieldCentric(); println("seeding field relative") }))
 
-        RobotContainer.rightJoystick.button(cancel).onTrue(Commands.runOnce({
+        //NOTE: rebound
+        RobotContainer.rightJoystick.button(10).onTrue(Commands.runOnce({
             if (!RobotContainer.currentDriveCommand.isEmpty) {
                 println("cancelling auto drive")
                 RobotContainer.currentDriveCommand.get().cancel()
                 RobotContainer.currentDriveCommand = Optional.empty()
                 RobotState.autoDriving = false
             }
+        }))
+
+        RobotContainer.rightJoystick.button(4).onTrue(Commands.run({
+            OperatorControls.noWalk = true
+            alignCommand.cancel()
+            alignCommand = OperatorControls.action.alignCommand
+            alignCommand.schedule()
+        }))
+
+        RobotContainer.rightJoystick.button(4).onFalse(Commands.runOnce({
+            alignCommand.cancel()
         }))
 
         RobotContainer.rightJoystick.button(3).onTrue(Commands.runOnce({
