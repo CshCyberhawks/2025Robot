@@ -33,6 +33,7 @@ object OperatorControls {
     val action
         get() = when (SmartDashboard.getString("ConsoleDriverAction", "")) {
             "Feeder" -> DriverAction.IntakeFeeder
+            "L1" -> DriverAction.ScoreL1
             "L2" -> DriverAction.ScoreL2
             "L3" -> DriverAction.ScoreL3
             "L4" -> DriverAction.ScoreL4

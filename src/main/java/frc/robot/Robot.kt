@@ -55,6 +55,8 @@ object Robot : TimedRobot() {
 
         SmartDashboard.putBoolean("Start by unclimbing?", false)
 
+        SmartDashboard.putBoolean("Start with a disabled climb", false)
+
         CanBridge.runTCP()
     }
 
@@ -73,6 +75,8 @@ object Robot : TimedRobot() {
         SmartDashboard.putBoolean("LL Bottom M2 Reset", false)
 
         SmartDashboard.putBoolean("Teleop pose difference?", true)
+
+
 
 
         RobotContainer
@@ -116,6 +120,8 @@ object Robot : TimedRobot() {
 
         RobotContainer.startByUnclimbing = SmartDashboard.getBoolean("Start by unclimbing?", false)
 //        println(RobotContainer.startByUnclimbing)
+
+        RobotContainer.startWithADisabledClimb = SmartDashboard.getBoolean("Start with a disabled climb", false)
 
 
         RobotContainer.vision.updateOdometryFromDisabled()
@@ -165,6 +171,12 @@ object Robot : TimedRobot() {
             println("unclilmbing")
             Superstructure.unclimb()
         }
+
+        if (RobotContainer.startWithADisabledClimb) {
+            println("starting with climb disabled")
+            Superstructure.disableClimb()
+        }
+
 //        } else if (!Superstructure.climbSystem.isStow() || !Superstructure.funnelSystem.isStow()) {
 //            Superstructure.climbStowThenStow()
 //        } else {

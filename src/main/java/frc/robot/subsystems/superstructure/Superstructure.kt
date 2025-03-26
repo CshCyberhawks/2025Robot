@@ -245,7 +245,7 @@ object Superstructure : SubsystemBase() {
         elevatorSystem
             .l4Position()
             .withPrerequisite(pivotSystem.safeTravelUp()),
-        intakeSystem.coralHalfSpit().withPrerequisite(elevatorSystem.closeL4())
+        //intakeSystem.coralHalfSpit().withPrerequisite(elevatorSystem.closeL4())
     )
 
     fun scoreL4() =
@@ -347,11 +347,13 @@ object Superstructure : SubsystemBase() {
     fun climb() = requestSuperstructureAction(
         SuperstructureAction.create(
                 ParallelRequest(
-                pivotSystem.oldClimbAngle(),
-                climbSystem.deploy(),
-                funnelSystem.deploy()
+                    climbSystem.unspoolForTime(),
+//                    pivotSystem.climbAngle(),
+                    //TODO: a timed climb system unspool
+//                    climbSystem.deploy(),
+                    funnelSystem.deploy()
                 ),
-            climbSystem.climb(),
+            SequentialRequest(pivotSystem.oldClimbAngleWithPID(), WaitRequest(1.5), climbSystem.climb()),
             EmptyRequest()//IfRequest({RobotState.actionCancelled}, SequentialRequest(ParallelRequest(funnelSystem.stow(), climbSystem.stow())), pivotSystem.stowAngle())
         )
     )
@@ -366,6 +368,10 @@ object Superstructure : SubsystemBase() {
             ),
 //            stowRequest().withPrerequisite(Prerequisite.withCondition { climbSystem.isStow() && funnelSystem.isStow() })
         )
+    )
+
+    fun disableClimb() = requestSuperstructureAction(
+        Superstructure.climbSystem.setDisable(RobotContainer.startWithADisabledClimb)
     )
 
     fun climbStowThenStow() = requestSuperstructureAction(

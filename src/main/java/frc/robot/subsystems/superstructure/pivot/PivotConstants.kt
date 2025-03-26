@@ -3,8 +3,8 @@ package frc.robot.subsystems.superstructure.pivot
 import edu.wpi.first.math.trajectory.TrapezoidProfile
 
 object PivotConstants {
-    const val velocityDegrees = 180.0 // Guessed values for now
-    const val accelerationDegrees = 250.0
+    const val velocityDegrees = 225.0 // Guessed values for now
+    const val accelerationDegrees = 375.0
 
     // Conversion so one (I guess its mechanism rotation) is 1 rotation of the pivot
     const val conversionFactor =

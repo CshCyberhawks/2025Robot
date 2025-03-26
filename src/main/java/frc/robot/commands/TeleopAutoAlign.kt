@@ -43,12 +43,12 @@ object TeleopAutoAlign {
 //            val adjustX: Double = 0.3
                 var adjustX: Double = min(
                     1.0,
-                    RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * 0.75
+                    RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * 0.5
                 )
 //            val adjustX = 1.0
 
                 // Once we're close enough we can just jump to the goal
-                if (adjustX < 0.25) {
+                if (adjustX < 0.3) {
                     adjustX = 0.0
                 }
 
@@ -69,12 +69,12 @@ object TeleopAutoAlign {
 //            val adjustX: Double = 0.3
                 var adjustX: Double = min(
                     1.0,
-                    RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * 0.75
+                    RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * .5
                 )
 //            val adjustX = 1.0
 
                 // Once we're close enough we can just jump to the goal
-                if (adjustX < 0.25) {
+                if (adjustX < 0.3) {
                     adjustX = 0.0
                 }
 
@@ -89,8 +89,7 @@ object TeleopAutoAlign {
 
                 if (OperatorControls.noWalk) {
                     AllianceFlipUtil.apply(AutoScoringConstants.getAlgaePoseAtOffset(position.ordinal, 0.0)).rotateBy(
-                        Rotation2d.fromDegrees(180.0)
-                    )
+                        Rotation2d.fromDegrees(180.0))
                 } else {
                     val goalPose =
                         AllianceFlipUtil.apply(AutoScoringConstants.getAlgaePoseAtOffset(position.ordinal, 0.0))
@@ -98,19 +97,18 @@ object TeleopAutoAlign {
 //            val adjustX: Double = 0.3
                     var adjustX: Double = min(
                         1.0,
-                        RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * 0.75
+                        RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * 0.5
                     )
 //            val adjustX = 1.0
 
                     // Once we're close enough we can just jump to the goal
-                    if (adjustX < 0.25) {
+                    if (adjustX < 0.3) {
                         adjustX = 0.0
                     }
 
-                    AllianceFlipUtil.apply(AutoScoringConstants.getAlgaePoseAtOffset(position.ordinal, adjustX))
-                        .rotateBy(
-                            Rotation2d.fromDegrees(180.0)
-                        )
+                    AllianceFlipUtil.apply(AutoScoringConstants.getAlgaePoseAtOffset(position.ordinal, adjustX)).rotateBy(
+                        Rotation2d.fromDegrees(180.0)
+                    )
                 }
             })
         }

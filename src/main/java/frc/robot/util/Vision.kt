@@ -54,7 +54,8 @@ class VisionSystem {
             }
 
             if (!bottomM2Reset) {
-                if (llName == "limelight-tright" || llName == "limelight-tleft") {
+//                if (llName == "limelight-tright" || llName == "limelight-tleft") {
+                if (llName == "limelight-tright") {
                     continue;
                 }
             }
@@ -117,7 +118,9 @@ class VisionSystem {
                         degStds = 300.0
                     }
 
-                    if (llName == "limelight-tright" || llName == "limelight-tleft") {
+                    if (llName == "limelight-tright") {
+
+//                        if (llName == "limelight-tright" || llName == "limelight-tleft") {
                         xyStds *= 4.0
                         degStds *= 4.0
                     }
