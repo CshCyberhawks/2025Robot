@@ -42,7 +42,7 @@ class ElevatorSystem(private val io: ElevatorIO) : SubsystemBase() {
         SmartDashboard.putNumber("Elevator Position", getPosition())
     }
 
-    fun feederPosition() = setPosition(6.2)
+    fun feederPosition() = setPosition(6.5)
 
     fun stowPosition() = setPosition(1.0)
 

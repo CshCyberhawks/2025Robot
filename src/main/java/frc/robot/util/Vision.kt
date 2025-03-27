@@ -54,8 +54,8 @@ class VisionSystem {
             }
 
             if (!bottomM2Reset) {
-//                if (llName == "limelight-tright" || llName == "limelight-tleft") {
-                if (llName == "limelight-tright") {
+                if (llName == "limelight-tright" || llName == "limelight-tleft") {
+//                if (llName == "limelight-tright") {
                     continue;
                 }
             }
@@ -120,7 +120,7 @@ class VisionSystem {
 
                     if (llName == "limelight-tright") {
 
-//                        if (llName == "limelight-tright" || llName == "limelight-tleft") {
+//                    if (llName == "limelight-tright" || llName == "limelight-tleft") {
                         xyStds *= 4.0
                         degStds *= 4.0
                     }
@@ -192,7 +192,7 @@ class VisionSystem {
                         xyStds = Math.sqrt((1.0/(2.0 * (llMeasure.avgTagArea + .25)))) - .15;
 
                         if (llMeasure.tagCount >= 2) {
-                            xyStds *= .4;
+                            xyStds *= .9;
                         }
 
 //                            if (llMeasure.tagCount >= 2) {
@@ -217,9 +217,23 @@ class VisionSystem {
 //                            }
 
 
-                        if (llName == "limelight-tright" || llName == "limelight-tleft") {
+                        if (llName == "limelight-tright") {
                             xyStds = 14.0
-                            degStds = 300.0
+                            degStds = 1800.0
+                        }
+                        else if (llName == "limelight-tleft") {
+                            if (llMeasure.avgTagDist < 1.5) {
+                                xyStds = 0.35
+                                degStds = 1800.0;
+                            }
+                            else {
+                                xyStds *= 1.2
+                            }
+                        }
+                        else {
+                            if (llMeasure.avgTagDist > 1.75) {
+                                xyStds *= 4.5
+                            }
                         }
 
 
@@ -228,6 +242,10 @@ class VisionSystem {
                         RobotContainer.drivetrain.setVisionMeasurementStdDevs(
                             VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds))
                         )
+
+//                        println("avg tag dist: " + llMeasure.avgTagDist)
+
+                        SmartDashboard.putNumber("LL ${llName} xy stds: ", xyStds)
 
 //                        println("updating odometry with ll")
 //                        println("Updating with LL ${llName}: X = " + llMeasure.pose.x + " Y = " + llMeasure.pose.y)

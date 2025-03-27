@@ -17,7 +17,7 @@ object SuperstructureAction {
             RobotState.actionConfirmed = false
             RobotState.superstructureActionRunning = true
         },
-        prepAction,
+        prepAction.withDeadline { confirmed() || cancelled() },
         AwaitRequest {
             confirmed() || cancelled()
         },

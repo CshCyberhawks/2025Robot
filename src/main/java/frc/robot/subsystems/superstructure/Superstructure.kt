@@ -115,7 +115,7 @@ object Superstructure : SubsystemBase() {
                 allRequestsComplete = true
             } else {
                 request(queuedRequests.removeAt(0))
-            }
+            } // TODO: This doesn't handle deadlines (I don't think it should)
         } else if (activeRequest.get().isFinished()) {
             activeRequest = Optional.empty()
         }
@@ -343,6 +343,14 @@ object Superstructure : SubsystemBase() {
                 safeRetract = true
             )
         )
+
+    fun algaeSpit() = requestSuperstructureAction(
+        ParallelRequest(
+            intakeSystem.algaeScore(),
+            WaitRequest(0.75),
+            intakeSystem.idle()
+        )
+    )
 
     fun climb() = requestSuperstructureAction(
         SuperstructureAction.create(

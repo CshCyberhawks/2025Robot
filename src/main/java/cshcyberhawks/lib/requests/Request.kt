@@ -1,5 +1,7 @@
 package cshcyberhawks.lib.requests
 
+import java.util.Optional
+
 /**
  * Abstract base class representing a generic request.
  * Requests system inspired by the one in Citrus Circuits' 2024 Robot Code
@@ -24,6 +26,7 @@ abstract class Request {
     open fun isFinished(): Boolean = true
 
     private var prerequisites: MutableList<Prerequisite> = mutableListOf()
+    private var deadline: Optional<() -> Boolean> = Optional.empty()
 
     /**
      * Adds a prerequisite to the current request.
@@ -51,7 +54,15 @@ abstract class Request {
         return this
     }
 
+    fun withDeadline(deadline: () -> Boolean): Request {
+        this.deadline = Optional.of(deadline)
+
+        return this
+    }
+
     fun allowed(): Boolean {
         return prerequisites.all { prerequisite -> prerequisite.met() }
     }
+
+    fun deadlineHit() = deadline.isPresent && deadline.get()()
 }

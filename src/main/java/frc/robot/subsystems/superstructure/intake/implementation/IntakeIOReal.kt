@@ -26,7 +26,6 @@ class IntakeIOReal() : IntakeIO {
     init {
         val coralIntakeMotorConfiguration = TalonFXConfiguration()
 //        coralIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive
-        println("WHY")
 //        coralIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive
 
         val currentConfigs = coralIntakeMotorConfiguration.CurrentLimits
@@ -35,13 +34,17 @@ class IntakeIOReal() : IntakeIO {
 
 //        intakeMotor.configurator.apply(coralIntakeMotorConfiguration)
 
-        coralLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
-        //coralLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
-        coralLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
+        try {
+            coralLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
+            //coralLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
+            coralLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
 
-        algaeLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
-        //algaeLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
-        algaeLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
+            algaeLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
+            //algaeLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
+            algaeLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
+        } catch (exception: Exception) {
+            println("Laser CAN Configuration Exception: $exception")
+        }
     }
 
     override fun setIntakeState(state: IntakeState) {
