@@ -40,9 +40,9 @@ class PivotIOPID() : PivotIO {
 //                    )
 //            )
         ProfiledPIDController(
-            0.65,
+            1.0,
             0.0,
-            0.1,
+            0.06,
             TrapezoidProfile.Constraints(
                 PivotConstants.velocityDegrees,
                 PivotConstants.accelerationDegrees
