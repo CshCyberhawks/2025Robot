@@ -61,7 +61,7 @@ object AutoBuilder {
                         Commands.runOnce({ Superstructure.scoreL4() }),
                         AutoCommands.coralReefAlign(targets[i].position, targets[i].side)
                     ),
-                    WaitCommand(0.55),
+                    WaitCommand(0.7),
                     Commands.runOnce({
                         RobotState.actionConfirmed = true
                         println("Score $i: ${autoTimer.get()}")

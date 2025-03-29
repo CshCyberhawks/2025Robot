@@ -245,7 +245,7 @@ object Superstructure : SubsystemBase() {
         elevatorSystem
             .l4Position()
             .withPrerequisite(pivotSystem.safeTravelUp()),
-        //intakeSystem.coralHalfSpit().withPrerequisite(elevatorSystem.closeL4())
+        intakeSystem.coralHalfSpit().withPrerequisite(elevatorSystem.closeL4())
     )
 
     fun scoreL4() =

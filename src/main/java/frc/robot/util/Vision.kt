@@ -192,7 +192,7 @@ class VisionSystem {
                         xyStds = Math.sqrt((1.0/(2.0 * (llMeasure.avgTagArea + .25)))) - .15;
 
                         if (llMeasure.tagCount >= 2) {
-                            xyStds *= .9;
+                            xyStds *= .6;
                         }
 
 //                            if (llMeasure.tagCount >= 2) {
@@ -222,16 +222,16 @@ class VisionSystem {
                             degStds = 1800.0
                         }
                         else if (llName == "limelight-tleft") {
-                            if (llMeasure.avgTagDist < 1.5) {
+                            if (llMeasure.avgTagDist < 1.75) {
                                 xyStds = 0.35
                                 degStds = 1800.0;
                             }
                             else {
-                                xyStds *= 1.2
+                                xyStds *= 2.5
                             }
                         }
                         else {
-                            if (llMeasure.avgTagDist > 1.75) {
+                            if (llMeasure.avgTagDist > 2.45) {
                                 xyStds *= 4.5
                             }
                         }

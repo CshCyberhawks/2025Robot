@@ -48,7 +48,7 @@ object TeleopAutoAlign {
 //            val adjustX = 1.0
 
                 // Once we're close enough we can just jump to the goal
-                if (adjustX < 0.3) {
+                if (adjustX < 0.2) {
                     adjustX = 0.0
                 }
 
@@ -74,7 +74,7 @@ object TeleopAutoAlign {
 //            val adjustX = 1.0
 
                 // Once we're close enough we can just jump to the goal
-                if (adjustX < 0.3) {
+                if (adjustX < 0.2) {
                     adjustX = 0.0
                 }
 
@@ -101,7 +101,7 @@ object TeleopAutoAlign {
 //            val adjustX = 1.0
 
                     // Once we're close enough we can just jump to the goal
-                    if (adjustX < 0.3) {
+                    if (adjustX < 0.2) {
                         adjustX = 0.0
                     }
 
