@@ -1,6 +1,7 @@
 package frc.robot.commands
 
 import cshcyberhawks.lib.math.MiscCalculations
+import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.wpilibj2.command.Command
 import frc.robot.RobotContainer
 import frc.robot.constants.AutoScoringConstants
@@ -36,14 +37,18 @@ object TeleopAutoAlign {
             if (OperatorControls.noWalk) {
                 AllianceFlipUtil.apply(AutoScoringConstants.getReefPoseAtOffset(position.ordinal, side, 0.0))
             } else {
-                val goalPose = AllianceFlipUtil.apply(AutoScoringConstants.getReefPoseAtOffset(position.ordinal, side, 0.0))
+                val goalPose =
+                    AllianceFlipUtil.apply(AutoScoringConstants.getReefPoseAtOffset(position.ordinal, side, 0.0))
                 // Make the position get closer as it gets closer to the final goal
 //            val adjustX: Double = 0.3
-                var adjustX: Double = min(1.0, RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * 0.75)
+                var adjustX: Double = min(
+                    1.0,
+                    RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * 0.5
+                )
 //            val adjustX = 1.0
 
                 // Once we're close enough we can just jump to the goal
-                if (adjustX < 0.25) {
+                if (adjustX < 0.2) {
                     adjustX = 0.0
                 }
 
@@ -62,11 +67,14 @@ object TeleopAutoAlign {
                 val goalPose = AllianceFlipUtil.apply(AutoScoringConstants.getAlgaePoseAtOffset(position.ordinal, 0.0))
                 // Make the position get closer as it gets closer to the final goal
 //            val adjustX: Double = 0.3
-                var adjustX: Double = min(1.0, RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * 0.75)
+                var adjustX: Double = min(
+                    1.0,
+                    RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * .5
+                )
 //            val adjustX = 1.0
 
                 // Once we're close enough we can just jump to the goal
-                if (adjustX < 0.25) {
+                if (adjustX < 0.2) {
                     adjustX = 0.0
                 }
 
@@ -75,18 +83,48 @@ object TeleopAutoAlign {
         })
     }
 
-    fun processorAlign(): Command = GoToPose({
-        AllianceFlipUtil.apply(FieldConstants.processorPosition)
-    }, { false })
+        fun l1ReefAlign(): Command {
+            return GoToPose({
+                val position = OperatorControls.reefPosition
 
-    fun feederAlign(): Command = GoToPose({
-        val leftPos = AllianceFlipUtil.apply(FieldConstants.leftFeederPosition)
-        val rightPos = AllianceFlipUtil.apply(FieldConstants.rightFeederPosition)
+                if (OperatorControls.noWalk) {
+                    AllianceFlipUtil.apply(AutoScoringConstants.getL1PoseAtOffset(position.ordinal, 0.0))
+                } else {
+                    val goalPose =
+                        AllianceFlipUtil.apply(AutoScoringConstants.getL1PoseAtOffset(position.ordinal, 0.0))
+                    // Make the position get closer as it gets closer to the final goal
+//            val adjustX: Double = 0.3
+                    var adjustX: Double = min(
+                        1.0,
+                        RobotContainer.drivetrain.getSwervePose().translation.getDistance(goalPose.translation) * 0.5
+                    )
+//            val adjustX = 1.0
 
-        if (RobotContainer.drivetrain.getSwervePose().translation.getDistance(leftPos.translation) < RobotContainer.drivetrain.getSwervePose().translation.getDistance(rightPos.translation))  {
-            leftPos
-        } else {
-            rightPos
+                    // Once we're close enough we can just jump to the goal
+                    if (adjustX < 0.2) {
+                        adjustX = 0.0
+                    }
+
+                    AllianceFlipUtil.apply(AutoScoringConstants.getL1PoseAtOffset(position.ordinal, adjustX))
+                }
+            })
         }
-    }, { false })
-}
+
+        fun processorAlign(): Command = GoToPose({
+            AllianceFlipUtil.apply(FieldConstants.processorPosition)
+        }, { false })
+
+        fun feederAlign(): Command = GoToPose({
+            val leftPos = AllianceFlipUtil.apply(FieldConstants.leftFeederPosition)
+            val rightPos = AllianceFlipUtil.apply(FieldConstants.rightFeederPosition)
+
+            if (RobotContainer.drivetrain.getSwervePose().translation.getDistance(leftPos.translation) < RobotContainer.drivetrain.getSwervePose().translation.getDistance(
+                    rightPos.translation
+                )
+            ) {
+                leftPos
+            } else {
+                rightPos
+            }
+        }, { false })
+    }

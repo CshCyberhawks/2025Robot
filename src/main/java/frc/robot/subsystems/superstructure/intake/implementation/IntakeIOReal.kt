@@ -26,7 +26,6 @@ class IntakeIOReal() : IntakeIO {
     init {
         val coralIntakeMotorConfiguration = TalonFXConfiguration()
 //        coralIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive
-        println("WHY")
 //        coralIntakeMotorConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive
 
         val currentConfigs = coralIntakeMotorConfiguration.CurrentLimits
@@ -35,13 +34,17 @@ class IntakeIOReal() : IntakeIO {
 
 //        intakeMotor.configurator.apply(coralIntakeMotorConfiguration)
 
-        coralLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
-        //coralLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
-        coralLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
+        try {
+            coralLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
+            //coralLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
+            coralLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
 
-        algaeLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
-        //algaeLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
-        algaeLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
+            algaeLaserCAN.setRangingMode(LaserCanInterface.RangingMode.SHORT)
+            //algaeLaserCAN.setRegionOfInterest(RegionOfInterest(8, 8, 16, 16))
+            algaeLaserCAN.setTimingBudget(LaserCanInterface.TimingBudget.TIMING_BUDGET_33MS)
+        } catch (exception: Exception) {
+            println("Laser CAN Configuration Exception: $exception")
+        }
     }
 
     override fun setIntakeState(state: IntakeState) {
@@ -71,7 +74,7 @@ class IntakeIOReal() : IntakeIO {
         val measurement: LaserCanInterface.Measurement = coralLaserCAN.measurement
         SmartDashboard.putNumber("Coral Measurement", measurement.distance_mm.toDouble())
         @Suppress("SENSELESS_COMPARISON")
-        return (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 40.0)
+        return (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm < 32.0)
     }
 
 

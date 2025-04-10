@@ -61,7 +61,7 @@ object AutoBuilder {
                         Commands.runOnce({ Superstructure.scoreL4() }),
                         AutoCommands.coralReefAlign(targets[i].position, targets[i].side)
                     ),
-                    WaitCommand(0.35),
+                    WaitCommand(0.7),
                     Commands.runOnce({
                         RobotState.actionConfirmed = true
                         println("Score $i: ${autoTimer.get()}")
@@ -132,6 +132,15 @@ object AutoBuilder {
             Commands.runOnce({ Superstructure.removeAlgaeLow() }),
             AutoCommands.algaeReefAlign(AutoScoringConstants.ReefPositions.D)
         ),
-        AutoCommands.safeReefExit(AutoScoringConstants.ReefPositions.D)
+        ParallelCommandGroup(
+            AutoCommands.safeReefExit(AutoScoringConstants.ReefPositions.D),
+            Commands.runOnce({ Superstructure.algaeSpit() }),
+        ),
+        ParallelDeadlineGroup(
+            Commands.waitUntil { RobotState.gamePieceState == GamePieceState.Algae },
+            Commands.runOnce({ Superstructure.removeAlgaeHigh() }),
+            AutoCommands.algaeReefAlign(AutoScoringConstants.ReefPositions.C)
+        ),
+        AutoCommands.safeReefExit(AutoScoringConstants.ReefPositions.C)
     )
 }

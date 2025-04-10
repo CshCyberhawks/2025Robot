@@ -96,10 +96,16 @@ open class GoToPose(
         RobotContainer.drivetrain.applyDriveRequest(xVel, yVel, rotVel)
     }
 
-    override fun isFinished(): Boolean = endCondition()
+    override fun isFinished(): Boolean {
+
+        val isDone =endCondition()
+        SmartDashboard.putBoolean("GoToPose Is Done?", isDone)
+
+        return isDone
+    }
 
     override fun end(interrupted: Boolean) {
-        println("drive command and then ending")
+//        println("drive command and then ending")
         RobotState.autoDriving = false
         RobotContainer.currentDriveCommand = Optional.empty()
     }

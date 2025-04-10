@@ -13,7 +13,7 @@ class SequentialRequest(vararg requests: Request) : Request() {
     private var startedCurrentRequest = false
 
     private fun startNextRequest() {
-        if (idleRequests.isNotEmpty() && currentRequest.isFinished()) {
+        if (idleRequests.isNotEmpty() && (currentRequest.isFinished() || currentRequest.deadlineHit()) && startedCurrentRequest) {
             currentRequest = idleRequests.removeAt(0)
             startedCurrentRequest = false
             startIfAllowed()

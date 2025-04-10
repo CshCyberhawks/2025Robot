@@ -24,6 +24,8 @@ object RobotContainer {
 
     var startByUnclimbing = false
 
+    var startWithADisabledClimb = false
+
 
     val xbox = CommandXboxController(2)
 
@@ -59,7 +61,7 @@ object RobotContainer {
 //            NamedCommands.registerCommand(pathplannerCommand.name, pathplannerCommand.cmd)
 //        }
 
-        autoCommand = frc.robot.commands.auto.AutoBuilder.twoL4Left()
+        autoCommand = frc.robot.commands.auto.AutoBuilder.twoL4Right()
 //        autoCommand = getAutonomousCommand()
 //        SmartDashboard.putData("Auto Chooser", autoChooser)
     }
